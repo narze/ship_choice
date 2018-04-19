@@ -22,6 +22,15 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+config :web,
+  ecto_repos: [Db.Repo]
+
+config :phoenix, :generators,
+  migration: false
+
+config :phoenix, :generators,
+  model: false
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

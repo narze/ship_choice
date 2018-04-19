@@ -36,6 +36,7 @@ defmodule Web.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:db, in_umbrella: true},
       {:phoenix, "~> 1.3.2"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_html, "~> 2.10"},
