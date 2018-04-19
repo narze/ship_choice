@@ -8,8 +8,7 @@ defmodule Db.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Starts a worker by calling: Db.Worker.start_link(arg)
-      # {Db.Worker, arg},
+      Db.Repo,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
