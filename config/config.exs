@@ -16,4 +16,4 @@ import_config "../apps/*/config/config.exs"
 #       format: "$date $time [$level] $metadata$message\n",
 #       metadata: [:user_id]
 
-config :db, ecto_repos: [Db.Repo]
+config :shipchoice_db, ecto_repos: [ShipchoiceDb.Repo]
