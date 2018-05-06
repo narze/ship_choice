@@ -36,6 +36,21 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   test "POST /shipments/upload", %{conn: conn} do
     conn = post conn, "/shipments/upload"
     assert redirected_to(conn) == "/shipments/upload"
-    assert get_flash(conn, :info) == "Uploaded Kerry Report"
+    assert get_flash(conn, :error) == "Kerry Report File Needed"
+  end
+
+  test "POST /shipments/upload with xlsx file", %{conn: conn} do
+    upload = %Plug.Upload{
+      path: "test/fixtures/kerry.xlsx",
+      filename: "kerry.xlsx",
+    }
+
+    conn = post conn,
+                "/shipments/upload",
+                %{kerry_report: upload}
+
+    assert redirected_to(conn) == "/shipments/upload"
+    assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
+    assert get_flash(conn, :info) =~ "13 Rows Processed."
   end
 end
