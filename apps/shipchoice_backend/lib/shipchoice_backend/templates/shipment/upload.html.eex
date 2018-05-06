@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h4>Upload Kerry Report</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= form_for @conn, shipment_path(@conn, :upload), [multipart: true], fn f -> %>
+      <div class="form-group">
+        <label for="file">Kerry Report File</label>
+        <%= file_input f, :kerry_report, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= submit "Submit", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

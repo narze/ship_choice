@@ -10,6 +10,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   test "GET /shipments", %{conn: conn} do
     conn = get conn, "/shipments"
     assert html_response(conn, 200) =~ "All Shipments"
+    assert html_response(conn, 200) =~ "Upload Kerry Report"
   end
 
   test "GET /shipments with existing shipments", %{conn: conn} do
@@ -25,5 +26,10 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
     assert html_response(conn, 200) =~ "SHP0001"
     assert html_response(conn, 200) =~ "SHP0002"
+  end
+
+  test "GET /shipments/upload", %{conn: conn} do
+    conn = get conn, "/shipments/upload"
+    assert html_response(conn, 200) =~ "Upload Kerry Report"
   end
 end
