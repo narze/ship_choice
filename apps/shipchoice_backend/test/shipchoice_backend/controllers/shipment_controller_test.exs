@@ -32,4 +32,10 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     conn = get conn, "/shipments/upload"
     assert html_response(conn, 200) =~ "Upload Kerry Report"
   end
+
+  test "POST /shipments/upload", %{conn: conn} do
+    conn = post conn, "/shipments/upload"
+    assert redirected_to(conn) == "/shipments/upload"
+    assert get_flash(conn, :info) == "Uploaded Kerry Report"
+  end
 end
