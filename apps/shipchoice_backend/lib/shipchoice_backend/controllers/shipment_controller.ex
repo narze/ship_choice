@@ -23,7 +23,7 @@ defmodule ShipchoiceBackend.ShipmentController do
 
       conn
       |> put_flash(:info, "Uploaded Kerry Report. #{length(rows)} Rows Processed.")
-      |> redirect(to: "/shipments/upload")
+      |> redirect(to: "/shipments")
     end
   end
 end

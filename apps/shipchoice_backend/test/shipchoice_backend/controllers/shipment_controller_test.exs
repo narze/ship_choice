@@ -49,7 +49,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
                 "/shipments/upload",
                 %{kerry_report: upload}
 
-    assert redirected_to(conn) == "/shipments/upload"
+    assert redirected_to(conn) == "/shipments"
     assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
     assert get_flash(conn, :info) =~ "13 Rows Processed."
   end
