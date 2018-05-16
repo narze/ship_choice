@@ -88,6 +88,55 @@ defmodule ShipchoiceDb.Shipment do
   Inserts list of shipments
   """
   def insert_list(shipment_list) do
-    Repo.insert_all(Shipment, shipment_list)
+    shipment_list_with_timestamps =
+      Enum.map(shipment_list, &add_timestamps/1)
+    {num, _} = Repo.insert_all(Shipment, shipment_list_with_timestamps)
+    num
+  end
+
+  defp add_timestamps(row) do
+    row
+    |> Map.put(:inserted_at, DateTime.utc_now)
+    |> Map.put(:updated_at, DateTime.utc_now)
+  end
+
+  @doc """
+  Parses shipment data from Kerry Excel file
+  """
+  def parse(%{
+        "consignment_no" => shipment_number,
+        "BranchID" => branch_code,
+        "sender_name" => sender_name,
+        "sender_telephone" => sender_phone,
+        "recipient_name" => recipient_name,
+        "recipient_telephone" => recipient_phone,
+        "recipient_address1" => recipient_address1,
+        "recipient_address2" => recipient_address2,
+        "recipient_zipcode" => recipient_zip,
+      } = data) do
+    metadata = Map.drop(data, [
+      "consignment_no",
+      "BranchID",
+      "sender_name",
+      "sender_telephone",
+      "recipient_name",
+      "recipient_telephone",
+      "recipient_address1",
+      "recipient_address2",
+      "recipient_zipcode",
+    ])
+
+    %{
+      shipment_number: shipment_number,
+      branch_code: branch_code,
+      sender_name: sender_name,
+      sender_phone: sender_phone,
+      recipient_name: recipient_name,
+      recipient_phone: recipient_phone,
+      recipient_address1: recipient_address1,
+      recipient_address2: recipient_address2,
+      recipient_zip: "#{recipient_zip}",
+      metadata: metadata
+    }
   end
 end

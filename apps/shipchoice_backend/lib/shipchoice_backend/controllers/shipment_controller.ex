@@ -28,11 +28,12 @@ defmodule ShipchoiceBackend.ShipmentController do
           Enum.zip(header, row) |> Enum.into(%{})
         end
       )
+      |> Enum.map(&ShipchoiceDb.Shipment.parse/1)
 
-      shipments = ShipchoiceDb.Shipment.insert_list(records)
+      num = ShipchoiceDb.Shipment.insert_list(records)
 
       conn
-      |> put_flash(:info, "Uploaded Kerry Report. #{length(shipments)} Rows Processed.")
+      |> put_flash(:info, "Uploaded Kerry Report. #{num} Rows Processed.")
       |> redirect(to: "/shipments")
     end
   end
