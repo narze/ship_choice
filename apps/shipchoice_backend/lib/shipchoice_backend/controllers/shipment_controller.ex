@@ -1,8 +1,9 @@
+require IEx
 defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   def index(conn, _params) do
-    shipments = ShipchoiceDb.Repo.all(ShipchoiceDb.Shipment)
+    shipments = ShipchoiceDb.Shipment.all
     render conn, "index.html", shipments: shipments
   end
 
@@ -17,12 +18,21 @@ defmodule ShipchoiceBackend.ShipmentController do
       |> redirect(to: "/shipments/upload")
     else
       {:ok, table_id} = Xlsxir.multi_extract(kerry_report.path, 0)
-      [_header | rows] = Xlsxir.get_list(table_id)
+      [header | rows] = Xlsxir.get_list(table_id)
       rows = Enum.reject(rows, fn(row) -> List.first(row) == nil end)
       Xlsxir.close(table_id)
 
+      records = rows
+      |> Enum.map(
+        fn(row) ->
+          Enum.zip(header, row) |> Enum.into(%{})
+        end
+      )
+
+      shipments = ShipchoiceDb.Shipment.insert_list(records)
+
       conn
-      |> put_flash(:info, "Uploaded Kerry Report. #{length(rows)} Rows Processed.")
+      |> put_flash(:info, "Uploaded Kerry Report. #{length(shipments)} Rows Processed.")
       |> redirect(to: "/shipments")
     end
   end

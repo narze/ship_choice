@@ -51,6 +51,13 @@ defmodule ShipchoiceDb.Shipment do
   end
 
   @doc """
+  Get all shipments
+  """
+  def all do
+    Repo.all(Shipment)
+  end
+
+  @doc """
   Retrieves a shipment
 
   ### Examples
@@ -75,5 +82,12 @@ defmodule ShipchoiceDb.Shipment do
   def insert(attrs) do
     changeset = Shipment.changeset(%Shipment{}, attrs)
     Repo.insert(changeset)
+  end
+
+  @doc """
+  Inserts list of shipments
+  """
+  def insert_list(shipment_list) do
+    Repo.insert_all(Shipment, shipment_list)
   end
 end

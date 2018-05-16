@@ -42,4 +42,53 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert shipment.metadata["weight"] == inserted_shipment.metadata[:weight]
     end
   end
+
+  describe "all/0" do
+    test "gets all shipments" do
+      shipments = Shipment.all
+
+      assert length(shipments) == 0
+    end
+  end
+
+  describe "insert_list/1" do
+    test "inserts list of shipments" do
+      shipment_list = [
+        %{
+          shipment_number: "PORM000188508",
+          branch_code: "PORM",
+          sender_name: "Manassarn Manoonchai",
+          sender_phone: "0863949474",
+          recipient_name: "John Doe",
+          recipient_phone: "0812345678",
+          recipient_address1: "345, Sixth Avenue",
+          recipient_address2: "District 51",
+          recipient_zip: "12345",
+          metadata: %{
+            service_code: "ND",
+            weight: 1.06,
+          },
+        },
+        %{
+          shipment_number: "PORM000188509",
+          branch_code: "PORM",
+          sender_name: "Manassarn Manoonchai",
+          sender_phone: "0863949474",
+          recipient_name: "John Doe",
+          recipient_phone: "0812345678",
+          recipient_address1: "345, Sixth Avenue",
+          recipient_address2: "District 51",
+          recipient_zip: "12345",
+          metadata: %{
+            service_code: "ND",
+            weight: 1.06,
+          },
+        },
+      ]
+
+      shipments = Shipment.insert_list(shipment_list)
+
+      assert length(shipments) == 2
+    end
+  end
 end

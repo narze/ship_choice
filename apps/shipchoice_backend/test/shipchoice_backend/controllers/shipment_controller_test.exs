@@ -52,5 +52,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     assert redirected_to(conn) == "/shipments"
     assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
     assert get_flash(conn, :info) =~ "13 Rows Processed."
+
+    assert length(ShipchoiceDb.Shipment.all) == 13
   end
 end
