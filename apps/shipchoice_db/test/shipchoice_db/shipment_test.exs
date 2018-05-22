@@ -109,7 +109,7 @@ defmodule ShipchoiceDb.ShipmentTest do
         },
       }
 
-      {:ok, inserted_shipment} = Shipment.insert(shipment_to_insert)
+      {:ok, _inserted_shipment} = Shipment.insert(shipment_to_insert)
 
       shipment_list = [
         %{
