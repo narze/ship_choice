@@ -1,3 +1,4 @@
+require IEx
 defmodule ShipchoiceBackend.ShipmentControllerTest do
   use ShipchoiceBackend.ConnCase
 
@@ -52,6 +53,17 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     assert redirected_to(conn) == "/shipments"
     assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
     assert get_flash(conn, :info) =~ "13 Rows Processed."
+
+    assert length(ShipchoiceDb.Shipment.all) == 13
+
+    # Upload again
+    conn2 = post conn,
+                "/shipments/upload",
+                %{kerry_report: upload}
+
+    assert redirected_to(conn2) == "/shipments"
+    assert get_flash(conn2, :info) =~ "Uploaded Kerry Report."
+    assert get_flash(conn2, :info) =~ "13 Rows Processed."
 
     assert length(ShipchoiceDb.Shipment.all) == 13
   end

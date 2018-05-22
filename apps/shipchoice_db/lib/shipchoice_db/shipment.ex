@@ -88,10 +88,32 @@ defmodule ShipchoiceDb.Shipment do
   Inserts list of shipments
   """
   def insert_list(shipment_list) do
-    shipment_list_with_timestamps =
-      Enum.map(shipment_list, &add_timestamps/1)
-    {num, _} = Repo.insert_all(Shipment, shipment_list_with_timestamps)
-    num
+    changesets =
+      shipment_list
+      |> Enum.map(&add_timestamps/1)
+      |> Enum.map(fn shipment ->
+         Shipment.changeset(%Shipment{}, shipment)
+      end)
+
+    result = changesets
+             |> Enum.with_index()
+             |> Enum.reduce(Ecto.Multi.new(), fn ({changeset, index}, multi) ->
+                Ecto.Multi.insert_or_update(
+                  multi,
+                  Integer.to_string(index),
+                  changeset,
+                  on_conflict: :replace_all,
+                  conflict_target: :shipment_number,
+                )
+             end)
+             |> Repo.transaction
+
+    case result do
+      {:ok, multiple_shipment_result} ->
+        Enum.count(multiple_shipment_result)
+      _ ->
+        0
+    end
   end
 
   defp add_timestamps(row) do
