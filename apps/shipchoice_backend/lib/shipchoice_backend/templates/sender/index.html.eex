@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h4>All Senders</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <table class="table">
+      <thead>
+        <th>Sender #</th>
+      </thead>
+
+      <tbody>
+        <%= for sender <- @senders do %>
+          <%= render "sender.html", sender: sender %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= link "Add New Sender", to: "/senders/new", class: "btn btn-primary" %>
+  </div>
+</div>
