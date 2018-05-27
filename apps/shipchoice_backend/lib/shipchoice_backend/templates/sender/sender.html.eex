@@ -1,2 +1,4 @@
 <tr>
+  <td><%= @sender.name %></td>
+  <td><%= @sender.phone %></td>
 </tr>

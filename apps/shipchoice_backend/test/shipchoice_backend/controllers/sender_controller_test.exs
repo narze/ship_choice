@@ -14,18 +14,20 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     assert html_response(conn, 200) =~ "Add New Sender"
   end
 
-  # test "GET /shipments with existing shipments", %{conn: conn} do
-  #   shipments = [
-  #     %{shipment_number: "SHP0001"},
-  #     %{shipment_number: "SHP0002"},
-  #   ]
+  test "GET /senders with existing senders", %{conn: conn} do
+    senders = [
+      %{name: "Foo", phone: "0812345678"},
+      %{name: "Bar", phone: "0898765432"},
+    ]
 
-  #   shipments
-  #   |> Enum.each(fn(shipment) -> ShipchoiceDb.Shipment.insert(shipment) end)
+    senders
+    |> Enum.each(fn(sender) -> ShipchoiceDb.Sender.insert(sender) end)
 
-  #   conn = get conn, "/shipments"
+    conn = get conn, "/senders"
 
-  #   assert html_response(conn, 200) =~ "SHP0001"
-  #   assert html_response(conn, 200) =~ "SHP0002"
-  # end
+    assert html_response(conn, 200) =~ "Foo"
+    assert html_response(conn, 200) =~ "0812345678"
+    assert html_response(conn, 200) =~ "Bar"
+    assert html_response(conn, 200) =~ "0898765432"
+  end
 end
