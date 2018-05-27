@@ -22,6 +22,8 @@ defmodule ShipchoiceBackend.Router do
     post "/shipments/upload", ShipmentController, :do_upload
 
     get "/senders", SenderController, :index
+    get "/senders/new", SenderController, :new
+    post "/senders", SenderController, :create
   end
 
   # Other scopes may use custom stacks.

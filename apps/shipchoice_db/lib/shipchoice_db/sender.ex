@@ -24,7 +24,7 @@ defmodule ShipchoiceDb.Sender do
       %Sender{}
 
   """
-  def changeset(%Sender{} = sender, attrs) do
+  def changeset(%Sender{} = sender, attrs \\ %{}) do
     sender
     |> cast(attrs, [
       :name,
