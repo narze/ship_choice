@@ -1,1 +1,9 @@
 /* This file is for your main application css. */
+.logo {
+  width: 370px;
+  height: 128px;
+  display: inline-block;
+  margin-bottom: 1em;
+  background-image: url("/images/shypchoice.png");
+  background-size: 370px 128px;
+}
