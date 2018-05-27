@@ -1,0 +1,6 @@
+<tr>
+  <td><%= @shipment.shipment_number %></td>
+  <td><%= @shipment.sender_name %> (<%= @shipment.sender_phone %>)</td>
+  <td><%= @shipment.recipient_name %></td>
+  <td><%= @shipment.metadata["COD"] %></td>
+</tr>
