@@ -8,6 +8,8 @@
     <table class="table">
       <thead>
         <th>Sender #</th>
+        <th>Phone</th>
+        <th>Shipments Count</th>
       </thead>
 
       <tbody>

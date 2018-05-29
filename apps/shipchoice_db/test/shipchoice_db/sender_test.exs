@@ -31,4 +31,20 @@ defmodule ShipchoiceDb.SenderTest do
       assert length(senders) == 0
     end
   end
+
+  describe "count_shipments/1" do
+    test "counts sender's shipments by phone number" do
+      sender_to_insert = %{
+        name: "Manassarn Manoonchai",
+        phone: "0863949474",
+      }
+
+      {:ok, inserted_sender} = Sender.insert(sender_to_insert)
+
+      sender = Sender.get(inserted_sender.id)
+      count = Sender.count_shipments(sender)
+
+      assert count == 0
+    end
+  end
 end

@@ -1,4 +1,5 @@
 <tr>
   <td><%= @sender.name %></td>
   <td><%= @sender.phone %></td>
+  <td><%= ShipchoiceDb.Sender.count_shipments(@sender) %></td>
 </tr>

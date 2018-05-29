@@ -3,8 +3,8 @@ defmodule ShipchoiceDb.Sender do
   Ecto Schema representing senders.
   """
   use Ecto.Schema
-  import Ecto.Changeset
-  alias ShipchoiceDb.{Repo, Sender}
+  import Ecto.{Changeset, Query}
+  alias ShipchoiceDb.{Repo, Sender, Shipment}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -67,5 +67,19 @@ defmodule ShipchoiceDb.Sender do
   def insert(attrs) do
     changeset = Sender.changeset(%Sender{}, attrs)
     Repo.insert(changeset)
+  end
+
+  @doc """
+  Counts shipments associated with sender with phone number
+
+  ### Examples
+
+      iex> count_shipments(sender)
+      0
+
+  """
+  def count_shipments(sender) do
+    query = from(s in Shipment, where: s.sender_phone == ^sender.phone)
+    Repo.aggregate(query, :count, :id)
   end
 end
