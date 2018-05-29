@@ -103,7 +103,7 @@ defmodule ShipchoiceDb.Shipment do
                   Integer.to_string(index),
                   changeset,
                   on_conflict: :replace_all,
-                  conflict_target: :shipment_number,
+                  conflict_target: :shipment_number
                 )
              end)
              |> Repo.transaction
@@ -152,13 +152,17 @@ defmodule ShipchoiceDb.Shipment do
       shipment_number: shipment_number,
       branch_code: branch_code,
       sender_name: sender_name,
-      sender_phone: sender_phone,
+      sender_phone: sanitize_phone(sender_phone),
       recipient_name: recipient_name,
-      recipient_phone: recipient_phone,
+      recipient_phone: sanitize_phone(recipient_phone),
       recipient_address1: recipient_address1,
       recipient_address2: recipient_address2,
       recipient_zip: "#{recipient_zip}",
       metadata: metadata
     }
+  end
+
+  defp sanitize_phone(phone) do
+    String.replace(phone, ~r/\D/, "", global: true)
   end
 end
