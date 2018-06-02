@@ -28,3 +28,8 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :sms_sender,
+  apitel_sender_id: System.get_env("APITEL_SENDER_ID"),
+  apitel_api_key: System.get_env("APITEL_API_KEY"),
+  apitel_api_secret: System.get_env("APITEL_API_SECRET")

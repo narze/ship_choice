@@ -1,0 +1,27 @@
+[
+  {
+    "request": {
+      "body": "{\n        \"to\": \"0863949474\",\n        \"from\": \"ATSMS\",\n        \"text\": \"A text message\",\n        \"apiKey\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n        \"apiSecret\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n      }",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.apitel.co/sms"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"errors\":{\"to\":[\"Invalid number. Should be +66{9 digits}\"]}}",
+      "headers": {
+        "Server": "nginx/1.10.3",
+        "Date": "Sat, 02 Jun 2018 13:38:42 GMT",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive"
+      },
+      "status_code": 400,
+      "type": "ok"
+    }
+  }
+]

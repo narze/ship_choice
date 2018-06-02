@@ -1,0 +1,28 @@
+[
+  {
+    "request": {
+      "body": "{\n        \"to\": \"+66863949474\",\n        \"from\": \"ATSMS\",\n        \"text\": \"สวัสดี เราคือ ShypChoice\",\n        \"apiKey\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\",\n        \"apiSecret\": \"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\"\n      }",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.apitel.co/sms"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"id\":13198,\"from\":\"ATSMS\",\"to\":\"+66863949474\",\"text\":\"สวัสดี เราคือ ShypChoice\",\"status\":\"ACCEPTED\"}",
+      "headers": {
+        "Server": "nginx/1.10.3",
+        "Date": "Sat, 02 Jun 2018 13:52:39 GMT",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=15768000"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
