@@ -23,7 +23,7 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :shipchoice_backend, :generators,
-  context_app: false
+  context_app: :shipchoice_backend
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
