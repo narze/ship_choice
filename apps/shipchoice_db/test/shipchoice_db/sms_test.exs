@@ -1,6 +1,6 @@
-defmodule ShipchoiceDb.SMSMessageTest do
+defmodule ShipchoiceDb.SMSTest do
   use ExUnit.Case
-  alias ShipchoiceDb.{SMSMessage, Repo}
+  alias ShipchoiceDb.{SMS, Repo}
   alias Ecto.Adapters.SQL.Sandbox
 
   setup do
@@ -14,9 +14,9 @@ defmodule ShipchoiceDb.SMSMessageTest do
         phone: "+66863949474",
       }
 
-      {:ok, inserted_sms} = SMSMessage.insert(sms_to_insert)
+      {:ok, inserted_sms} = SMS.insert(sms_to_insert)
 
-      sms = SMSMessage.get(inserted_sms.id)
+      sms = SMS.get(inserted_sms.id)
 
       assert sms.id == inserted_sms.id
       assert sms.message == inserted_sms.message
