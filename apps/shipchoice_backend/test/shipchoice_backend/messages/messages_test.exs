@@ -4,7 +4,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   alias ShipchoiceBackend.Messages
 
   describe "sms" do
-    alias ShipchoiceDb.SMS
+    alias ShipchoiceDb.{SMS, Shipment}
 
     @valid_attrs %{message: "some message", phone: "some phone", sent_at: ~N[2010-04-17 14:00:00.000000]}
     @update_attrs %{message: "some updated message", phone: "some updated phone", sent_at: ~N[2011-05-18 15:01:01.000000]}
@@ -17,6 +17,29 @@ defmodule ShipchoiceBackend.MessagesTest do
         |> Messages.create_sms()
 
       sms
+    end
+
+    def shipment_fixture(attrs \\ %{}) do
+      {:ok, shipment} =
+        attrs
+        |> Enum.into(%{
+          shipment_number: "PORM000188508",
+          branch_code: "PORM",
+          sender_name: "Manassarn Manoonchai",
+          sender_phone: "0863949474",
+          recipient_name: "John Doe",
+          recipient_phone: "0812345678",
+          recipient_address1: "345, Sixth Avenue",
+          recipient_address2: "District 51",
+          recipient_zip: "12345",
+          metadata: %{
+            service_code: "ND",
+            weight: 1.06,
+          },
+        })
+        |> Shipment.insert()
+
+      shipment
     end
 
     test "list_sms/0 returns all sms" do
@@ -64,6 +87,16 @@ defmodule ShipchoiceBackend.MessagesTest do
     test "change_sms/1 returns a sms changeset" do
       sms = sms_fixture()
       assert %Ecto.Changeset{} = Messages.change_sms(sms)
+    end
+  end
+
+  describe "sending message to shipment recipient via sms" do
+    test "send_message_to_shipment/2 creates a sms & send it to recipient" do
+      message = "Hello"
+      shipment = shipment_fixture()
+
+      assert {:ok, sms} = Messages.send_message_to_shipment(message, shipment)
+      assert sms.shipment_id == shipment.id
     end
   end
 end

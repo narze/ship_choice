@@ -7,6 +7,7 @@ defmodule ShipchoiceDb.SMS do
   alias ShipchoiceDb.{Repo, SMS, Shipment}
 
   @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
 
   schema "sms_messages" do
     field :status, :string, default: "pending"

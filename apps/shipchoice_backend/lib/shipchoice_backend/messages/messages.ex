@@ -99,4 +99,19 @@ defmodule ShipchoiceBackend.Messages do
   def change_sms(%SMS{} = sms) do
     SMS.changeset(sms, %{})
   end
+
+  @doc """
+  Creates a SMS & send the message to shipment recipient
+  """
+  def send_message_to_shipment(_message, %Shipment{} = shipment) do
+    attrs = %{}
+
+    sms = shipment
+    |> Ecto.build_assoc(:sms, attrs)
+    |> Repo.insert!
+
+    # TODO send the message
+
+    {:ok, sms}
+  end
 end
