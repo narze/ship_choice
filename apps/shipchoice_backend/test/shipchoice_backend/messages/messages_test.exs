@@ -3,6 +3,8 @@ defmodule ShipchoiceBackend.MessagesTest do
 
   alias ShipchoiceBackend.Messages
 
+  import Mock
+
   describe "sms" do
     alias ShipchoiceDb.{SMS, Shipment}
 
@@ -95,8 +97,11 @@ defmodule ShipchoiceBackend.MessagesTest do
       message = "Hello"
       shipment = shipment_fixture()
 
-      assert {:ok, sms} = Messages.send_message_to_shipment(message, shipment)
-      assert sms.shipment_id == shipment.id
+      with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
+        assert {:ok, sms} = Messages.send_message_to_shipment(message, shipment)
+        assert sms.shipment_id == shipment.id
+        assert called SMSSender.send_message(message, :_)
+      end
     end
   end
 end
