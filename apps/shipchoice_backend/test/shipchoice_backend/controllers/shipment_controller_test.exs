@@ -3,9 +3,36 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
+  alias ShipchoiceBackend.Messages
+  alias ShipchoiceDb.{Shipment, SMS, Repo}
+
+  import Mock
 
   setup do
-    :ok = Sandbox.checkout(ShipchoiceDb.Repo)
+    :ok = Sandbox.checkout(Repo)
+  end
+
+  def shipment_fixture(attrs \\ %{}) do
+    {:ok, shipment} =
+      attrs
+      |> Enum.into(%{
+        shipment_number: "PORM000188508",
+        branch_code: "PORM",
+        sender_name: "Manassarn Manoonchai",
+        sender_phone: "0863949474",
+        recipient_name: "John Doe",
+        recipient_phone: "0812345678",
+        recipient_address1: "345, Sixth Avenue",
+        recipient_address2: "District 51",
+        recipient_zip: "12345",
+        metadata: %{
+          service_code: "ND",
+          weight: 1.06,
+        },
+      })
+      |> Shipment.insert()
+
+    shipment
   end
 
   test "GET /shipments", %{conn: conn} do
@@ -66,5 +93,17 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     assert get_flash(conn2, :info) =~ "13 Rows Processed."
 
     assert length(ShipchoiceDb.Shipment.all) == 13
+  end
+
+  test "POST /shipments/:id/send_sms", %{conn: conn} do
+    shipment = shipment_fixture()
+
+    with_mock Messages,
+              [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %SMS{}} end] do
+      conn = post conn, "/shipments/#{shipment.id}/send_sms"
+      assert redirected_to(conn) == "/shipments"
+      assert get_flash(conn, :info) =~ "SMS Sent."
+      assert called Messages.send_message_to_shipment(:_, :_)
+    end
   end
 end

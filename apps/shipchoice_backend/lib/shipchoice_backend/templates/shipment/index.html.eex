@@ -11,6 +11,7 @@
         <th>Sender</th>
         <th>Recipient Name</th>
         <th>COD</th>
+        <th>Actions</th>
       </thead>
 
       <tbody>

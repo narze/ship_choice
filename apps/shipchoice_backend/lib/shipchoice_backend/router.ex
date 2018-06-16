@@ -20,6 +20,7 @@ defmodule ShipchoiceBackend.Router do
     get "/shipments", ShipmentController, :index
     get "/shipments/upload", ShipmentController, :upload
     post "/shipments/upload", ShipmentController, :do_upload
+    post "/shipments/:id/send_sms", ShipmentController, :send_sms
 
     get "/senders", SenderController, :index
     get "/senders/new", SenderController, :new

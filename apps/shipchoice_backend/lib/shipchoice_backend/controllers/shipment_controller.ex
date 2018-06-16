@@ -2,6 +2,8 @@ require IEx
 defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
+  alias ShipchoiceBackend.Messages
+
   def index(conn, _params) do
     shipments = ShipchoiceDb.Shipment.all
     render conn, "index.html", shipments: shipments
@@ -36,5 +38,16 @@ defmodule ShipchoiceBackend.ShipmentController do
       |> put_flash(:info, "Uploaded Kerry Report. #{num} Rows Processed.")
       |> redirect(to: "/shipments")
     end
+  end
+
+  def send_sms(conn, %{"id" => id}) do
+    shipment = ShipchoiceDb.Shipment.get(id)
+    message = "Shipment #{shipment.shipment_number} is being sent."
+
+    {:ok, _sms} = Messages.send_message_to_shipment(message, shipment)
+
+    conn
+    |> put_flash(:info, "SMS Sent.")
+    |> redirect(to: "/shipments")
   end
 end

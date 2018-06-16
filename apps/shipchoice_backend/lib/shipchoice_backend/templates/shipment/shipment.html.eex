@@ -3,4 +3,5 @@
   <td><%= @shipment.sender_name %> (<%= @shipment.sender_phone %>)</td>
   <td><%= @shipment.recipient_name %></td>
   <td><%= @shipment.metadata["COD"] %></td>
+  <td><%= link "Send SMS", method: :post, to: "/shipments/#{@shipment.id}/send_sms" %></td>
 </tr>
