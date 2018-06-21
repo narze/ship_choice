@@ -108,13 +108,19 @@ defmodule ShipchoiceBackend.Messages do
       message: message
     }
 
-    sms = shipment
-    |> Ecto.build_assoc(:sms, attrs)
-    |> Repo.insert!
+    existing_sms = Ecto.assoc(shipment, :sms)
 
-    # TODO: Use the sms to send message
-    {:ok, _response} = SMSSender.send_message(sms.message, "+66814879292")
+    if Repo.aggregate(existing_sms, :count, :id) > 0 do
+      {:error, "Message already sent for this shipment"}
+    else
+      sms = shipment
+      |> Ecto.build_assoc(:sms, attrs)
+      |> Repo.insert!()
 
-    {:ok, sms}
+      # TODO: Use the sms to send message
+      {:ok, _response} = SMSSender.send_message(sms.message, "+66814879292")
+
+      {:ok, sms}
+    end
   end
 end

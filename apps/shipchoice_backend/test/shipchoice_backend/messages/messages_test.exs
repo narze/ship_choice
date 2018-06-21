@@ -104,4 +104,17 @@ defmodule ShipchoiceBackend.MessagesTest do
       end
     end
   end
+
+  describe "when message already sent once" do
+    test "send_message_to_shipment/2 returns error" do
+      message = "Hello"
+      shipment = shipment_fixture()
+      sms = shipment
+      |> Ecto.build_assoc(:sms, %{message: message})
+      |> Repo.insert!()
+
+      assert {:error, "Message already sent for this shipment"}
+        = Messages.send_message_to_shipment(message, shipment)
+    end
+  end
 end
