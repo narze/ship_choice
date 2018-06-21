@@ -1,10 +1,11 @@
+require IEx
 defmodule ShipchoiceBackend.Messages do
   @moduledoc """
   The Messages context.
   """
 
   import Ecto.Query, warn: false
-  alias ShipchoiceDb.{Repo, SMS, Shipment}
+  alias ShipchoiceDb.{Repo, SMS, Shipment, Sender}
 
   @doc """
   Returns the list of sms.
@@ -122,5 +123,18 @@ defmodule ShipchoiceBackend.Messages do
 
       {:ok, sms}
     end
+  end
+
+  @doc """
+  Send multiple SMS to all shipments in a sender
+  """
+  def send_message_to_all_shipments_in_sender(message, %Sender{} = sender) do
+    shipments = Sender.get_shipments(sender)
+
+    messages_sent_count = shipments
+    |> Enum.map(fn(shipment) -> send_message_to_shipment(message, shipment) end)
+    |> Enum.count(fn({result, _}) -> result == :ok end)
+
+    {:ok, "Sent to #{messages_sent_count} shipments"}
   end
 end

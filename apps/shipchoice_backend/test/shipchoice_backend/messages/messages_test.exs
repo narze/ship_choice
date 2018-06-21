@@ -6,7 +6,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   import Mock
 
   describe "sms" do
-    alias ShipchoiceDb.{SMS, Shipment}
+    alias ShipchoiceDb.{SMS, Shipment, Sender}
 
     @valid_attrs %{message: "some message", phone: "some phone", sent_at: ~N[2010-04-17 14:00:00.000000]}
     @update_attrs %{message: "some updated message", phone: "some updated phone", sent_at: ~N[2011-05-18 15:01:01.000000]}
@@ -42,6 +42,18 @@ defmodule ShipchoiceBackend.MessagesTest do
         |> Shipment.insert()
 
       shipment
+    end
+
+    def sender_fixture(attrs \\ %{}) do
+      {:ok, sender} =
+        attrs
+        |> Enum.into(%{
+          name: "Manassarn Manoonchai",
+          phone: "0863949474",
+        })
+        |> Sender.insert()
+
+      sender
     end
 
     test "list_sms/0 returns all sms" do
@@ -109,12 +121,25 @@ defmodule ShipchoiceBackend.MessagesTest do
     test "send_message_to_shipment/2 returns error" do
       message = "Hello"
       shipment = shipment_fixture()
-      sms = shipment
+      _sms = shipment
       |> Ecto.build_assoc(:sms, %{message: message})
       |> Repo.insert!()
 
       assert {:error, "Message already sent for this shipment"}
         = Messages.send_message_to_shipment(message, shipment)
+    end
+  end
+
+  describe "sending all unsent shipments for single sender" do
+    test "send_message_to_all_shipments_in_sender/2" do
+      message = "Hello"
+      shipment1 = shipment_fixture(%{shipment_number: "PORM000188508"})
+      _shipment2 = shipment_fixture(%{shipment_number: "PORM000188509"})
+      sender = sender_fixture(%{phone: shipment1.sender_phone})
+
+      with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
+        assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(message, sender)
+      end
     end
   end
 end

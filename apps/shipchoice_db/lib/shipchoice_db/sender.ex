@@ -82,4 +82,9 @@ defmodule ShipchoiceDb.Sender do
     query = from(s in Shipment, where: s.sender_phone == ^sender.phone)
     Repo.aggregate(query, :count, :id)
   end
+
+  def get_shipments(sender) do
+    query = from(s in Shipment, where: s.sender_phone == ^sender.phone)
+    Repo.all(query)
+  end
 end
