@@ -132,11 +132,11 @@ defmodule ShipchoiceBackend.Messages do
   @doc """
   Send multiple SMS to all shipments in a sender
   """
-  def send_message_to_all_shipments_in_sender(message, %Sender{} = sender) do
+  def send_message_to_all_shipments_in_sender(%Sender{} = sender) do
     shipments = Sender.get_shipments(sender)
 
     messages_sent_count = shipments
-    |> Enum.map(fn(shipment) -> send_message_to_shipment(message, shipment) end)
+    |> Enum.map(fn(shipment) -> send_message_to_shipment(build_shipment_message(shipment), shipment) end)
     |> Enum.count(fn({result, _}) -> result == :ok end)
 
     {:ok, "Sent to #{messages_sent_count} shipments"}
@@ -145,5 +145,9 @@ defmodule ShipchoiceBackend.Messages do
   def transform_phone_number(phone_number) do
     phone_number
     |> String.replace_prefix("0", "+66")
+  end
+
+  def build_shipment_message(shipment) do
+    "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https//shypchoice.com/t/#{shipment.shipment_number}"
   end
 end

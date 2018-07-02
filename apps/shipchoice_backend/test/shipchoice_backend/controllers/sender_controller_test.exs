@@ -89,14 +89,14 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     shipment2 = shipment_fixture(%{shipment_number: "PORM000188509"})
 
     with_mock Messages, [
-                send_message_to_all_shipments_in_sender: fn(message, sender) -> {:ok, message} end
+                send_message_to_all_shipments_in_sender: fn(sender) -> {:ok, "Sent"} end
               ] do
       conn = post conn,
                   "/senders/#{sender.id}/send_sms_to_shipments"
 
       assert redirected_to(conn) == "/senders"
       assert get_flash(conn, :info) =~ "Sent SMS to 2 shipments."
-      assert called Messages.send_message_to_all_shipments_in_sender(:_, :_)
+      assert called Messages.send_message_to_all_shipments_in_sender(:_)
     end
   end
 end

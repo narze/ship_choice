@@ -33,7 +33,7 @@ defmodule ShipchoiceBackend.SenderController do
   def send_sms_to_shipments(conn, %{"id" => id}) do
     sender = ShipchoiceDb.Sender.get(id)
     count = ShipchoiceDb.Sender.count_shipments(sender)
-    {:ok, result} = Messages.send_message_to_all_shipments_in_sender("Hello", sender)
+    {:ok, result} = Messages.send_message_to_all_shipments_in_sender(sender)
     IO.inspect result
 
     conn

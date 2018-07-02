@@ -131,14 +131,14 @@ defmodule ShipchoiceBackend.MessagesTest do
   end
 
   describe "sending all unsent shipments for single sender" do
-    test "send_message_to_all_shipments_in_sender/2" do
+    test "send_message_to_all_shipments_in_sender/1" do
       message = "Hello"
       shipment1 = shipment_fixture(%{shipment_number: "PORM000188508"})
       _shipment2 = shipment_fixture(%{shipment_number: "PORM000188509"})
       sender = sender_fixture(%{phone: shipment1.sender_phone})
 
       with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
-        assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(message, sender)
+        assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(sender)
       end
     end
   end
@@ -146,6 +146,14 @@ defmodule ShipchoiceBackend.MessagesTest do
   describe "transform_phone_number/1" do
     test "replaces leading 0 with +66" do
       assert Messages.transform_phone_number("0812345678") == "+66812345678"
+    end
+  end
+
+  describe "build_shipment_message/1" do
+    test "builds message for shipment with kerry url & tracking number" do
+      shipment = shipment_fixture(%{shipment_number: "ABC0001"})
+      message = "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https//shypchoice.com/t/ABC0001"
+      assert Messages.build_shipment_message(shipment) == message
     end
   end
 end
