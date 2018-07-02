@@ -132,7 +132,6 @@ defmodule ShipchoiceBackend.MessagesTest do
 
   describe "sending all unsent shipments for single sender" do
     test "send_message_to_all_shipments_in_sender/1" do
-      message = "Hello"
       shipment1 = shipment_fixture(%{shipment_number: "PORM000188508"})
       _shipment2 = shipment_fixture(%{shipment_number: "PORM000188509"})
       sender = sender_fixture(%{phone: shipment1.sender_phone})
