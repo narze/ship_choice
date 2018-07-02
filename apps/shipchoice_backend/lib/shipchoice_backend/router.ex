@@ -25,6 +25,7 @@ defmodule ShipchoiceBackend.Router do
     get "/senders", SenderController, :index
     get "/senders/new", SenderController, :new
     post "/senders", SenderController, :create
+    post "/senders/:id/send_sms_to_shipments", SenderController, :send_sms_to_shipments
   end
 
   # Other scopes may use custom stacks.

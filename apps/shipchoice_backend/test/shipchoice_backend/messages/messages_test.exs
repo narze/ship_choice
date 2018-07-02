@@ -112,7 +112,7 @@ defmodule ShipchoiceBackend.MessagesTest do
       with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
         assert {:ok, sms} = Messages.send_message_to_shipment(message, shipment)
         assert sms.shipment_id == shipment.id
-        assert called SMSSender.send_message(message, :_)
+        assert called SMSSender.send_message(message, "+66812345678")
       end
     end
   end
@@ -140,6 +140,12 @@ defmodule ShipchoiceBackend.MessagesTest do
       with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
         assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(message, sender)
       end
+    end
+  end
+
+  describe "transform_phone_number/1" do
+    test "replaces leading 0 with +66" do
+      assert Messages.transform_phone_number("0812345678") == "+66812345678"
     end
   end
 end

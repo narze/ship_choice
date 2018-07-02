@@ -119,7 +119,11 @@ defmodule ShipchoiceBackend.Messages do
       |> Repo.insert!()
 
       # TODO: Use the sms to send message
-      {:ok, _response} = SMSSender.send_message(sms.message, "+66814879292")
+      {:ok, _response} =
+        SMSSender.send_message(
+          sms.message,
+          transform_phone_number(shipment.recipient_phone)
+        )
 
       {:ok, sms}
     end
@@ -136,5 +140,10 @@ defmodule ShipchoiceBackend.Messages do
     |> Enum.count(fn({result, _}) -> result == :ok end)
 
     {:ok, "Sent to #{messages_sent_count} shipments"}
+  end
+
+  def transform_phone_number(phone_number) do
+    phone_number
+    |> String.replace_prefix("0", "+66")
   end
 end

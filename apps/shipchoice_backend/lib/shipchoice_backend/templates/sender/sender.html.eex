@@ -2,4 +2,10 @@
   <td><%= @sender.name %></td>
   <td><%= @sender.phone %></td>
   <td><%= ShipchoiceDb.Sender.count_shipments(@sender) %></td>
+  <td>
+    <%= link("Send SMS to recipients",
+             to: sender_path(@conn, :send_sms_to_shipments, @sender),
+             method: :post,
+             class: "btn btn-primary") %>
+  </td>
 </tr>

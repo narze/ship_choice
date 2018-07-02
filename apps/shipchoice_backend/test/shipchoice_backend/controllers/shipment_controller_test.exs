@@ -4,7 +4,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Shipment, SMS, Repo}
+  alias ShipchoiceDb.{Shipment, SMS, Repo, Sender}
 
   import Mock
 

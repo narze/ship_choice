@@ -10,12 +10,14 @@
         <th>Sender #</th>
         <th>Phone</th>
         <th>Shipments Count</th>
+        <th>Actions</th>
       </thead>
 
       <tbody>
-        <%= for sender <- @senders do %>
-          <%= render "sender.html", sender: sender %>
-        <% end %>
+        <%= render_many @senders,
+                        ShipchoiceBackend.SenderView,
+                        "sender.html",
+                        conn: @conn %>
       </tbody>
     </table>
   </div>
