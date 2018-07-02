@@ -151,7 +151,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   describe "build_shipment_message/1" do
     test "builds message for shipment with kerry url & tracking number" do
       shipment = shipment_fixture(%{shipment_number: "ABC0001"})
-      message = "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https//shypchoice.com/t/ABC0001"
+      message = "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https://shypchoice.com/t/ABC0001"
       assert Messages.build_shipment_message(shipment) == message
     end
   end

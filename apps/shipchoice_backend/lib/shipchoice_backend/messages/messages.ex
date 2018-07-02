@@ -148,6 +148,6 @@ defmodule ShipchoiceBackend.Messages do
   end
 
   def build_shipment_message(shipment) do
-    "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https//shypchoice.com/t/#{shipment.shipment_number}"
+    "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https://shypchoice.com/t/#{shipment.shipment_number}"
   end
 end
