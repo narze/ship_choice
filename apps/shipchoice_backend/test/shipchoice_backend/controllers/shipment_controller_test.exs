@@ -7,32 +7,10 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   alias ShipchoiceDb.{Shipment, SMS, Repo, Sender}
 
   import Mock
+  import ShipchoiceDb.Factory
 
   setup do
     :ok = Sandbox.checkout(Repo)
-  end
-
-  def shipment_fixture(attrs \\ %{}) do
-    {:ok, shipment} =
-      attrs
-      |> Enum.into(%{
-        shipment_number: "PORM000188508",
-        branch_code: "PORM",
-        sender_name: "Manassarn Manoonchai",
-        sender_phone: "0863949474",
-        recipient_name: "John Doe",
-        recipient_phone: "0812345678",
-        recipient_address1: "345, Sixth Avenue",
-        recipient_address2: "District 51",
-        recipient_zip: "12345",
-        metadata: %{
-          service_code: "ND",
-          weight: 1.06,
-        },
-      })
-      |> Shipment.insert()
-
-    shipment
   end
 
   test "GET /shipments", %{conn: conn} do
@@ -96,7 +74,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   end
 
   test "POST /shipments/:id/send_sms", %{conn: conn} do
-    shipment = shipment_fixture()
+    shipment = insert(:shipment)
 
     with_mock Messages,
               [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %SMS{}} end] do

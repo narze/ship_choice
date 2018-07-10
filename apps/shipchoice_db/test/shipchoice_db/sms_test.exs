@@ -1,5 +1,6 @@
 defmodule ShipchoiceDb.SMSTest do
   use ExUnit.Case
+  import ShipchoiceDb.Factory
   alias ShipchoiceDb.{SMS, Repo}
   alias Ecto.Adapters.SQL.Sandbox
 
@@ -9,12 +10,12 @@ defmodule ShipchoiceDb.SMSTest do
 
   describe "insert/1" do
     test "inserts a sms" do
-      sms_to_insert = %{
+      attrs = %{
         message: "Hello world",
         phone: "+66863949474",
       }
 
-      {:ok, inserted_sms} = SMS.insert(sms_to_insert)
+      inserted_sms = insert(:sms, attrs)
 
       sms = SMS.get(inserted_sms.id)
 

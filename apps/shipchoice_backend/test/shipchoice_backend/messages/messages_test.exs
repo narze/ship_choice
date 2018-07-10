@@ -4,6 +4,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   alias ShipchoiceBackend.Messages
 
   import Mock
+  import ShipchoiceDb.Factory
 
   describe "sms" do
     alias ShipchoiceDb.{SMS, Shipment, Sender}
@@ -12,57 +13,13 @@ defmodule ShipchoiceBackend.MessagesTest do
     @update_attrs %{message: "some updated message", phone: "some updated phone", sent_at: ~N[2011-05-18 15:01:01.000000]}
     @invalid_attrs %{message: nil, phone: nil, sent_at: nil}
 
-    def sms_fixture(attrs \\ %{}) do
-      {:ok, sms} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Messages.create_sms()
-
-      sms
-    end
-
-    def shipment_fixture(attrs \\ %{}) do
-      {:ok, shipment} =
-        attrs
-        |> Enum.into(%{
-          shipment_number: "PORM000188508",
-          branch_code: "PORM",
-          sender_name: "Manassarn Manoonchai",
-          sender_phone: "0863949474",
-          recipient_name: "John Doe",
-          recipient_phone: "0812345678",
-          recipient_address1: "345, Sixth Avenue",
-          recipient_address2: "District 51",
-          recipient_zip: "12345",
-          metadata: %{
-            service_code: "ND",
-            weight: 1.06,
-          },
-        })
-        |> Shipment.insert()
-
-      shipment
-    end
-
-    def sender_fixture(attrs \\ %{}) do
-      {:ok, sender} =
-        attrs
-        |> Enum.into(%{
-          name: "Manassarn Manoonchai",
-          phone: "0863949474",
-        })
-        |> Sender.insert()
-
-      sender
-    end
-
     test "list_sms/0 returns all sms" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert Messages.list_sms() == [sms]
     end
 
     test "get_sms!/1 returns the sms with given id" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert Messages.get_sms!(sms.id) == sms
     end
 
@@ -78,7 +35,7 @@ defmodule ShipchoiceBackend.MessagesTest do
     end
 
     test "update_sms/2 with valid data updates the sms" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert {:ok, sms} = Messages.update_sms(sms, @update_attrs)
       assert %SMS{} = sms
       assert sms.message == "some updated message"
@@ -87,19 +44,19 @@ defmodule ShipchoiceBackend.MessagesTest do
     end
 
     test "update_sms/2 with invalid data returns error changeset" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert {:error, %Ecto.Changeset{}} = Messages.update_sms(sms, @invalid_attrs)
       assert sms == Messages.get_sms!(sms.id)
     end
 
     test "delete_sms/1 deletes the sms" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert {:ok, %SMS{}} = Messages.delete_sms(sms)
       assert_raise Ecto.NoResultsError, fn -> Messages.get_sms!(sms.id) end
     end
 
     test "change_sms/1 returns a sms changeset" do
-      sms = sms_fixture()
+      sms = insert(:sms, @valid_attrs)
       assert %Ecto.Changeset{} = Messages.change_sms(sms)
     end
   end
@@ -107,7 +64,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   describe "sending message to shipment recipient via sms" do
     test "send_message_to_shipment/2 creates a sms & send it to recipient" do
       message = "Hello"
-      shipment = shipment_fixture()
+      shipment = insert(:shipment)
 
       with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
         assert {:ok, sms} = Messages.send_message_to_shipment(message, shipment)
@@ -120,7 +77,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   describe "when message already sent once" do
     test "send_message_to_shipment/2 returns error" do
       message = "Hello"
-      shipment = shipment_fixture()
+      shipment = insert(:shipment)
       _sms = shipment
       |> Ecto.build_assoc(:sms, %{message: message})
       |> Repo.insert!()
@@ -132,9 +89,9 @@ defmodule ShipchoiceBackend.MessagesTest do
 
   describe "sending all unsent shipments for single sender" do
     test "send_message_to_all_shipments_in_sender/1" do
-      shipment1 = shipment_fixture(%{shipment_number: "PORM000188508"})
-      _shipment2 = shipment_fixture(%{shipment_number: "PORM000188509"})
-      sender = sender_fixture(%{phone: shipment1.sender_phone})
+      shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
+      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
+      sender = insert(:sender, %{phone: shipment1.sender_phone})
 
       with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
         assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(sender)
@@ -150,7 +107,7 @@ defmodule ShipchoiceBackend.MessagesTest do
 
   describe "build_shipment_message/1" do
     test "builds message for shipment with kerry url & tracking number" do
-      shipment = shipment_fixture(%{shipment_number: "ABC0001"})
+      shipment = insert(:shipment, %{shipment_number: "ABC0001"})
       message = "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https://shypchoice.com/t/ABC0001"
       assert Messages.build_shipment_message(shipment) == message
     end
