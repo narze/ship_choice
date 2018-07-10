@@ -19,8 +19,6 @@ defmodule ShipChoice.MixProject do
       {:distillery, "~> 1.5", runtime: false},
       {:mix_test_watch, "~> 0.6", only: :dev, runtime: false},
       {:mock, "~> 0.3.0", only: :test},
-      {:comeonin, "~> 4.1"},
-      {:bcrypt_elixir, "~> 1.0"},
     ]
   end
 end

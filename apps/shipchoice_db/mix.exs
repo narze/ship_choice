@@ -40,6 +40,8 @@ defmodule ShipchoiceDb.Mixfile do
       {:ecto, "~> 2.1"},
       {:poison, "~> 3.1"},
       {:ex_machina, "~> 2.2", only: :test},
+      {:comeonin, "~> 4.1"},
+      {:bcrypt_elixir, "~> 1.0"},
     ]
   end
 

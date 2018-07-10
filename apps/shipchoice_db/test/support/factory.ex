@@ -40,6 +40,7 @@ defmodule ShipchoiceDb.Factory do
     %User{
       name: "Manassarn Manoonchai",
       username: "narze",
+      password: "password",
     }
   end
 end
