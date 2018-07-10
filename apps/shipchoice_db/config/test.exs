@@ -8,3 +8,5 @@ config :shipchoice_db, ShipchoiceDb.Repo,
   database: "shipchoice_db_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :bcrypt_elixir, log_rounds: 4

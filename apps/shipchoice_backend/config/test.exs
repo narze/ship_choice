@@ -5,3 +5,5 @@ use Mix.Config
 config :shipchoice_backend, ShipchoiceBackend.Endpoint,
   http: [port: 4001],
   server: false
+
+config :bcrypt_elixir, log_rounds: 4
