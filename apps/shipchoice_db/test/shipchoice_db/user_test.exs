@@ -11,6 +11,7 @@ defmodule ShipchoiceDb.UserTest do
   describe "factory" do
     test "factory is valid" do
       {:ok, inserted_user} = User.insert(params_for(:user))
+      {:error, _} = User.insert(params_for(:user))
 
       user = User.get(inserted_user.id)
 
