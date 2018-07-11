@@ -3,7 +3,7 @@ defmodule ShipchoiceDb.User do
   Ecto Schema representing users
   """
   use Ecto.Schema
-  import Ecto.{Changeset}
+  import Ecto.{Changeset, Query}
   alias ShipchoiceDb.{Repo, User}
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -85,5 +85,24 @@ defmodule ShipchoiceDb.User do
   def insert(attrs) do
     changeset = User.changeset(%User{}, attrs)
     Repo.insert(changeset)
+  end
+
+  def authenticate(username, password) do
+    user = get_by_username(username)
+
+    cond do
+      user && Comeonin.Bcrypt.checkpw(password, user.password_hash) ->
+        {:ok, user}
+      user ->
+        {:error, :unauthorized}
+      true ->
+        Comeonin.Bcrypt.dummy_checkpw()
+        {:error, :not_found}
+    end
+  end
+
+  def get_by_username(username) do
+    from(u in User, where: u.username == ^username)
+    |> Repo.one()
   end
 end

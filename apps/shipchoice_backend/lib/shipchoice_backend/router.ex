@@ -7,6 +7,7 @@ defmodule ShipchoiceBackend.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ShipchoiceBackend.Auth
   end
 
   pipeline :api do
@@ -28,6 +29,8 @@ defmodule ShipchoiceBackend.Router do
     post "/senders/:id/send_sms_to_shipments", SenderController, :send_sms_to_shipments
 
     get "/t/:number", TrackingController, :tracking
+
+    resources "/sessions", SessionController, only: [:new, :create]
   end
 
   # Other scopes may use custom stacks.

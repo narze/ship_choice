@@ -22,4 +22,9 @@ defmodule ShipchoiceDb.UserTest do
       assert user.password_hash != nil
     end
   end
+
+  test "authenticate/1" do
+    {:ok, user} = User.insert(params_for(:user, username: "username", password: "password"))
+    assert {:ok, %User{}} = User.authenticate("username", "password")
+  end
 end
