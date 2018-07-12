@@ -23,6 +23,7 @@ defmodule ShipchoiceBackend do
       import Plug.Conn
       import ShipchoiceBackend.Router.Helpers
       import ShipchoiceBackend.Gettext
+      import ShipchoiceBackend.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -48,6 +49,7 @@ defmodule ShipchoiceBackend do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import ShipchoiceBackend.Auth, only: [authenticate_user: 2]
     end
   end
 

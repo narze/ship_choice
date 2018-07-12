@@ -3,6 +3,8 @@ defmodule ShipchoiceBackend.SenderController do
 
   alias ShipchoiceBackend.Messages
 
+  plug :authenticate_user
+
   def index(conn, _params) do
     senders = ShipchoiceDb.Sender.all
     render conn, "index.html", senders: senders
@@ -13,9 +15,9 @@ defmodule ShipchoiceBackend.SenderController do
     render conn, "new.html", changeset: changeset
   end
 
-  def create(conn, params) do
+  def create(conn, %{"sender" => sender_to_insert}) do
     inserted_sender =
-      params["sender"]
+      sender_to_insert
       |> ShipchoiceDb.Sender.insert()
 
     case inserted_sender do
