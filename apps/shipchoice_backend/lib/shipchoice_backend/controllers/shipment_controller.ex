@@ -1,8 +1,9 @@
-require IEx
 defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
+
+  plug :authenticate_user
 
   def index(conn, _params) do
     shipments = ShipchoiceDb.Shipment.all

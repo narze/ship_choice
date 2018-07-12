@@ -1,4 +1,3 @@
-require IEx
 defmodule ShipchoiceBackend.ShipmentControllerTest do
   use ShipchoiceBackend.ConnCase
 
@@ -13,75 +12,111 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     :ok = Sandbox.checkout(Repo)
   end
 
-  test "GET /shipments", %{conn: conn} do
-    conn = get conn, "/shipments"
-    assert html_response(conn, 200) =~ "All Shipments"
-    assert html_response(conn, 200) =~ "Upload Kerry Report"
+  test "requires user authentication on all actions", %{conn: conn} do
+    Enum.each([
+      get(conn, shipment_path(conn, :index)),
+      get(conn, shipment_path(conn, :upload)),
+      post(conn, shipment_path(conn, :do_upload)),
+      post(conn, shipment_path(conn, :send_sms, 1)),
+    ], fn conn ->
+      assert html_response(conn, 302)
+      assert redirected_to(conn) == "/sessions/new"
+      assert get_flash(conn, :error) == "You must be signed in to access that page."
+      assert conn.halted
+    end)
   end
 
-  test "GET /shipments with existing shipments", %{conn: conn} do
-    shipments = [
-      %{shipment_number: "SHP0001"},
-      %{shipment_number: "SHP0002"},
-    ]
+  describe "with a signed in user" do
+    setup %{conn: conn, login_as: username} do
+      user = insert(:user, username: username)
+      conn = assign(conn, :current_user, user)
 
-    shipments
-    |> Enum.each(fn(shipment) -> ShipchoiceDb.Shipment.insert(shipment) end)
+      {:ok, conn: conn, user: user}
+    end
 
-    conn = get conn, "/shipments"
+    @tag login_as: "narze"
+    test "GET /shipments", %{conn: conn} do
+      conn = get conn, "/shipments"
+      assert html_response(conn, 200) =~ "All Shipments"
+      assert html_response(conn, 200) =~ "Upload Kerry Report"
+    end
 
-    assert html_response(conn, 200) =~ "SHP0001"
-    assert html_response(conn, 200) =~ "SHP0002"
-  end
+    @tag login_as: "narze"
+    test "GET /shipments with existing shipments", %{conn: conn} do
+      shipments = [
+        %{shipment_number: "SHP0001"},
+        %{shipment_number: "SHP0002"},
+      ]
 
-  test "GET /shipments/upload", %{conn: conn} do
-    conn = get conn, "/shipments/upload"
-    assert html_response(conn, 200) =~ "Upload Kerry Report"
-  end
+      shipments
+      |> Enum.each(fn(shipment) -> ShipchoiceDb.Shipment.insert(shipment) end)
 
-  test "POST /shipments/upload", %{conn: conn} do
-    conn = post conn, "/shipments/upload"
-    assert redirected_to(conn) == "/shipments/upload"
-    assert get_flash(conn, :error) == "Kerry Report File Needed"
-  end
+      conn = get conn, "/shipments"
 
-  test "POST /shipments/upload with xlsx file", %{conn: conn} do
-    upload = %Plug.Upload{
-      path: "test/fixtures/kerry.xlsx",
-      filename: "kerry.xlsx",
-    }
+      assert html_response(conn, 200) =~ "SHP0001"
+      assert html_response(conn, 200) =~ "SHP0002"
+    end
 
-    conn = post conn,
-                "/shipments/upload",
-                %{kerry_report: upload}
+    @tag login_as: "narze"
+    test "GET /shipments/upload", %{conn: conn} do
+      conn = get conn, "/shipments/upload"
+      assert html_response(conn, 200) =~ "Upload Kerry Report"
+    end
 
-    assert redirected_to(conn) == "/shipments"
-    assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
-    assert get_flash(conn, :info) =~ "13 Rows Processed."
+    @tag login_as: "narze"
+    test "POST /shipments/upload", %{conn: conn} do
+      conn = post conn, "/shipments/upload"
+      assert redirected_to(conn) == "/shipments/upload"
+      assert get_flash(conn, :error) == "Kerry Report File Needed"
+    end
 
-    assert length(ShipchoiceDb.Shipment.all) == 13
+    @tag login_as: "narze"
+    test "POST /shipments/upload with xlsx file", %{conn: conn, user: user} do
+      upload = %Plug.Upload{
+        path: "test/fixtures/kerry.xlsx",
+        filename: "kerry.xlsx",
+      }
 
-    # Upload again
-    conn2 = post conn,
-                "/shipments/upload",
-                %{kerry_report: upload}
+      conn = post conn,
+                  "/shipments/upload",
+                  %{kerry_report: upload}
 
-    assert redirected_to(conn2) == "/shipments"
-    assert get_flash(conn2, :info) =~ "Uploaded Kerry Report."
-    assert get_flash(conn2, :info) =~ "13 Rows Processed."
-
-    assert length(ShipchoiceDb.Shipment.all) == 13
-  end
-
-  test "POST /shipments/:id/send_sms", %{conn: conn} do
-    shipment = insert(:shipment)
-
-    with_mock Messages,
-              [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %SMS{}} end] do
-      conn = post conn, "/shipments/#{shipment.id}/send_sms"
       assert redirected_to(conn) == "/shipments"
-      assert get_flash(conn, :info) =~ "SMS Sent."
-      assert called Messages.send_message_to_shipment(:_, :_)
+      assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
+      assert get_flash(conn, :info) =~ "13 Rows Processed."
+
+      assert length(ShipchoiceDb.Shipment.all) == 13
+
+      # Recycle & manually assign current_user
+      saved_assigns = conn.assigns
+      conn =
+        conn
+        |> recycle()
+        |> Map.put(:assigns, saved_assigns)
+
+      # Upload again
+      conn2 = post conn,
+                  "/shipments/upload",
+                  %{kerry_report: upload}
+
+      assert redirected_to(conn2) == "/shipments"
+      assert get_flash(conn2, :info) =~ "Uploaded Kerry Report."
+      assert get_flash(conn2, :info) =~ "13 Rows Processed."
+
+      assert length(ShipchoiceDb.Shipment.all) == 13
+    end
+
+    @tag login_as: "narze"
+    test "POST /shipments/:id/send_sms", %{conn: conn} do
+      shipment = insert(:shipment)
+
+      with_mock Messages,
+                [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %SMS{}} end] do
+        conn = post conn, "/shipments/#{shipment.id}/send_sms"
+        assert redirected_to(conn) == "/shipments"
+        assert get_flash(conn, :info) =~ "SMS Sent."
+        assert called Messages.send_message_to_shipment(:_, :_)
+      end
     end
   end
 end
