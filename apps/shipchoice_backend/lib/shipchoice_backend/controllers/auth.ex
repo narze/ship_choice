@@ -27,6 +27,10 @@ defmodule ShipchoiceBackend.Auth do
     |> configure_session(renew: true)
   end
 
+  def logout(conn) do
+    configure_session(conn, drop: true)
+  end
+
   def authenticate_user(conn, _opts) do
     if conn.assigns[:current_user] do
       conn

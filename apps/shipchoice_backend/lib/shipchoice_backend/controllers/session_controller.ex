@@ -1,6 +1,7 @@
 defmodule ShipchoiceBackend.SessionController do
   use ShipchoiceBackend, :controller
 
+  alias ShipchoiceBackend.Auth
   alias ShipchoiceDb.User
 
   def new(conn, _params) do
@@ -20,9 +21,16 @@ defmodule ShipchoiceBackend.SessionController do
     end
   end
 
+  def delete(conn, _params) do
+    conn
+    |> Auth.logout()
+    |> put_flash(:info, "Logged Out.")
+    |> redirect(to: "/")
+  end
+
   defp sign_in(conn, username, password) do
     case User.authenticate(username, password) do
-      {:ok, user} -> {:ok, ShipchoiceBackend.Auth.login(conn, user)}
+      {:ok, user} -> {:ok, Auth.login(conn, user)}
       {:error, :unauthorized} -> {:error, :unauthorized, conn}
       {:error, :not_found} -> {:error, :not_found, conn}
     end
