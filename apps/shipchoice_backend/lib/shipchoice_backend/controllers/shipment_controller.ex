@@ -41,14 +41,14 @@ defmodule ShipchoiceBackend.ShipmentController do
     end
   end
 
-  def send_sms(conn, %{"id" => id}) do
+  def send_message(conn, %{"id" => id}) do
     shipment = ShipchoiceDb.Shipment.get(id)
     message = "Shipment #{shipment.shipment_number} is being sent."
 
-    {:ok, _sms} = Messages.send_message_to_shipment(message, shipment)
+    {:ok, _message} = Messages.send_message_to_shipment(message, shipment)
 
     conn
-    |> put_flash(:info, "SMS Sent.")
+    |> put_flash(:info, "Message Sent.")
     |> redirect(to: "/shipments")
   end
 end

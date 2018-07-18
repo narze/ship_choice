@@ -1,136 +1,135 @@
-require IEx
 defmodule ShipchoiceBackend.Messages do
   @moduledoc """
   The Messages context.
   """
 
   import Ecto.Query, warn: false
-  alias ShipchoiceDb.{Repo, SMS, Shipment, Sender}
+  alias ShipchoiceDb.{Repo, Message, Shipment, Sender}
 
   @doc """
-  Returns the list of sms.
+  Returns the list of messages.
 
   ## Examples
 
-      iex> list_sms()
-      [%SMS{}, ...]
+      iex> list_message()
+      [%Message{}, ...]
 
   """
-  def list_sms do
-    Repo.all(SMS)
+  def list_message do
+    Repo.all(Message)
   end
 
   @doc """
-  Gets a single sms.
+  Gets a single message.
 
-  Raises `Ecto.NoResultsError` if the Sms does not exist.
+  Raises `Ecto.NoResultsError` if the message does not exist.
 
   ## Examples
 
-      iex> get_sms!(123)
-      %SMS{}
+      iex> get_message!(123)
+      %Message{}
 
-      iex> get_sms!(456)
+      iex> get_message!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_sms!(id), do: Repo.get!(SMS, id)
+  def get_message!(id), do: Repo.get!(Message, id)
 
   @doc """
-  Creates a sms.
+  Creates a message.
 
   ## Examples
 
-      iex> create_sms(%{field: value})
-      {:ok, %SMS{}}
+      iex> create_message(%{field: value})
+      {:ok, %Message{}}
 
-      iex> create_sms(%{field: bad_value})
+      iex> create_message(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_sms(attrs \\ %{}) do
-    %SMS{}
-    |> SMS.changeset(attrs)
+  def create_message(attrs \\ %{}) do
+    %Message{}
+    |> Message.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a sms.
+  Updates a message.
 
   ## Examples
 
-      iex> update_sms(sms, %{field: new_value})
-      {:ok, %SMS{}}
+      iex> update_message(message, %{field: new_value})
+      {:ok, %Message{}}
 
-      iex> update_sms(sms, %{field: bad_value})
+      iex> update_message(message, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_sms(%SMS{} = sms, attrs) do
-    sms
-    |> SMS.changeset(attrs)
+  def update_message(%Message{} = message, attrs) do
+    message
+    |> Message.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a SMS.
+  Deletes a Message.
 
   ## Examples
 
-      iex> delete_sms(sms)
-      {:ok, %SMS{}}
+      iex> delete_message(message)
+      {:ok, %Message{}}
 
-      iex> delete_sms(sms)
+      iex> delete_message(message)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_sms(%SMS{} = sms) do
-    Repo.delete(sms)
+  def delete_message(%Message{} = message) do
+    Repo.delete(message)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking sms changes.
+  Returns an `%Ecto.Changeset{}` for tracking message changes.
 
   ## Examples
 
-      iex> change_sms(sms)
-      %Ecto.Changeset{source: %SMS{}}
+      iex> change_message(message)
+      %Ecto.Changeset{source: %Message{}}
 
   """
-  def change_sms(%SMS{} = sms) do
-    SMS.changeset(sms, %{})
+  def change_message(%Message{} = message) do
+    Message.changeset(message, %{})
   end
 
   @doc """
-  Creates a SMS & send the message to shipment recipient
+  Creates a message & send the message to shipment recipient
   """
   def send_message_to_shipment(message, %Shipment{} = shipment) do
     attrs = %{
       message: message
     }
 
-    existing_sms = Ecto.assoc(shipment, :sms)
+    existing_message = Ecto.assoc(shipment, :messages)
 
-    if Repo.aggregate(existing_sms, :count, :id) > 0 do
+    if Repo.aggregate(existing_message, :count, :id) > 0 do
       {:error, "Message already sent for this shipment"}
     else
-      sms = shipment
-      |> Ecto.build_assoc(:sms, attrs)
+      message = shipment
+      |> Ecto.build_assoc(:messages, attrs)
       |> Repo.insert!()
 
-      # TODO: Use the sms to send message
+      # TODO: Use the message to send message
       {:ok, _response} =
         SMSSender.send_message(
-          sms.message,
+          message.message,
           transform_phone_number(shipment.recipient_phone)
         )
 
-      {:ok, sms}
+      {:ok, message}
     end
   end
 
   @doc """
-  Send multiple SMS to all shipments in a sender
+  Send multiple Message to all shipments in a sender
   """
   def send_message_to_all_shipments_in_sender(%Sender{} = sender) do
     shipments = Sender.get_shipments(sender)

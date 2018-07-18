@@ -3,7 +3,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Shipment, SMS, Sender, Repo}
+  alias ShipchoiceDb.{Shipment, Message, Sender, Repo}
   alias ShipchoiceBackend.Messages
 
   import Mock
@@ -84,7 +84,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     end
 
     @tag login_as: "narze"
-    test "POST /senders/:id/send_sms_to_shipments", %{conn: conn} do
+    test "POST /senders/:id/send_message_to_shipments", %{conn: conn} do
       sender = %{name: "Foo", phone: "0863949474"}
 
       {:ok, sender} = Sender.insert(sender)
@@ -96,10 +96,10 @@ defmodule ShipchoiceBackend.SenderControllerTest do
                   send_message_to_all_shipments_in_sender: fn(sender) -> {:ok, "Sent"} end
                 ] do
         conn = post conn,
-                    "/senders/#{sender.id}/send_sms_to_shipments"
+                    "/senders/#{sender.id}/send_message_to_shipments"
 
         assert redirected_to(conn) == "/senders"
-        assert get_flash(conn, :info) =~ "Sent SMS to 2 shipments."
+        assert get_flash(conn, :info) =~ "Sent message to 2 shipments."
         assert called Messages.send_message_to_all_shipments_in_sender(:_)
       end
     end

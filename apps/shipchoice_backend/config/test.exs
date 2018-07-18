@@ -7,3 +7,5 @@ config :shipchoice_backend, ShipchoiceBackend.Endpoint,
   server: false
 
 config :bcrypt_elixir, log_rounds: 4
+
+config :logger, level: :error

@@ -32,14 +32,14 @@ defmodule ShipchoiceBackend.SenderController do
     end
   end
 
-  def send_sms_to_shipments(conn, %{"id" => id}) do
+  def send_message_to_shipments(conn, %{"id" => id}) do
     sender = ShipchoiceDb.Sender.get(id)
     count = ShipchoiceDb.Sender.count_shipments(sender)
     {:ok, result} = Messages.send_message_to_all_shipments_in_sender(sender)
     IO.inspect result
 
     conn
-    |> put_flash(:info, "Sent SMS to #{count} shipments.")
+    |> put_flash(:info, "Sent message to #{count} shipments.")
     |> redirect(to: "/senders")
   end
 end

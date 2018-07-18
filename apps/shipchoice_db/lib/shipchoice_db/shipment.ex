@@ -4,7 +4,7 @@ defmodule ShipchoiceDb.Shipment do
   """
   use Ecto.Schema
   import Ecto.Changeset
-  alias ShipchoiceDb.{Repo, Shipment, SMS}
+  alias ShipchoiceDb.{Repo, Shipment, Message}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -20,7 +20,7 @@ defmodule ShipchoiceDb.Shipment do
     field :recipient_address2, :string
     field :recipient_zip, :string
     field :metadata, :map
-    has_many :sms, SMS
+    has_many :messages, Message
 
     timestamps()
   end

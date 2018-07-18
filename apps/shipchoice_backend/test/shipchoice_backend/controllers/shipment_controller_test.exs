@@ -3,7 +3,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Shipment, SMS, Repo, Sender}
+  alias ShipchoiceDb.{Shipment, Message, Repo, Sender}
 
   import Mock
   import ShipchoiceDb.Factory
@@ -17,7 +17,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       get(conn, shipment_path(conn, :index)),
       get(conn, shipment_path(conn, :upload)),
       post(conn, shipment_path(conn, :do_upload)),
-      post(conn, shipment_path(conn, :send_sms, 1)),
+      post(conn, shipment_path(conn, :send_message, 1)),
     ], fn conn ->
       assert html_response(conn, 302)
       assert redirected_to(conn) == "/sessions/new"
@@ -107,14 +107,14 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "narze"
-    test "POST /shipments/:id/send_sms", %{conn: conn} do
+    test "POST /shipments/:id/send_message", %{conn: conn} do
       shipment = insert(:shipment)
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %SMS{}} end] do
-        conn = post conn, "/shipments/#{shipment.id}/send_sms"
+                [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %Message{}} end] do
+        conn = post conn, "/shipments/#{shipment.id}/send_message"
         assert redirected_to(conn) == "/shipments"
-        assert get_flash(conn, :info) =~ "SMS Sent."
+        assert get_flash(conn, :info) =~ "Message Sent."
         assert called Messages.send_message_to_shipment(:_, :_)
       end
     end

@@ -1,10 +1,10 @@
-defmodule ShipchoiceDb.SMS do
+defmodule ShipchoiceDb.Message do
   @moduledoc """
-  Ecto Schema representing SMS messages.
+  Ecto Schema representing messages.
   """
   use Ecto.Schema
   import Ecto.{Changeset}
-  alias ShipchoiceDb.{Repo, SMS, Shipment}
+  alias ShipchoiceDb.{Repo, Message, Shipment}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -20,16 +20,16 @@ defmodule ShipchoiceDb.SMS do
   end
 
   @doc """
-  Validates sms message data.
+  Validates message data.
 
   ## Examples
 
-      iex> changeset(%SMS{}, %{field: value})
-      %SMS{}
+      iex> changeset(%Message{}, %{field: value})
+      %Message{}
 
   """
-  def changeset(%SMS{} = sms, attrs \\ %{}) do
-    sms
+  def changeset(%Message{} = message, attrs \\ %{}) do
+    message
     |> cast(attrs, [
       :status,
       :message,
@@ -41,36 +41,36 @@ defmodule ShipchoiceDb.SMS do
   end
 
   @doc """
-  Get all sms messages
+  Get all messages
   """
   def all do
-    Repo.all(SMS)
+    Repo.all(Message)
   end
 
   @doc """
-  Retrieves a sms
+  Retrieves a message
 
   ### Examples
 
       iex> get(1)
-      %SMS{}
+      %Message{}
 
   """
   def get(id) do
-    Repo.get(SMS, id)
+    Repo.get(Message, id)
   end
 
   @doc """
-  Creates a sms
+  Creates a message
 
   ### Examples
 
       iex> insert(%{field: value})
-      {:ok, %SMS{}}
+      {:ok, %Message{}}
 
   """
   def insert(attrs) do
-    changeset = SMS.changeset(%SMS{}, attrs)
+    changeset = Message.changeset(%Message{}, attrs)
     Repo.insert(changeset)
   end
 end

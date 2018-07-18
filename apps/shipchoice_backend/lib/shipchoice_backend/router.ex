@@ -21,12 +21,12 @@ defmodule ShipchoiceBackend.Router do
     get "/shipments", ShipmentController, :index
     get "/shipments/upload", ShipmentController, :upload
     post "/shipments/upload", ShipmentController, :do_upload
-    post "/shipments/:id/send_sms", ShipmentController, :send_sms
+    post "/shipments/:id/send_message", ShipmentController, :send_message
 
     get "/senders", SenderController, :index
     get "/senders/new", SenderController, :new
     post "/senders", SenderController, :create
-    post "/senders/:id/send_sms_to_shipments", SenderController, :send_sms_to_shipments
+    post "/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments
 
     get "/t/:number", TrackingController, :tracking
 

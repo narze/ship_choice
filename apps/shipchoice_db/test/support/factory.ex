@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.Factory do
   use ExMachina.Ecto, repo: ShipchoiceDb.Repo
 
-  alias ShipchoiceDb.{Sender, Shipment, SMS, User}
+  alias ShipchoiceDb.{Sender, Shipment, Message, User}
 
   def sender_factory do
     %Sender{
@@ -28,8 +28,8 @@ defmodule ShipchoiceDb.Factory do
     }
   end
 
-  def sms_factory do
-    %SMS{
+  def message_factory do
+    %Message{
       status: "pending",
       message: "Hello",
       phone: "0812345678",
