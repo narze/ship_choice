@@ -9,7 +9,7 @@ defmodule ShipchoiceDb.SMS do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
-  schema "sms_messages" do
+  schema "message" do
     field :status, :string, default: "pending"
     field :message, :string
     field :phone, :string
