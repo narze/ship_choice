@@ -16,7 +16,9 @@ use Mix.Config
 config :shipchoice_backend, ShipchoiceBackend.Endpoint,
   load_from_system_env: true,
   http: [port: "${PORT}"],
+  url: [host: "${HOST}", port: "${PORT}"],
   check_origin: false,
+  secret_key_base: "${SECRET_KEY_BASE}",
   server: true,
   root: ".",
   cache_static_manifest: "priv/static/cache_manifest.json"
