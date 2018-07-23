@@ -48,6 +48,9 @@ release :shipchoice do
   set version: "0.1.0"
   set applications: [
     :runtime_tools,
+    :elixir_make,
+    :erlsom,
+    :parse_trans,
     shipchoice_backend: :permanent,
     shipchoice_db: :permanent,
     sms_sender: :permanent
