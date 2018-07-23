@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipchoice-deployment
+spec:
+  selector:
+    matchLabels:
+      app: shipchoice
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: shipchoice
+    spec:
+      containers:
+      - name: shipchoice
+        image: shipchoice:v1
+        ports:
+          - containerPort: 8080
+          # args: ["foreground"]
+        env:
+          - name: HOST
+            value: "shypchoice.com"
+          - name: SECRET_KEY_BASE
+            value: "184d56adc40455276617e159344fac997ad173c896d56aa77dfdb54993bd2591da18a07f08b35de6c6197ccc48e9e0fe4a60bc44e03744a5bcc4abc25494d"
+          - name: DB_USERNAME
+            value: "postgres"
+          - name: DB_PASSWORD
+            value: "postgres"
+          - name: DB_NAME
+            value: "shipchoice_db_dev"
+          - name: DB_HOSTNAME
+            value: "192.168.88.207"
