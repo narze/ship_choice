@@ -15,9 +15,9 @@ spec:
       containers:
         - name: shipchoice
           image: gcr.io/shipchoice-20180716/shipchoice:0.0.2
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
-            # args: ["foreground"]
           env:
             - name: HOST
               value: "shypchoice.com"
