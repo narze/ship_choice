@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipchoice-deployment
+spec:
+  selector:
+    matchLabels:
+      app: shipchoice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: shipchoice
+    spec:
+      containers:
+        - name: shipchoice
+          image: gcr.io/shipchoice-20180716/shipchoice:v1
+          ports:
+            - containerPort: 8080
+            # args: ["foreground"]
+          env:
+            - name: HOST
+              value: "shypchoice.com"
+            - name: DB_NAME
+              value: "shipchoice_db_prod"
+            - name: DB_HOSTNAME
+              value: 127.0.0.1
+            # [START cloudsql_secrets]
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            # [END cloudsql_secrets]
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-credentials
+                  key: secret-key-base
+
+        # [START proxy_container]
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=shipchoice-20180716:asia-southeast1:shipchoice=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        # [END proxy_container]
+
+      # [START volumes]
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      # [END volumes]
