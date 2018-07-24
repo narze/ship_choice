@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: shipchoice
-        image: shipchoice:v1
+        image: shipchoice:latest
+        imagePullPolicy: Never
         ports:
           - containerPort: 8080
           # args: ["foreground"]
@@ -28,6 +29,6 @@ spec:
           - name: DB_PASSWORD
             value: "postgres"
           - name: DB_NAME
-            value: "shipchoice_db_dev"
+            value: "shipchoice_db_prod"
           - name: DB_HOSTNAME
-            value: "192.168.88.207"
+            value: "10.0.2.2"
