@@ -55,5 +55,9 @@ release :shipchoice do
     shipchoice_db: :permanent,
     sms_sender: :permanent
   ]
+  set commands: [
+    "migrate": "rel/commands/migrate.sh",
+    "seed": "rel/commands/seed.sh"
+  ]
 end
 
