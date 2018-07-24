@@ -42,6 +42,21 @@ spec:
                 secretKeyRef:
                   name: shipchoice-credentials
                   key: secret-key-base
+            - name: APITEL_SENDER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-apitel-credentials
+                  key: apitel-sender-id
+            - name: APITEL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-apitel-credentials
+                  key: apitel-api-key
+            - name: APITEL_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-apitel-credentials
+                  key: apitel-api-secret
 
         # [START proxy_container]
         - name: cloudsql-proxy

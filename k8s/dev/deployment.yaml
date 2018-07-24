@@ -32,3 +32,9 @@ spec:
             value: "shipchoice_db_prod"
           - name: DB_HOSTNAME
             value: "10.0.2.2"
+          - name: APITEL_SENDER_ID
+            value: ATSMS
+          - name: APITEL_API_KEY
+            value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          - name: APITEL_API_SECRET
+            value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

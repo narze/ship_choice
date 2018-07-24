@@ -30,6 +30,6 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :sms_sender,
-  apitel_sender_id: System.get_env("APITEL_SENDER_ID"),
-  apitel_api_key: System.get_env("APITEL_API_KEY"),
-  apitel_api_secret: System.get_env("APITEL_API_SECRET")
+  apitel_sender_id: "${APITEL_SENDER_ID}",
+  apitel_api_key: "${APITEL_API_KEY}",
+  apitel_api_secret: "${APITEL_API_SECRET}"
