@@ -4,10 +4,14 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-lg-8">
     <%= pagination_links @page %>
   </div>
-
+  <div class="col-lg-4">
+    <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
+  </div>
+</div>
+<div class="row">
   <div class="col-lg-12">
     <table class="table">
       <thead>
@@ -24,10 +28,5 @@
         <% end %>
       </tbody>
     </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col-lg-12">
-    <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary" %>
   </div>
 </div>
