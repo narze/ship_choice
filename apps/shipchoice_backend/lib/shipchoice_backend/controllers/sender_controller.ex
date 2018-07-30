@@ -5,9 +5,14 @@ defmodule ShipchoiceBackend.SenderController do
 
   plug :authenticate_user
 
-  def index(conn, _params) do
-    senders = ShipchoiceDb.Sender.all
-    render conn, "index.html", senders: senders
+  def index(conn, params) do
+    page =
+      ShipchoiceDb.Sender
+      |> ShipchoiceDb.Repo.paginate(params)
+
+    render conn, "index.html",
+      senders: page.entries,
+      page: page
   end
 
   def new(conn, _params) do
