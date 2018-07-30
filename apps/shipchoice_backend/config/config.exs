@@ -25,6 +25,10 @@ config :logger, :console,
 config :shipchoice_backend, :generators,
   context_app: :shipchoice_backend
 
+config :scrivener_html,
+  routes_helper: MyApp.Router.Helpers,
+  view_style: :bootstrap_v4
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
