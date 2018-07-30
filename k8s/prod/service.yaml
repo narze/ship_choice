@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: shipchoice-service
+  name: shipchoice
+  labels:
+    app: shipchoice
 spec:
-  ports:
-    - port: 80
-      targetPort: 8080
-      protocol: TCP
-      name: http
+  type: NodePort
   selector:
     app: shipchoice
-  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080

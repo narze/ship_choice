@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: shipchoice
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "shypchoice"
+spec:
+  backend:
+    serviceName: shipchoice
+    servicePort: 8080
