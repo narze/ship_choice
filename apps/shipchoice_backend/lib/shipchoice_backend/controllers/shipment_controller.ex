@@ -5,9 +5,17 @@ defmodule ShipchoiceBackend.ShipmentController do
 
   plug :authenticate_user
 
-  def index(conn, _params) do
-    shipments = ShipchoiceDb.Shipment.all
-    render conn, "index.html", shipments: shipments
+  def index(conn, params) do
+    page =
+      ShipchoiceDb.Shipment
+      |> ShipchoiceDb.Repo.paginate(params)
+
+    render conn, "index.html",
+      shipments: page.entries,
+      page_number: page.page_number,
+      page_size: page.page_size,
+      total_pages: page.total_pages,
+      total_entries: page.total_entries
   end
 
   def upload(conn, _params) do
