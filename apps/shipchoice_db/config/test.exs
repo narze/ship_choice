@@ -7,7 +7,8 @@ config :shipchoice_db, ShipchoiceDb.Repo,
   password: "postgres",
   database: "shipchoice_db_test",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  ownership_timeout: 999999
 
 config :bcrypt_elixir, log_rounds: 4
 

@@ -1,4 +1,3 @@
-require IEx
 defmodule ShipchoiceBackend.SenderControllerTest do
   use ShipchoiceBackend.ConnCase
 
