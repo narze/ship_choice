@@ -24,7 +24,7 @@ defmodule ShipchoiceBackend.Mixfile do
   def application do
     [
       mod: {ShipchoiceBackend.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :sentry]
     ]
   end
 
