@@ -16,7 +16,7 @@ defmodule ShipChoice.MixProject do
   # Run "mix help deps" for examples and options.
   defp deps do
     [
-      {:distillery, "~> 1.5", runtime: false},
+      {:distillery, "~> 2.0-pre"},
       {:mix_test_watch, "~> 0.6", only: :dev, runtime: false},
       {:mock, "~> 0.3.0", only: :test},
       {:sentry, "~> 6.4"},
