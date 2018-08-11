@@ -147,6 +147,24 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "narze"
+    test "omits tracking url if url shorten fails", %{conn: conn} do
+      shipment = insert(:shipment)
+      expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
+
+      with_mock Messages,
+                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
+        with_mock URLShortener,
+                [shorten_url: fn(_url) -> {:error, "FAILURE"} end] do
+          conn = post conn, "/shipments/#{shipment.id}/send_message"
+          assert redirected_to(conn) == "/shipments"
+          assert get_flash(conn, :info) =~ "Message Sent."
+          assert called URLShortener.shorten_url(shipment |> Shipment.tracking_url)
+          assert called Messages.send_message_to_shipment(expected_message, :_, :_)
+        end
+      end
+    end
+
+    @tag login_as: "narze"
     test "POST send_message when already have one message", %{conn: conn} do
       shipment = insert(:shipment, messages: [build(:message)])
 
