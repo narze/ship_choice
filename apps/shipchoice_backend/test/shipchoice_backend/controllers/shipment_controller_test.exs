@@ -3,7 +3,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Shipment, Message, Repo, Sender}
+  alias ShipchoiceDb.{Shipment, Message, Repo}
 
   import Mock
   import ShipchoiceDb.Factory
@@ -111,6 +111,27 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       shipment = insert(:shipment)
       shortened_url = "http://short.url/abc"
       expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{shortened_url}"
+
+      with_mock Messages,
+                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
+        with_mock URLShortener,
+                [shorten_url: fn(_url) -> {:ok, shortened_url} end] do
+          conn = post conn, "/shipments/#{shipment.id}/send_message"
+          assert redirected_to(conn) == "/shipments"
+          assert get_flash(conn, :info) =~ "Message Sent."
+          assert called URLShortener.shorten_url(shipment |> Shipment.tracking_url)
+          assert called Messages.send_message_to_shipment(expected_message, :_, :_)
+        end
+      end
+    end
+
+    @tag login_as: "narze"
+    test "trims sender name to make message not longer than 70 chars", %{conn: conn} do
+      shipment = insert(:shipment, sender_name: String.duplicate("ที่", 20))
+      shortened_url = "short.url/abcd"
+      expected_message = "Kerry กำลังนำส่งพัสดุจาก #{String.duplicate("ที่", 10)} #{shortened_url}"
+
+      assert String.to_charlist(expected_message) |> length() == 70
 
       with_mock Messages,
                 [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do

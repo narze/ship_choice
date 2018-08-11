@@ -55,9 +55,23 @@ defmodule ShipchoiceBackend.ShipmentController do
         |> Shipment.tracking_url
         |> URLShortener.shorten_url do
         {:ok, tracking_url} ->
-          "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{tracking_url}"
+          sender_name_max_length = 70 - 26 - String.length(tracking_url)
+          sliced_sender_name =
+            shipment.sender_name
+            |> String.to_charlist
+            |> Enum.slice(0..sender_name_max_length - 1)
+            |> to_string()
+
+          "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name} #{tracking_url}"
         _ ->
-          "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
+          sender_name_max_length = 70 - 25
+          sliced_sender_name =
+            shipment.sender_name
+            |> String.to_charlist
+            |> Enum.slice(0..sender_name_max_length - 1)
+            |> to_string()
+
+          "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name}"
       end
 
     result = Messages.send_message_to_shipment(message, shipment, resend: true)
