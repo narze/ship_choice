@@ -53,7 +53,8 @@ release :shipchoice do
     :parse_trans,
     shipchoice_backend: :permanent,
     shipchoice_db: :permanent,
-    sms_sender: :permanent
+    sms_sender: :permanent,
+    url_shortener: :permanent
   ]
   set commands: [
     "migrate": "rel/commands/migrate.sh",
