@@ -167,4 +167,8 @@ defmodule ShipchoiceDb.Shipment do
   defp sanitize_phone(phone) do
     String.replace(phone, ~r/\D/, "", global: true)
   end
+
+  def tracking_url(%Shipment{} = shipment) do
+    "http://shypchoice.com/t/#{shipment.shipment_number}"
+  end
 end

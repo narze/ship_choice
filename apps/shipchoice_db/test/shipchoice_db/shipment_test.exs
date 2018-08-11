@@ -1,5 +1,6 @@
 defmodule ShipchoiceDb.ShipmentTest do
   use ExUnit.Case
+  import ShipchoiceDb.Factory
   alias ShipchoiceDb.{Shipment, Repo}
   alias Ecto.Adapters.SQL.Sandbox
 
@@ -246,6 +247,17 @@ defmodule ShipchoiceDb.ShipmentTest do
       }
 
       assert Shipment.parse(shipment_data) == expected_map
+    end
+  end
+
+  describe "tracking_url/1" do
+    test "returns shipment's tracking url" do
+      shipment = insert(:shipment)
+      tracking_url =
+        shipment
+        |> Shipment.tracking_url()
+
+      assert tracking_url == "http://shypchoice.com/t/#{shipment.shipment_number}"
     end
   end
 end

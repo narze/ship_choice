@@ -2,12 +2,13 @@ defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
+  alias ShipchoiceDb.Shipment
 
   plug :authenticate_user
 
   def index(conn, params) do
     page =
-      ShipchoiceDb.Shipment
+      Shipment
       |> ShipchoiceDb.Repo.paginate(params)
 
     render conn, "index.html",
@@ -36,9 +37,9 @@ defmodule ShipchoiceBackend.ShipmentController do
           Enum.zip(header, row) |> Enum.into(%{})
         end
       )
-      |> Enum.map(&ShipchoiceDb.Shipment.parse/1)
+      |> Enum.map(&Shipment.parse/1)
 
-      num = ShipchoiceDb.Shipment.insert_list(records)
+      num = Shipment.insert_list(records)
 
       conn
       |> put_flash(:info, "Uploaded Kerry Report. #{num} Rows Processed.")
@@ -47,8 +48,17 @@ defmodule ShipchoiceBackend.ShipmentController do
   end
 
   def send_message(conn, %{"id" => id}) do
-    shipment = ShipchoiceDb.Shipment.get(id)
-    message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
+    shipment = Shipment.get(id)
+
+    message =
+      case shipment
+        |> Shipment.tracking_url
+        |> URLShortener.shorten_url do
+        {:ok, tracking_url} ->
+          "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{tracking_url}"
+        _ ->
+          "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
+      end
 
     result = Messages.send_message_to_shipment(message, shipment, resend: true)
     case result do
