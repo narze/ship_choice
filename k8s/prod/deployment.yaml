@@ -57,6 +57,16 @@ spec:
                 secretKeyRef:
                   name: shipchoice-apitel-credentials
                   key: apitel-api-secret
+            - name: BITLY_GROUP_GUID
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-bitly-credentials
+                  key: bitly-group-guid
+            - name: BITLY_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: shipchoice-bitly-credentials
+                  key: bitly-access-token
 
         # [START proxy_container]
         - name: cloudsql-proxy
