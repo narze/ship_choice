@@ -1,0 +1,34 @@
+[
+  {
+    "request": {
+      "body": "{\n        \"group_guid\": \"B99fhZ3f0mnx\",\n        \"domain\": \"bit.ly\",\n        \"long_url\": \"https://shypchoice.com\"\n      }",
+      "headers": {
+        "Host": "api-ssl.bitly.com",
+        "Authorization": "Bearer 71899553e6584c97e96998c2dfd78e62b9bf165f",
+        "Content-Type": "application/json"
+      },
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "https://api-ssl.bitly.com/v4/shorten"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"message\":\"FORBIDDEN\",\"resource\":\"bitlinks\",\"description\":\"You are currently forbidden to access this resource.\"}",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Sat, 11 Aug 2018 17:20:41 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "114",
+        "Connection": "keep-alive",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "X-XSS-Protection": "1; mode=blockFilter",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "default-src 'none"
+      },
+      "status_code": 403,
+      "type": "ok"
+    }
+  }
+]
