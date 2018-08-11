@@ -8,12 +8,12 @@ defmodule URLShortener do
   """
   def shorten_url(url) do
     access_token = Application.fetch_env!(:url_shortener, :bitly_access_token)
-    group_uuid = Application.fetch_env!(:url_shortener, :bitly_group_uuid)
+    group_guid = Application.fetch_env!(:url_shortener, :bitly_group_guid)
 
     case HTTPoison.post(
       "https://api-ssl.bitly.com/v4/shorten",
       "{
-        \"group_guid\": \"#{group_uuid}\",
+        \"group_guid\": \"#{group_guid}\",
         \"domain\": \"bit.ly\",
         \"long_url\": \"#{url}\"
       }",

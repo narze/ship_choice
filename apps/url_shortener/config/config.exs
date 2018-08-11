@@ -3,7 +3,7 @@
 use Mix.Config
 
 config :url_shortener,
-  bitly_group_uuid: System.get_env("BITLY_GROUP_UUID"),
+  bitly_group_guid: System.get_env("BITLY_GROUP_GUID"),
   bitly_access_token: System.get_env("BITLY_ACCESS_TOKEN")
 
 import_config "#{Mix.env}.exs"
