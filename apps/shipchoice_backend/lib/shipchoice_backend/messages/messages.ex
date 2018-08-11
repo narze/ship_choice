@@ -104,13 +104,17 @@ defmodule ShipchoiceBackend.Messages do
   Creates a message & send the message to shipment recipient
   """
   def send_message_to_shipment(message, %Shipment{} = shipment) do
+    send_message_to_shipment(message, shipment, resend: false)
+  end
+
+  def send_message_to_shipment(message, %Shipment{} = shipment, [resend: resend]) do
     attrs = %{
       message: message
     }
 
     existing_message = Ecto.assoc(shipment, :messages)
 
-    if Repo.aggregate(existing_message, :count, :id) > 0 do
+    if !resend && Repo.aggregate(existing_message, :count, :id) > 0 do
       {:error, "Message already sent for this shipment"}
     else
       message = shipment

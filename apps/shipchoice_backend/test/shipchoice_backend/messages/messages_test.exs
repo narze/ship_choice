@@ -62,7 +62,7 @@ defmodule ShipchoiceBackend.MessagesTest do
   end
 
   describe "sending message to shipment recipient via message" do
-    test "send_message_to_shipment/2 creates a message & send it to recipient" do
+    test "send_message_to_shipment/3 creates a message & send it to recipient" do
       message_to_send = "Hello"
       shipment = insert(:shipment)
 
@@ -75,15 +75,25 @@ defmodule ShipchoiceBackend.MessagesTest do
   end
 
   describe "when message already sent once" do
-    test "send_message_to_shipment/2 returns error" do
+    test "send_message_to_shipment/3 returns error" do
       message = "Hello"
-      shipment = insert(:shipment)
-      _message = shipment
-      |> Ecto.build_assoc(:messages, %{message: message})
-      |> Repo.insert!()
+      shipment = insert(:shipment, messages: [build(:message)])
 
       assert {:error, "Message already sent for this shipment"}
         = Messages.send_message_to_shipment(message, shipment)
+    end
+  end
+
+  describe "when having option resend: true" do
+    test "send_message_to_shipment/3 creates a message" do
+      message_to_send = "Hello"
+      shipment = insert(:shipment)
+
+      with_mock SMSSender, [send_message: fn(message_to_send, _phone_number) -> {:ok, message_to_send} end] do
+        assert {:ok, message} = Messages.send_message_to_shipment(message_to_send, shipment, resend: true)
+        assert message.shipment_id == shipment.id
+        assert called SMSSender.send_message(message_to_send, "+66812345678")
+      end
     end
   end
 

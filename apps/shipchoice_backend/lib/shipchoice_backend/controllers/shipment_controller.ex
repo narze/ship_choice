@@ -50,10 +50,16 @@ defmodule ShipchoiceBackend.ShipmentController do
     shipment = ShipchoiceDb.Shipment.get(id)
     message = "Shipment #{shipment.shipment_number} is being sent."
 
-    {:ok, _message} = Messages.send_message_to_shipment(message, shipment)
-
-    conn
-    |> put_flash(:info, "Message Sent.")
-    |> redirect(to: "/shipments")
+    result = Messages.send_message_to_shipment(message, shipment, resend: true)
+    case result do
+      {:ok, _message} ->
+        conn
+        |> put_flash(:info, "Message Sent.")
+        |> redirect(to: "/shipments")
+      {:error, error} ->
+        conn
+        |> put_flash(:error, error)
+        |> redirect(to: "/shipments")
+    end
   end
 end

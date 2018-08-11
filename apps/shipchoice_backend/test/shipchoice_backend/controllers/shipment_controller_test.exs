@@ -111,11 +111,39 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       shipment = insert(:shipment)
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}) -> {:ok, %Message{}} end] do
+                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
         conn = post conn, "/shipments/#{shipment.id}/send_message"
         assert redirected_to(conn) == "/shipments"
         assert get_flash(conn, :info) =~ "Message Sent."
-        assert called Messages.send_message_to_shipment(:_, :_)
+        assert called Messages.send_message_to_shipment(:_, :_, :_)
+      end
+    end
+
+    @tag login_as: "narze"
+    test "POST send_message when already have one message", %{conn: conn} do
+      shipment = insert(:shipment, messages: [build(:message)])
+
+      with_mock Messages,
+                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
+        conn = post conn, "/shipments/#{shipment.id}/send_message"
+        assert redirected_to(conn) == "/shipments"
+        assert get_flash(conn, :info) =~ "Message Sent."
+        assert called Messages.send_message_to_shipment(:_, :_, :_)
+      end
+    end
+
+    @tag login_as: "narze"
+    test "POST send_message when send_message_to_shipment returns error", %{conn: conn} do
+      shipment = insert(:shipment, messages: [build(:message)])
+
+      msg = "Unexpected error occurred."
+
+      with_mock Messages,
+                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:error, msg} end] do
+        conn = post conn, "/shipments/#{shipment.id}/send_message"
+        assert redirected_to(conn) == "/shipments"
+        assert get_flash(conn, :error) =~ msg
+        assert called Messages.send_message_to_shipment(:_, :_, :_)
       end
     end
   end
