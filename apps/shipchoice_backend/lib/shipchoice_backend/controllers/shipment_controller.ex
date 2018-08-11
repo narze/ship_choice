@@ -48,7 +48,7 @@ defmodule ShipchoiceBackend.ShipmentController do
 
   def send_message(conn, %{"id" => id}) do
     shipment = ShipchoiceDb.Shipment.get(id)
-    message = "Shipment #{shipment.shipment_number} is being sent."
+    message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
 
     result = Messages.send_message_to_shipment(message, shipment, resend: true)
     case result do

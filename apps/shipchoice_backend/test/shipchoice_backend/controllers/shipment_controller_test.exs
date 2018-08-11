@@ -115,7 +115,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
         conn = post conn, "/shipments/#{shipment.id}/send_message"
         assert redirected_to(conn) == "/shipments"
         assert get_flash(conn, :info) =~ "Message Sent."
-        assert called Messages.send_message_to_shipment(:_, :_, :_)
+        assert called Messages.send_message_to_shipment("Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}", :_, :_)
       end
     end
 
