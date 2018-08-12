@@ -19,7 +19,7 @@ defmodule ShipChoice.MixProject do
       {:distillery, "~> 2.0-pre"},
       {:mix_test_watch, "~> 0.6", only: :dev, runtime: false},
       {:mock, "~> 0.3.0", only: :test},
-      {:sentry, "~> 6.4"},
+      {:sentry, "~> 6.4"}
     ]
   end
 end

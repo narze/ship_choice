@@ -13,25 +13,27 @@ defmodule ShipchoiceBackend.SessionControllerTest do
       conn
       |> bypass_through(ShipchoiceBackend.Router, :browser)
       |> get("/")
+
     {:ok, %{conn: conn}}
   end
 
   test "GET /sessions/new", %{conn: conn} do
-    conn = get conn, "/sessions/new"
+    conn = get(conn, "/sessions/new")
     assert html_response(conn, 200) =~ "Sign In"
   end
 
   test "POST /sessions", %{conn: conn} do
-    {:ok, user} = ShipchoiceDb.User.insert(params_for(:user, username: "username", password: "password"))
+    {:ok, user} =
+      ShipchoiceDb.User.insert(params_for(:user, username: "username", password: "password"))
 
-    conn = post conn, "/sessions", %{"username" => "username", "password" => "password"}
+    conn = post(conn, "/sessions", %{"username" => "username", "password" => "password"})
     assert redirected_to(conn) == "/"
     assert get_flash(conn, :info) =~ "Signed In Successfully."
   end
 
   describe "logout" do
     setup %{conn: conn} do
-      user_id = Ecto.UUID.generate
+      user_id = Ecto.UUID.generate()
 
       conn =
         conn
@@ -41,7 +43,7 @@ defmodule ShipchoiceBackend.SessionControllerTest do
     end
 
     test "DELETE /sessions", %{conn: conn, user_id: user_id} do
-      conn = delete conn, "/sessions/#{user_id}"
+      conn = delete(conn, "/sessions/#{user_id}")
       assert redirected_to(conn) == "/"
       assert get_flash(conn, :info) =~ "Logged Out."
       refute get_session(conn, :user_id)

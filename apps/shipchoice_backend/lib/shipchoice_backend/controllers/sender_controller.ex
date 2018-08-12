@@ -3,21 +3,24 @@ defmodule ShipchoiceBackend.SenderController do
 
   alias ShipchoiceBackend.Messages
 
-  plug :authenticate_user
+  plug(:authenticate_user)
 
   def index(conn, params) do
     page =
       ShipchoiceDb.Sender
       |> ShipchoiceDb.Repo.paginate(params)
 
-    render conn, "index.html",
+    render(
+      conn,
+      "index.html",
       senders: page.entries,
       page: page
+    )
   end
 
   def new(conn, _params) do
     changeset = ShipchoiceDb.Sender.changeset(%ShipchoiceDb.Sender{})
-    render conn, "new.html", changeset: changeset
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"sender" => sender_to_insert}) do
@@ -30,6 +33,7 @@ defmodule ShipchoiceBackend.SenderController do
         conn
         |> put_flash(:info, "Added New Sender.")
         |> redirect(to: "/senders")
+
       _ ->
         conn
         |> put_flash(:error, "Error occurred")
@@ -41,7 +45,7 @@ defmodule ShipchoiceBackend.SenderController do
     sender = ShipchoiceDb.Sender.get(id)
     count = ShipchoiceDb.Sender.count_shipments(sender)
     {:ok, result} = Messages.send_message_to_all_shipments_in_sender(sender)
-    IO.inspect result
+    IO.inspect(result)
 
     conn
     |> put_flash(:info, "Sent message to #{count} shipments.")

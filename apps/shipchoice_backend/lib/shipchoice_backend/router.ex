@@ -4,35 +4,36 @@ defmodule ShipchoiceBackend.Router do
   use Sentry.Plug
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug ShipchoiceBackend.Auth
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+    plug(ShipchoiceBackend.Auth)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", ShipchoiceBackend do
-    pipe_through :browser # Use the default browser stack
+    # Use the default browser stack
+    pipe_through(:browser)
 
-    get "/", PageController, :index
-    get "/shipments", ShipmentController, :index
-    get "/shipments/upload", ShipmentController, :upload
-    post "/shipments/upload", ShipmentController, :do_upload
-    post "/shipments/:id/send_message", ShipmentController, :send_message
+    get("/", PageController, :index)
+    get("/shipments", ShipmentController, :index)
+    get("/shipments/upload", ShipmentController, :upload)
+    post("/shipments/upload", ShipmentController, :do_upload)
+    post("/shipments/:id/send_message", ShipmentController, :send_message)
 
-    get "/senders", SenderController, :index
-    get "/senders/new", SenderController, :new
-    post "/senders", SenderController, :create
-    post "/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments
+    get("/senders", SenderController, :index)
+    get("/senders/new", SenderController, :new)
+    post("/senders", SenderController, :create)
+    post("/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments)
 
-    get "/t/:number", TrackingController, :tracking
+    get("/t/:number", TrackingController, :tracking)
 
-    resources "/sessions", SessionController, only: [:new, :create, :delete]
+    resources("/sessions", SessionController, only: [:new, :create, :delete])
   end
 
   # Other scopes may use custom stacks.

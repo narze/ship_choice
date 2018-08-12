@@ -107,7 +107,7 @@ defmodule ShipchoiceBackend.Messages do
     send_message_to_shipment(message, shipment, resend: false)
   end
 
-  def send_message_to_shipment(message, %Shipment{} = shipment, [resend: resend]) do
+  def send_message_to_shipment(message, %Shipment{} = shipment, resend: resend) do
     attrs = %{
       message: message
     }
@@ -117,9 +117,10 @@ defmodule ShipchoiceBackend.Messages do
     if !resend && Repo.aggregate(existing_message, :count, :id) > 0 do
       {:error, "Message already sent for this shipment"}
     else
-      message = shipment
-      |> Ecto.build_assoc(:messages, attrs)
-      |> Repo.insert!()
+      message =
+        shipment
+        |> Ecto.build_assoc(:messages, attrs)
+        |> Repo.insert!()
 
       # TODO: Use the message to send message
       {:ok, _response} =
@@ -138,9 +139,12 @@ defmodule ShipchoiceBackend.Messages do
   def send_message_to_all_shipments_in_sender(%Sender{} = sender) do
     shipments = Sender.get_shipments(sender)
 
-    messages_sent_count = shipments
-    |> Enum.map(fn(shipment) -> send_message_to_shipment(build_shipment_message(shipment), shipment) end)
-    |> Enum.count(fn({result, _}) -> result == :ok end)
+    messages_sent_count =
+      shipments
+      |> Enum.map(fn shipment ->
+        send_message_to_shipment(build_shipment_message(shipment), shipment)
+      end)
+      |> Enum.count(fn {result, _} -> result == :ok end)
 
     {:ok, "Sent to #{messages_sent_count} shipments"}
   end
@@ -151,6 +155,8 @@ defmodule ShipchoiceBackend.Messages do
   end
 
   def build_shipment_message(shipment) do
-    "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https://shypchoice.com/t/#{shipment.shipment_number}"
+    "สินค้ากำลังนำส่งโดย Kerry Express ติดตามสถานะจาก https://shypchoice.com/t/#{
+      shipment.shipment_number
+    }"
   end
 end

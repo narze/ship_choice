@@ -31,7 +31,7 @@ defmodule URLShortener.MixProject do
       # {:sibling_app_in_umbrella, in_umbrella: true},
       {:exvcr, "~> 0.10", only: :test},
       {:httpoison, "~> 1.0"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 3.1"}
     ]
   end
 end

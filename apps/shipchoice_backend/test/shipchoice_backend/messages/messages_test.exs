@@ -9,8 +9,16 @@ defmodule ShipchoiceBackend.MessagesTest do
   describe "message" do
     alias ShipchoiceDb.{Message}
 
-    @valid_attrs %{message: "some message", phone: "some phone", sent_at: ~N[2010-04-17 14:00:00.000000]}
-    @update_attrs %{message: "some updated message", phone: "some updated phone", sent_at: ~N[2011-05-18 15:01:01.000000]}
+    @valid_attrs %{
+      message: "some message",
+      phone: "some phone",
+      sent_at: ~N[2010-04-17 14:00:00.000000]
+    }
+    @update_attrs %{
+      message: "some updated message",
+      phone: "some updated phone",
+      sent_at: ~N[2011-05-18 15:01:01.000000]
+    }
     @invalid_attrs %{message: nil, phone: nil, sent_at: nil}
 
     test "list_message/0 returns all message" do
@@ -66,10 +74,11 @@ defmodule ShipchoiceBackend.MessagesTest do
       message_to_send = "Hello"
       shipment = insert(:shipment)
 
-      with_mock SMSSender, [send_message: fn(message_to_send, _phone_number) -> {:ok, message_to_send} end] do
+      with_mock SMSSender,
+        send_message: fn message_to_send, _phone_number -> {:ok, message_to_send} end do
         assert {:ok, message} = Messages.send_message_to_shipment(message_to_send, shipment)
         assert message.shipment_id == shipment.id
-        assert called SMSSender.send_message(message_to_send, "+66812345678")
+        assert called(SMSSender.send_message(message_to_send, "+66812345678"))
       end
     end
   end
@@ -79,8 +88,8 @@ defmodule ShipchoiceBackend.MessagesTest do
       message = "Hello"
       shipment = insert(:shipment, messages: [build(:message)])
 
-      assert {:error, "Message already sent for this shipment"}
-        = Messages.send_message_to_shipment(message, shipment)
+      assert {:error, "Message already sent for this shipment"} =
+               Messages.send_message_to_shipment(message, shipment)
     end
   end
 
@@ -89,10 +98,13 @@ defmodule ShipchoiceBackend.MessagesTest do
       message_to_send = "Hello"
       shipment = insert(:shipment)
 
-      with_mock SMSSender, [send_message: fn(message_to_send, _phone_number) -> {:ok, message_to_send} end] do
-        assert {:ok, message} = Messages.send_message_to_shipment(message_to_send, shipment, resend: true)
+      with_mock SMSSender,
+        send_message: fn message_to_send, _phone_number -> {:ok, message_to_send} end do
+        assert {:ok, message} =
+                 Messages.send_message_to_shipment(message_to_send, shipment, resend: true)
+
         assert message.shipment_id == shipment.id
-        assert called SMSSender.send_message(message_to_send, "+66812345678")
+        assert called(SMSSender.send_message(message_to_send, "+66812345678"))
       end
     end
   end
@@ -103,8 +115,9 @@ defmodule ShipchoiceBackend.MessagesTest do
       _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
       sender = insert(:sender, %{phone: shipment1.sender_phone})
 
-      with_mock SMSSender, [send_message: fn(message, _phone_number) -> {:ok, message} end] do
-        assert {:ok, "Sent to 2 shipments"} = Messages.send_message_to_all_shipments_in_sender(sender)
+      with_mock SMSSender, send_message: fn message, _phone_number -> {:ok, message} end do
+        assert {:ok, "Sent to 2 shipments"} =
+                 Messages.send_message_to_all_shipments_in_sender(sender)
       end
     end
   end

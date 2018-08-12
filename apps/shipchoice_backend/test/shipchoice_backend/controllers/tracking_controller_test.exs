@@ -4,7 +4,7 @@ defmodule ShipchoiceBackend.TrackingControllerTest do
   test "GET /t/:shipment_number", %{conn: conn} do
     shipment_number = "ABC123"
 
-    conn = get conn, "/t/#{shipment_number}"
+    conn = get(conn, "/t/#{shipment_number}")
 
     assert redirected_to(conn) == "https://th.kerryexpress.com/en/track/?track=#{shipment_number}"
   end

@@ -5,7 +5,7 @@ defmodule ShipchoiceBackend.SessionController do
   alias ShipchoiceDb.User
 
   def new(conn, _params) do
-    render conn, "new.html"
+    render(conn, "new.html")
   end
 
   def create(conn, %{"username" => username, "password" => password}) do
@@ -14,6 +14,7 @@ defmodule ShipchoiceBackend.SessionController do
         conn
         |> put_flash(:info, "Signed In Successfully.")
         |> redirect(to: "/")
+
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid username/password combination")

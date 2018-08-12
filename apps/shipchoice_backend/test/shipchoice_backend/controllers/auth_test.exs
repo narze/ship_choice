@@ -10,6 +10,7 @@ defmodule ShipchoiceBackend.AuthTest do
       conn
       |> bypass_through(ShipchoiceBackend.Router, :browser)
       |> get("/")
+
     {:ok, %{conn: conn}}
   end
 
@@ -19,13 +20,13 @@ defmodule ShipchoiceBackend.AuthTest do
         conn
         |> assign(:current_user, nil)
         |> Auth.authenticate_user([])
+
       assert conn.halted
     end
 
     test "authenticate_user continues when the current_user exists", %{conn: conn} do
-      conn = conn
-      |> assign(:current_user, %User{}) |> Auth.authenticate_user([])
-        refute conn.halted
+      conn = conn |> assign(:current_user, %User{}) |> Auth.authenticate_user([])
+      refute conn.halted
     end
   end
 
@@ -35,7 +36,7 @@ defmodule ShipchoiceBackend.AuthTest do
     end
 
     test "login puts user in the session", %{conn: conn} do
-      user_id = Ecto.UUID.generate
+      user_id = Ecto.UUID.generate()
 
       login_conn =
         conn
@@ -53,7 +54,7 @@ defmodule ShipchoiceBackend.AuthTest do
     end
 
     test "logout removes current user from session", %{conn: conn} do
-      user_id = Ecto.UUID.generate
+      user_id = Ecto.UUID.generate()
 
       logout_conn =
         conn

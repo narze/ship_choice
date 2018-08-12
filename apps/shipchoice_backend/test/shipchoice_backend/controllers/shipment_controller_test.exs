@@ -13,17 +13,20 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
   end
 
   test "requires user authentication on all actions", %{conn: conn} do
-    Enum.each([
-      get(conn, shipment_path(conn, :index)),
-      get(conn, shipment_path(conn, :upload)),
-      post(conn, shipment_path(conn, :do_upload)),
-      post(conn, shipment_path(conn, :send_message, 1)),
-    ], fn conn ->
-      assert html_response(conn, 302)
-      assert redirected_to(conn) == "/sessions/new"
-      assert get_flash(conn, :error) == "You must be signed in to access that page."
-      assert conn.halted
-    end)
+    Enum.each(
+      [
+        get(conn, shipment_path(conn, :index)),
+        get(conn, shipment_path(conn, :upload)),
+        post(conn, shipment_path(conn, :do_upload)),
+        post(conn, shipment_path(conn, :send_message, 1))
+      ],
+      fn conn ->
+        assert html_response(conn, 302)
+        assert redirected_to(conn) == "/sessions/new"
+        assert get_flash(conn, :error) == "You must be signed in to access that page."
+        assert conn.halted
+      end
+    )
   end
 
   describe "with a signed in user" do
@@ -36,7 +39,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
     @tag login_as: "narze"
     test "GET /shipments", %{conn: conn} do
-      conn = get conn, "/shipments"
+      conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       assert html_response(conn, 200) =~ "Upload Kerry Report"
     end
@@ -45,13 +48,13 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     test "GET /shipments with existing shipments", %{conn: conn} do
       shipments = [
         %{shipment_number: "SHP0001"},
-        %{shipment_number: "SHP0002"},
+        %{shipment_number: "SHP0002"}
       ]
 
       shipments
-      |> Enum.each(fn(shipment) -> ShipchoiceDb.Shipment.insert(shipment) end)
+      |> Enum.each(fn shipment -> ShipchoiceDb.Shipment.insert(shipment) end)
 
-      conn = get conn, "/shipments"
+      conn = get(conn, "/shipments")
 
       assert html_response(conn, 200) =~ "SHP0001"
       assert html_response(conn, 200) =~ "SHP0002"
@@ -59,13 +62,13 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
     @tag login_as: "narze"
     test "GET /shipments/upload", %{conn: conn} do
-      conn = get conn, "/shipments/upload"
+      conn = get(conn, "/shipments/upload")
       assert html_response(conn, 200) =~ "Upload Kerry Report"
     end
 
     @tag login_as: "narze"
     test "POST /shipments/upload", %{conn: conn} do
-      conn = post conn, "/shipments/upload"
+      conn = post(conn, "/shipments/upload")
       assert redirected_to(conn) == "/shipments/upload"
       assert get_flash(conn, :error) == "Kerry Report File Needed"
     end
@@ -74,36 +77,33 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     test "POST /shipments/upload with xlsx file", %{conn: conn, user: user} do
       upload = %Plug.Upload{
         path: "test/fixtures/kerry.xlsx",
-        filename: "kerry.xlsx",
+        filename: "kerry.xlsx"
       }
 
-      conn = post conn,
-                  "/shipments/upload",
-                  %{kerry_report: upload}
+      conn = post(conn, "/shipments/upload", %{kerry_report: upload})
 
       assert redirected_to(conn) == "/shipments"
       assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
       assert get_flash(conn, :info) =~ "13 Rows Processed."
 
-      assert length(ShipchoiceDb.Shipment.all) == 13
+      assert length(ShipchoiceDb.Shipment.all()) == 13
 
       # Recycle & manually assign current_user
       saved_assigns = conn.assigns
+
       conn =
         conn
         |> recycle()
         |> Map.put(:assigns, saved_assigns)
 
       # Upload again
-      conn2 = post conn,
-                  "/shipments/upload",
-                  %{kerry_report: upload}
+      conn2 = post(conn, "/shipments/upload", %{kerry_report: upload})
 
       assert redirected_to(conn2) == "/shipments"
       assert get_flash(conn2, :info) =~ "Uploaded Kerry Report."
       assert get_flash(conn2, :info) =~ "13 Rows Processed."
 
-      assert length(ShipchoiceDb.Shipment.all) == 13
+      assert length(ShipchoiceDb.Shipment.all()) == 13
     end
 
     @tag login_as: "narze"
@@ -113,14 +113,13 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{shortened_url}"
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
-        with_mock URLShortener,
-                [shorten_url: fn(_url) -> {:ok, shortened_url} end] do
-          conn = post conn, "/shipments/#{shipment.id}/send_message"
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        with_mock URLShortener, shorten_url: fn _url -> {:ok, shortened_url} end do
+          conn = post(conn, "/shipments/#{shipment.id}/send_message")
           assert redirected_to(conn) == "/shipments"
           assert get_flash(conn, :info) =~ "Message Sent."
-          assert called URLShortener.shorten_url(shipment |> Shipment.tracking_url)
-          assert called Messages.send_message_to_shipment(expected_message, :_, :_)
+          assert called(URLShortener.shorten_url(shipment |> Shipment.tracking_url()))
+          assert called(Messages.send_message_to_shipment(expected_message, :_, :_))
         end
       end
     end
@@ -134,14 +133,13 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       assert String.to_charlist(expected_message) |> length() == 70
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
-        with_mock URLShortener,
-                [shorten_url: fn(_url) -> {:ok, shortened_url} end] do
-          conn = post conn, "/shipments/#{shipment.id}/send_message"
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        with_mock URLShortener, shorten_url: fn _url -> {:ok, shortened_url} end do
+          conn = post(conn, "/shipments/#{shipment.id}/send_message")
           assert redirected_to(conn) == "/shipments"
           assert get_flash(conn, :info) =~ "Message Sent."
-          assert called URLShortener.shorten_url(shipment |> Shipment.tracking_url)
-          assert called Messages.send_message_to_shipment(expected_message, :_, :_)
+          assert called(URLShortener.shorten_url(shipment |> Shipment.tracking_url()))
+          assert called(Messages.send_message_to_shipment(expected_message, :_, :_))
         end
       end
     end
@@ -152,14 +150,13 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
-        with_mock URLShortener,
-                [shorten_url: fn(_url) -> {:error, "FAILURE"} end] do
-          conn = post conn, "/shipments/#{shipment.id}/send_message"
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        with_mock URLShortener, shorten_url: fn _url -> {:error, "FAILURE"} end do
+          conn = post(conn, "/shipments/#{shipment.id}/send_message")
           assert redirected_to(conn) == "/shipments"
           assert get_flash(conn, :info) =~ "Message Sent."
-          assert called URLShortener.shorten_url(shipment |> Shipment.tracking_url)
-          assert called Messages.send_message_to_shipment(expected_message, :_, :_)
+          assert called(URLShortener.shorten_url(shipment |> Shipment.tracking_url()))
+          assert called(Messages.send_message_to_shipment(expected_message, :_, :_))
         end
       end
     end
@@ -169,11 +166,11 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       shipment = insert(:shipment, messages: [build(:message)])
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:ok, %Message{}} end] do
-        conn = post conn, "/shipments/#{shipment.id}/send_message"
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        conn = post(conn, "/shipments/#{shipment.id}/send_message")
         assert redirected_to(conn) == "/shipments"
         assert get_flash(conn, :info) =~ "Message Sent."
-        assert called Messages.send_message_to_shipment(:_, :_, :_)
+        assert called(Messages.send_message_to_shipment(:_, :_, :_))
       end
     end
 
@@ -184,11 +181,11 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       msg = "Unexpected error occurred."
 
       with_mock Messages,
-                [send_message_to_shipment: fn(_message, %Shipment{}, _resent) -> {:error, msg} end] do
-        conn = post conn, "/shipments/#{shipment.id}/send_message"
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:error, msg} end do
+        conn = post(conn, "/shipments/#{shipment.id}/send_message")
         assert redirected_to(conn) == "/shipments"
         assert get_flash(conn, :error) =~ msg
-        assert called Messages.send_message_to_shipment(:_, :_, :_)
+        assert called(Messages.send_message_to_shipment(:_, :_, :_))
       end
     end
   end

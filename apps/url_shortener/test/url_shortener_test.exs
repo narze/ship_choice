@@ -4,7 +4,7 @@ defmodule URLShortenerTest do
   doctest URLShortener
 
   setup do
-    HTTPoison.start
+    HTTPoison.start()
   end
 
   describe "shorten_url/1" do
