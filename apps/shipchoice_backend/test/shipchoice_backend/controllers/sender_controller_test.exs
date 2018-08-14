@@ -62,6 +62,24 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     end
 
     @tag login_as: "narze"
+    test "GET /senders with search term", %{conn: conn} do
+      senders = [
+        %{name: "Foo", phone: "0812345678"},
+        %{name: "Bar", phone: "0898765432"}
+      ]
+
+      senders
+      |> Enum.each(fn sender -> Sender.insert(sender) end)
+
+      conn = get(conn, "/senders?search=8123456")
+
+      assert html_response(conn, 200) =~ "Foo"
+      assert html_response(conn, 200) =~ "0812345678"
+      refute html_response(conn, 200) =~ "Bar"
+      refute html_response(conn, 200) =~ "0898765432"
+    end
+
+    @tag login_as: "narze"
     test "GET /senders/new", %{conn: conn} do
       conn = get(conn, "/senders/new")
 

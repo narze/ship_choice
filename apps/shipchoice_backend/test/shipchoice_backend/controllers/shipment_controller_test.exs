@@ -61,6 +61,22 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "narze"
+    test "GET /shipments with search term", %{conn: conn} do
+      shipments = [
+        %{shipment_number: "SHP0001"},
+        %{shipment_number: "SHP0002"}
+      ]
+
+      shipments
+      |> Enum.each(fn shipment -> ShipchoiceDb.Shipment.insert(shipment) end)
+
+      conn = get(conn, "/shipments?search=HP0001")
+
+      assert html_response(conn, 200) =~ "SHP0001"
+      refute html_response(conn, 200) =~ "SHP0002"
+    end
+
+    @tag login_as: "narze"
     test "GET /shipments/upload", %{conn: conn} do
       conn = get(conn, "/shipments/upload")
       assert html_response(conn, 200) =~ "Upload Kerry Report"

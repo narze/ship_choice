@@ -5,6 +5,18 @@
 </div>
 
 <div class="row">
+  <div class="col-lg-12">
+    <%= form_for @conn,
+                 sender_path(@conn, :index),
+                 [method: :get, class: "form-inline"],
+                 fn f -> %>
+      <%= search_input f, :search, class: "form-control mr-sm-2", placeholder: "Search" %>
+      <%= submit "Search", class: "btn btn-outline-success my-1 my-sm-3" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-lg-8">
     <%= pagination_links @page %>
   </div>
@@ -17,7 +29,7 @@
   <div class="col-lg-12">
     <table class="table">
       <thead>
-        <th>Sender #</th>
+        <th>Sender Name</th>
         <th>Phone</th>
         <th>Shipments Count</th>
         <th>Actions</th>

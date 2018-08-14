@@ -87,4 +87,12 @@ defmodule ShipchoiceDb.Sender do
     query = from(s in Shipment, where: s.sender_phone == ^sender.phone)
     Repo.all(query)
   end
+
+  def search(query, search_term) do
+    wildcard = "%#{search_term}%"
+
+    from sender in query,
+      where: ilike(sender.name, ^wildcard),
+      or_where: ilike(sender.phone, ^wildcard)
+  end
 end

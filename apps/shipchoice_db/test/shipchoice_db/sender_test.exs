@@ -58,4 +58,28 @@ defmodule ShipchoiceDb.SenderTest do
       assert count == 0
     end
   end
+
+  describe "search/2" do
+    test "returns results matched by sender name" do
+      sender = insert(:sender)
+
+      result =
+        Sender
+        |> Sender.search(sender.name |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [sender]
+    end
+
+    test "returns results matched by sender phone" do
+      sender = insert(:sender)
+
+      result =
+        Sender
+        |> Sender.search(sender.phone |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [sender]
+    end
+  end
 end
