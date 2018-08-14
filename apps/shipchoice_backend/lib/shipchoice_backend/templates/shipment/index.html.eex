@@ -32,7 +32,7 @@
         <th>Shipment #</th>
         <th>Sender</th>
         <th>Recipient Name</th>
-        <th>COD</th>
+        <th>Recipient Phone</th>
         <th>Actions</th>
       </thead>
 

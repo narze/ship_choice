@@ -2,6 +2,6 @@
   <td><%= @shipment.shipment_number %></td>
   <td><%= @shipment.sender_name %> (<%= @shipment.sender_phone %>)</td>
   <td><%= @shipment.recipient_name %></td>
-  <td><%= @shipment.metadata["COD"] %></td>
+  <td><%= @shipment.recipient_phone %></td>
   <td><%= link "Send Message", method: :post, to: "/shipments/#{@shipment.id}/send_message" %></td>
 </tr>
