@@ -260,4 +260,61 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert tracking_url == "http://shypchoice.com/t/#{shipment.shipment_number}"
     end
   end
+
+  describe "search/2" do
+    test "returns results matched by shipment number" do
+      shipment = insert(:shipment)
+
+      result =
+        Shipment
+        |> Shipment.search(shipment.shipment_number |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+
+    test "returns results matched by sender name" do
+      shipment = insert(:shipment)
+
+      result =
+        Shipment
+        |> Shipment.search(shipment.sender_name |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+
+    test "returns results matched by sender phone" do
+      shipment = insert(:shipment)
+
+      result =
+        Shipment
+        |> Shipment.search(shipment.sender_phone |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+
+    test "returns results matched by recipient name" do
+      shipment = insert(:shipment)
+
+      result =
+        Shipment
+        |> Shipment.search(shipment.recipient_name |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+
+    test "returns results matched by recipient phone" do
+      shipment = insert(:shipment)
+
+      result =
+        Shipment
+        |> Shipment.search(shipment.recipient_phone |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+  end
 end

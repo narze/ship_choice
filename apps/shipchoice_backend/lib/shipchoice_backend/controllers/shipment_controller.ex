@@ -9,6 +9,7 @@ defmodule ShipchoiceBackend.ShipmentController do
   def index(conn, params) do
     page =
       Shipment
+      |> Shipment.search(get_in(params, ["search"]))
       |> ShipchoiceDb.Repo.paginate(params)
 
     render(

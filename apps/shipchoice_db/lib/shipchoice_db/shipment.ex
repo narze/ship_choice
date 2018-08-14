@@ -4,6 +4,7 @@ defmodule ShipchoiceDb.Shipment do
   """
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, only: [from: 2]
   alias ShipchoiceDb.{Repo, Shipment, Message}
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -170,5 +171,16 @@ defmodule ShipchoiceDb.Shipment do
 
   def tracking_url(%Shipment{} = shipment) do
     "http://shypchoice.com/t/#{shipment.shipment_number}"
+  end
+
+  def search(query, search_term) do
+    wildcard = "%#{search_term}%"
+
+    from shipment in query,
+      where: ilike(shipment.shipment_number, ^wildcard),
+      or_where: ilike(shipment.sender_name, ^wildcard),
+      or_where: ilike(shipment.sender_phone, ^wildcard),
+      or_where: ilike(shipment.recipient_name, ^wildcard),
+      or_where: ilike(shipment.recipient_phone, ^wildcard)
   end
 end

@@ -22,8 +22,8 @@ defmodule ShipchoiceDb.Factory do
       recipient_address2: "District 51",
       recipient_zip: "12345",
       metadata: %{
-        service_code: "ND",
-        weight: 1.06,
+        "service_code" => "ND",
+        "weight" => 1.06,
       }
     }
   end

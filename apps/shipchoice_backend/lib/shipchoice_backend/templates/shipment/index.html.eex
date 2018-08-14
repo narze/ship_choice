@@ -5,6 +5,18 @@
 </div>
 
 <div class="row">
+  <div class="col-lg-12">
+    <%= form_for @conn,
+                 shipment_path(@conn, :index),
+                 [method: :get, class: "form-inline"],
+                 fn f -> %>
+      <%= search_input f, :search, class: "form-control mr-sm-2", placeholder: "Search" %>
+      <%= submit "Search", class: "btn btn-outline-success my-1 my-sm-3" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-lg-8">
     <%= pagination_links @page %>
   </div>
