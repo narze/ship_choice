@@ -32,11 +32,16 @@ defmodule ShipchoiceDb.MessageTest do
 
   end
 
-#   describe "all/0" do
-#     test "gets all senders" do
-#       senders = Sender.all
+  describe "search/2" do
+    test "returns results matched by message text" do
+      message = insert(:message)
 
-#       assert length(senders) == 0
-#     end
-#   end
+      result =
+        Message
+        |> Message.search(message.message |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [message]
+    end
+  end
 end

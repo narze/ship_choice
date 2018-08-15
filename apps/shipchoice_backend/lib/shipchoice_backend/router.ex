@@ -31,6 +31,8 @@ defmodule ShipchoiceBackend.Router do
     post("/senders", SenderController, :create)
     post("/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments)
 
+    get("/messages", MessageController, :index)
+
     get("/t/:number", TrackingController, :tracking)
 
     resources("/sessions", SessionController, only: [:new, :create, :delete])

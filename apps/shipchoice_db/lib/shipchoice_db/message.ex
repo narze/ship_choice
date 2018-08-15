@@ -3,7 +3,7 @@ defmodule ShipchoiceDb.Message do
   Ecto Schema representing messages.
   """
   use Ecto.Schema
-  import Ecto.{Changeset}
+  import Ecto.{Changeset, Query}
   alias ShipchoiceDb.{Repo, Message, Shipment}
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -72,5 +72,12 @@ defmodule ShipchoiceDb.Message do
   def insert(attrs) do
     changeset = Message.changeset(%Message{}, attrs)
     Repo.insert(changeset)
+  end
+
+  def search(query, search_term) do
+    wildcard = "%#{search_term}%"
+
+    from message in query,
+      where: ilike(message.message, ^wildcard)
   end
 end
