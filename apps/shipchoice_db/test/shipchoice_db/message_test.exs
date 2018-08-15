@@ -43,5 +43,16 @@ defmodule ShipchoiceDb.MessageTest do
 
       assert result == [message]
     end
+
+    test "returns results matched by message phone number" do
+      message = insert(:message)
+
+      result =
+        Message
+        |> Message.search(message.phone |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [message]
+    end
   end
 end

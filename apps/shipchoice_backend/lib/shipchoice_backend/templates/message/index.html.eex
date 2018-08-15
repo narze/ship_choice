@@ -27,6 +27,9 @@
     <table class="table">
       <thead>
         <th>Message #</th>
+        <th>Phone</th>
+        <th>Sent At</th>
+        <th>Shipment</th>
       </thead>
 
       <tbody>

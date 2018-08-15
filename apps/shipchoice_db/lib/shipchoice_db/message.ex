@@ -78,6 +78,7 @@ defmodule ShipchoiceDb.Message do
     wildcard = "%#{search_term}%"
 
     from message in query,
-      where: ilike(message.message, ^wildcard)
+      where: ilike(message.message, ^wildcard),
+      or_where: ilike(message.phone, ^wildcard)
   end
 end

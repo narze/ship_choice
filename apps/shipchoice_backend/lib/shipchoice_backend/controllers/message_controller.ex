@@ -11,10 +11,12 @@ defmodule ShipchoiceBackend.MessageController do
       |> Message.search(get_in(params, ["search"]))
       |> ShipchoiceDb.Repo.paginate(params)
 
+    entries = ShipchoiceDb.Repo.preload(page.entries, :shipment)
+
     render(
       conn,
       "index.html",
-      messages: page.entries,
+      messages: entries,
       page: page
     )
   end
