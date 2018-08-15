@@ -1,6 +1,6 @@
 <tr>
   <td><%= @message.message %></td>
   <td><%= @message.phone %></td>
-  <td><%= @message.sent_at %></td>
-  <td><%= @message.shipment.shipment_number %></td>
+  <td><%= sent_at(@message) %></td>
+  <td><%= shipment_number(@message) %></td>
 </tr>

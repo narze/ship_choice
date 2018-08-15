@@ -41,18 +41,24 @@ defmodule ShipchoiceBackend.MessageControllerTest do
 
     @tag login_as: "narze"
     test "GET /messages with existing messages", %{conn: conn} do
+      shipment = build(:shipment)
+
       messages = [
-        %{message: "Hello"},
+        %{message: "Hello", sent_at: DateTime.utc_now, shipment: shipment},
         %{message: "World"}
       ]
 
-      messages
-      |> Enum.each(fn message -> insert(:message, message) end)
+      messages =
+        messages
+        |> Enum.map(fn message -> insert(:message, message) end)
 
       conn = get(conn, "/messages")
 
       assert html_response(conn, 200) =~ "Hello"
       assert html_response(conn, 200) =~ "World"
+      assert html_response(conn, 200) =~ List.first(messages).sent_at |> Timex.format!("{relative}", :relative)
+      assert html_response(conn, 200) =~ List.first(messages).phone
+      assert html_response(conn, 200) =~ shipment.shipment_number
     end
 
     @tag login_as: "narze"

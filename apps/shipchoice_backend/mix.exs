@@ -45,7 +45,8 @@ defmodule ShipchoiceBackend.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:xlsxir, "~> 1.6.2"},
-      {:scrivener_html, "~> 1.7"}
+      {:scrivener_html, "~> 1.7"},
+      {:timex, "~> 3.1"}
     ]
   end
 
