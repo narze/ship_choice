@@ -24,34 +24,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto"></ul>
 
-            <ul class="navbar-nav my-2 my-lg-0">
-              <%= if @current_user do %>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menu
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <%= link "Shipments",
-                              to: shipment_path(@conn, :index),
-                              class: "dropdown-item" %>
-                    <%= link "Senders",
-                              to: sender_path(@conn, :index),
-                              class: "dropdown-item" %>
-                    <div class="dropdown-divider"></div>
-                    <%= link "Logout",
-                              to: session_path(@conn, :delete, @current_user),
-                              method: :delete,
-                              class: "dropdown-item" %>
-                  </div>
-                </li>
-              <% else %>
-                <li class="nav-item active">
-                  <%= link "Login",
-                            to: session_path(@conn, :new),
-                            class: "nav-link" %>
-                </li>
-              <% end %>
-            </ul>
+            <%= render "menu.html", current_user: @current_user, conn: @conn %>
           </div>
         </nav>
       </header>
