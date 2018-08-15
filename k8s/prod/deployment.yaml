@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: shipchoice
-          image: gcr.io/shipchoice-20180716/shipchoice:0.0.7
+          image: gcr.io/shipchoice-20180716/shipchoice:0.0.8
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
