@@ -165,8 +165,14 @@ defmodule ShipchoiceDb.Shipment do
     }
   end
 
-  defp sanitize_phone(phone) do
-    String.replace(phone, ~r/\D/, "", global: true)
+  def sanitize_phone(phone) do
+    captured =
+      Regex.scan(~r/\d{10}/, phone, capture: :first)
+      |> List.first
+
+    if is_list(captured) do
+      captured |> List.first
+    end
   end
 
   def tracking_url(%Shipment{} = shipment) do

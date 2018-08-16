@@ -317,4 +317,21 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert result == [shipment]
     end
   end
+
+  describe "sanitize_phone/1" do
+    test "removes trailing semicolon" do
+      assert Shipment.sanitize_phone("0812345678;") == "0812345678"
+      assert Shipment.sanitize_phone("0812345678") == "0812345678"
+    end
+
+    test "get the first one if input has more than one number" do
+      assert Shipment.sanitize_phone("0959233452;0959244143;") == "0959233452"
+    end
+
+    test "skips non Thai mobile phone number" do
+      assert Shipment.sanitize_phone("021234567;") == nil
+      assert Shipment.sanitize_phone("038337742;") == nil
+      assert Shipment.sanitize_phone("038337742;0959244143;") == "0959244143"
+    end
+  end
 end
