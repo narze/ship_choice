@@ -18,6 +18,7 @@ import_config "../apps/*/config/config.exs"
 
 config :shipchoice_db, ecto_repos: [ShipchoiceDb.Repo]
 
-config :sentry, dsn: "https://7c5a8f264ec446758d89e30b992bcd53@sentry.io/1259500",
-   included_environments: [:prod, :dev],
-   environment_name: Mix.env
+config :sentry,
+  dsn: "https://7c5a8f264ec446758d89e30b992bcd53@sentry.io/1259500",
+  included_environments: [:prod],
+  environment_name: Mix.env()
