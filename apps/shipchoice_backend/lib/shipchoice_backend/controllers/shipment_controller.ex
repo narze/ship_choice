@@ -42,10 +42,13 @@ defmodule ShipchoiceBackend.ShipmentController do
         end)
         |> Enum.map(&Shipment.parse/1)
 
-      num = Shipment.insert_list(records)
+      {:ok, count: count, new: new} = Shipment.insert_only_new_shipments(records)
 
       conn
-      |> put_flash(:info, "Uploaded Kerry Report. #{num} Rows Processed.")
+      |> put_flash(
+        :info,
+        "Uploaded Kerry Report. #{count} Rows Processed. #{new} Shipments Added."
+      )
       |> redirect(to: "/shipments")
     end
   end

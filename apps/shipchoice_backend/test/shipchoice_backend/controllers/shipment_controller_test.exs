@@ -52,7 +52,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       ]
 
       shipments
-      |> Enum.each(fn shipment -> ShipchoiceDb.Shipment.insert(shipment) end)
+      |> Enum.each(fn shipment -> Shipment.insert(shipment) end)
 
       conn = get(conn, "/shipments")
 
@@ -68,7 +68,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       ]
 
       shipments
-      |> Enum.each(fn shipment -> ShipchoiceDb.Shipment.insert(shipment) end)
+      |> Enum.each(fn shipment -> Shipment.insert(shipment) end)
 
       conn = get(conn, "/shipments?search=HP0001")
 
@@ -100,9 +100,9 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
       assert redirected_to(conn) == "/shipments"
       assert get_flash(conn, :info) =~ "Uploaded Kerry Report."
-      assert get_flash(conn, :info) =~ "13 Rows Processed."
+      assert get_flash(conn, :info) =~ "13 Rows Processed. 13 Shipments Added."
 
-      assert length(ShipchoiceDb.Shipment.all()) == 13
+      assert length(Shipment.all()) == 13
 
       # Recycle & manually assign current_user
       saved_assigns = conn.assigns
@@ -112,14 +112,18 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
         |> recycle()
         |> Map.put(:assigns, saved_assigns)
 
+      # Add message into a shipment
+      shipment = Shipment |> Ecto.Query.first() |> Repo.one()
+      insert(:message, shipment_id: shipment.id)
+
       # Upload again
       conn2 = post(conn, "/shipments/upload", %{kerry_report: upload})
 
       assert redirected_to(conn2) == "/shipments"
       assert get_flash(conn2, :info) =~ "Uploaded Kerry Report."
-      assert get_flash(conn2, :info) =~ "13 Rows Processed."
+      assert get_flash(conn2, :info) =~ "13 Rows Processed. 0 Shipments Added."
 
-      assert length(ShipchoiceDb.Shipment.all()) == 13
+      assert length(Shipment.all()) == 13
     end
 
     @tag login_as: "narze"

@@ -52,7 +52,7 @@ defmodule ShipchoiceDb.ShipmentTest do
     end
   end
 
-  describe "insert_list/1" do
+  describe "insert_only_new_shipments/1" do
     test "inserts list of shipments" do
       shipment_list = [
         %{
@@ -82,35 +82,18 @@ defmodule ShipchoiceDb.ShipmentTest do
           recipient_zip: "12345",
           metadata: %{
             service_code: "ND",
-            weight: 1.06,
-          },
-        },
+            weight: 1.06
+          }
+        }
       ]
 
-      num = Shipment.insert_list(shipment_list)
+      {:ok, count: 2, new: 2} = Shipment.insert_only_new_shipments(shipment_list)
 
-      assert num == 2
-      assert length(Shipment.all) == 2
+      assert length(Shipment.all()) == 2
     end
 
-    test "updates list of shipments with same shipment number" do
-      shipment_to_insert = %{
-        shipment_number: "PORM000188508",
-        branch_code: "PORM",
-        sender_name: "Manassarn Manoonchai",
-        sender_phone: "0863949474",
-        recipient_name: "John Doe",
-        recipient_phone: "0812345678",
-        recipient_address1: "345, Sixth Avenue",
-        recipient_address2: "District 51",
-        recipient_zip: "12345",
-        metadata: %{
-          service_code: "ND",
-          weight: 1.06,
-        },
-      }
-
-      {:ok, _inserted_shipment} = Shipment.insert(shipment_to_insert)
+    test "skips existing shipments identified by shipment number" do
+      insert(:shipment, shipment_number: "PORM000188508")
 
       shipment_list = [
         %{
@@ -145,10 +128,9 @@ defmodule ShipchoiceDb.ShipmentTest do
         },
       ]
 
-      num = Shipment.insert_list(shipment_list)
+      {:ok, count: 2, new: 1} = Shipment.insert_only_new_shipments(shipment_list)
 
-      assert num == 2
-      assert length(Shipment.all) == 2
+      assert length(Shipment.all()) == 2
     end
   end
 
