@@ -1,4 +1,5 @@
 <tr>
   <td><%= @user.name %></td>
   <td><%= @user.username %></td>
+  <td><%= is_admin(@user) %></td>
 </tr>

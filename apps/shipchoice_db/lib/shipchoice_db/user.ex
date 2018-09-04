@@ -14,6 +14,7 @@ defmodule ShipchoiceDb.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    field :is_admin, :boolean
 
     timestamps()
   end

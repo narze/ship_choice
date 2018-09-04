@@ -20,6 +20,7 @@ defmodule ShipchoiceDb.UserTest do
       assert user.username == inserted_user.username
       assert user.password == nil
       assert user.password_hash != nil
+      assert user.is_admin == false
     end
   end
 
