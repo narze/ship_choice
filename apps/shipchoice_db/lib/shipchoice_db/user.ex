@@ -105,4 +105,12 @@ defmodule ShipchoiceDb.User do
     from(u in User, where: u.username == ^username)
     |> Repo.one()
   end
+
+  def search(query, search_term) do
+    wildcard = "%#{search_term}%"
+
+    from sender in query,
+      where: ilike(sender.name, ^wildcard),
+      or_where: ilike(sender.username, ^wildcard)
+  end
 end

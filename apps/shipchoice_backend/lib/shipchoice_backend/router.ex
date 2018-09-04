@@ -36,6 +36,7 @@ defmodule ShipchoiceBackend.Router do
     get("/t/:number", TrackingController, :tracking)
 
     resources("/sessions", SessionController, only: [:new, :create, :delete])
+    resources("/users", UserController, only: [:index, :new, :create])
   end
 
   # Other scopes may use custom stacks.

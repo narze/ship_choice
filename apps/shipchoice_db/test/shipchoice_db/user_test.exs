@@ -27,4 +27,28 @@ defmodule ShipchoiceDb.UserTest do
     {:ok, user} = User.insert(params_for(:user, username: "username", password: "password"))
     assert {:ok, %User{}} = User.authenticate("username", "password")
   end
+
+  describe "search/2" do
+    test "returns results matched by user name" do
+      user = insert(:user)
+
+      result =
+        User
+        |> User.search(user.name |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [user |> Map.put(:password, nil)]
+    end
+
+    test "returns results matched by username" do
+      user = insert(:user)
+
+      result =
+        User
+        |> User.search(user.username |> String.slice(1..-2))
+        |> Repo.all()
+
+      assert result == [user |> Map.put(:password, nil)]
+    end
+  end
 end

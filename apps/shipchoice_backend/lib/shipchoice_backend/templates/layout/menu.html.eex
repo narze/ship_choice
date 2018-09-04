@@ -14,6 +14,9 @@
         <%= link "Messages",
                   to: message_path(@conn, :index),
                   class: "dropdown-item" %>
+        <%= link "Users",
+                  to: user_path(@conn, :index),
+                  class: "dropdown-item" %>
         <div class="dropdown-divider"></div>
         <%= link "Logout",
                   to: session_path(@conn, :delete, @current_user),
