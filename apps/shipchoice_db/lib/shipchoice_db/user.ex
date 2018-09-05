@@ -4,7 +4,7 @@ defmodule ShipchoiceDb.User do
   """
   use Ecto.Schema
   import Ecto.{Changeset, Query}
-  alias ShipchoiceDb.{Repo, User}
+  alias ShipchoiceDb.{Repo, Sender, User}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -17,6 +17,8 @@ defmodule ShipchoiceDb.User do
     field :is_admin, :boolean
 
     timestamps()
+
+    many_to_many :senders, Sender, join_through: "sender_user"
   end
 
   @doc """

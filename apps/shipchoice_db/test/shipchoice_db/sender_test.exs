@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.SenderTest do
   use ExUnit.Case
   import ShipchoiceDb.Factory
-  alias ShipchoiceDb.{Shipment, Sender, Repo}
+  alias ShipchoiceDb.{Repo, Sender, Shipment, User}
   alias Ecto.Adapters.SQL.Sandbox
 
   setup do
@@ -80,6 +80,18 @@ defmodule ShipchoiceDb.SenderTest do
         |> Repo.all()
 
       assert result == [sender]
+    end
+  end
+
+  describe "sender" do
+    test "has many users" do
+      inserted_sender = insert(:sender, users: [build(:user)])
+
+      sender =
+        Sender.get(inserted_sender.id)
+        |> Repo.preload(:users)
+
+      assert length(sender.users) == 1
     end
   end
 end

@@ -52,4 +52,16 @@ defmodule ShipchoiceDb.UserTest do
       assert result == [user |> Map.put(:password, nil) |> Map.put(:is_admin, false)]
     end
   end
+
+  describe "user" do
+    test "has many senders" do
+      inserted_user = insert(:user, senders: [build(:sender)])
+
+      user =
+        User.get(inserted_user.id)
+        |> Repo.preload(:senders)
+
+      assert length(user.senders) == 1
+    end
+  end
 end
