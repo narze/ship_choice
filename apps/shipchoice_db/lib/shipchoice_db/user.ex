@@ -21,6 +21,9 @@ defmodule ShipchoiceDb.User do
     many_to_many :senders, Sender, join_through: "sender_user"
   end
 
+  @required_fields ~w(name username password)a
+  @optional_fields ~w(is_admin)a
+
   @doc """
   Validates user data.
 
@@ -32,12 +35,8 @@ defmodule ShipchoiceDb.User do
   """
   def changeset(%User{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [
-      :name,
-      :username,
-      :password,
-    ])
-    |> validate_required([:name, :username, :password])
+    |> cast(attrs, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
     |> validate_length(:password, min: 6, max: 100)
     |> unique_constraint(:username)
     |> put_pass_hash()

@@ -41,6 +41,7 @@ defmodule ShipchoiceDb.Factory do
       name: "Manassarn Manoonchai",
       username: "narze",
       password: "password",
+      is_admin: true,
     }
   end
 end

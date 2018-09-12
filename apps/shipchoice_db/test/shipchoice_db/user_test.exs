@@ -20,7 +20,7 @@ defmodule ShipchoiceDb.UserTest do
       assert user.username == inserted_user.username
       assert user.password == nil
       assert user.password_hash != nil
-      assert user.is_admin == false
+      assert user.is_admin == true
     end
   end
 
@@ -38,7 +38,7 @@ defmodule ShipchoiceDb.UserTest do
         |> User.search(user.name |> String.slice(1..-2))
         |> Repo.all()
 
-      assert result == [user |> Map.put(:password, nil) |> Map.put(:is_admin, false)]
+      assert result == [user |> Map.put(:password, nil) |> Map.put(:is_admin, true)]
     end
 
     test "returns results matched by username" do
@@ -49,7 +49,7 @@ defmodule ShipchoiceDb.UserTest do
         |> User.search(user.username |> String.slice(1..-2))
         |> Repo.all()
 
-      assert result == [user |> Map.put(:password, nil) |> Map.put(:is_admin, false)]
+      assert result == [user |> Map.put(:password, nil) |> Map.put(:is_admin, true)]
     end
   end
 
