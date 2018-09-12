@@ -31,10 +31,15 @@ defmodule ShipchoiceDb.Membership do
     |> validate_required(@required_fields)
   end
 
-  def insert(changeset) do
+  def insert(%Ecto.Changeset{} = changeset) do
     changeset.params
     |> to_multi()
     |> Repo.transaction()
+  end
+
+  def insert(attrs) do
+    changeset = Membership.changeset(%Membership{}, attrs)
+    insert(changeset)
   end
 
   defp to_multi(params \\ %{}) do

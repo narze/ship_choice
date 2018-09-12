@@ -35,6 +35,7 @@ defmodule ShipchoiceBackend.Router do
 
     get("/t/:number", TrackingController, :tracking)
 
+    resources("/memberships", MembershipController, only: [:new, :create])
     resources("/sessions", SessionController, only: [:new, :create, :delete])
     resources("/users", UserController, only: [:index, :new, :create])
   end
