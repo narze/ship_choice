@@ -23,8 +23,8 @@ defmodule ShipchoiceBackend.SessionControllerTest do
   end
 
   test "POST /sessions", %{conn: conn} do
-    {:ok, user} =
-      ShipchoiceDb.User.insert(params_for(:user, username: "username", password: "password"))
+    {:ok, _user} =
+      User.insert(params_for(:user, username: "username", password: "password"))
 
     conn = post(conn, "/sessions", %{"username" => "username", "password" => "password"})
     assert redirected_to(conn) == "/"

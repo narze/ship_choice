@@ -25,7 +25,7 @@ defmodule ShipchoiceDb.UserTest do
   end
 
   test "authenticate/1" do
-    {:ok, user} = User.insert(params_for(:user, username: "username", password: "password"))
+    {:ok, _user} = User.insert(params_for(:user, username: "username", password: "password"))
     assert {:ok, %User{}} = User.authenticate("username", "password")
   end
 

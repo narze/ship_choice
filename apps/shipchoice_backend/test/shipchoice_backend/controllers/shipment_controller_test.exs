@@ -90,7 +90,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "narze"
-    test "POST /shipments/upload with xlsx file", %{conn: conn, user: user} do
+    test "POST /shipments/upload with xlsx file", %{conn: conn} do
       upload = %Plug.Upload{
         path: "test/fixtures/kerry.xlsx",
         filename: "kerry.xlsx"

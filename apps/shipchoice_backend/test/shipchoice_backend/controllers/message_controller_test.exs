@@ -2,9 +2,8 @@ defmodule ShipchoiceBackend.MessageControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Message, Repo}
+  alias ShipchoiceDb.{Repo}
 
-  import Mock
   import ShipchoiceDb.Factory
 
   setup do

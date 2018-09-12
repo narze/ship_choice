@@ -2,14 +2,12 @@ defmodule ShipchoiceBackend.UserControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Shipment, Message, User, Repo}
-  alias ShipchoiceBackend.Messages
+  alias ShipchoiceDb.{User, Repo}
 
-  import Mock
   import ShipchoiceDb.Factory
 
-  setup %{conn: conn} do
-    :ok = Sandbox.checkout(ShipchoiceDb.Repo)
+  setup do
+    :ok = Sandbox.checkout(Repo)
   end
 
   test "requires user authentication on all actions", %{conn: conn} do

@@ -31,7 +31,7 @@ defmodule ShipchoiceBackend.AuthTest do
   end
 
   describe "login" do
-    setup %{conn: conn} do
+    setup do
       :ok = Sandbox.checkout(Repo)
     end
 
@@ -49,7 +49,7 @@ defmodule ShipchoiceBackend.AuthTest do
   end
 
   describe "logout" do
-    setup %{conn: conn} do
+    setup do
       :ok = Sandbox.checkout(Repo)
     end
 

@@ -2,14 +2,14 @@ defmodule ShipchoiceBackend.SenderControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Shipment, Message, Sender, Repo}
+  alias ShipchoiceDb.{Sender, Repo}
   alias ShipchoiceBackend.Messages
 
   import Mock
   import ShipchoiceDb.Factory
 
-  setup %{conn: conn} do
-    :ok = Sandbox.checkout(ShipchoiceDb.Repo)
+  setup do
+    :ok = Sandbox.checkout(Repo)
   end
 
   test "requires user authentication on all actions", %{conn: conn} do
@@ -108,10 +108,10 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
       {:ok, sender} = Sender.insert(sender)
 
-      shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
-      shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
+      _shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
+      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
 
-      with_mock Messages, send_message_to_all_shipments_in_sender: fn sender -> {:ok, "Sent"} end do
+      with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender -> {:ok, "Sent"} end do
         conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")
 
         assert redirected_to(conn) == "/senders"

@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.SenderTest do
   use ExUnit.Case
   import ShipchoiceDb.Factory
-  alias ShipchoiceDb.{Repo, Sender, Shipment, User}
+  alias ShipchoiceDb.{Repo, Sender}
   alias Ecto.Adapters.SQL.Sandbox
 
   setup do
@@ -39,7 +39,7 @@ defmodule ShipchoiceDb.SenderTest do
       shipment1 = insert(:shipment, %{shipment_number: "PORM000188508", sender_phone: "11111"})
       shipment2 = insert(:shipment, %{shipment_number: "PORM000188509", sender_phone: "11111"})
 
-      assert [shipment1, shipment2] = Sender.get_shipments(sender)
+      assert [shipment1, shipment2] == Sender.get_shipments(sender)
     end
   end
 
