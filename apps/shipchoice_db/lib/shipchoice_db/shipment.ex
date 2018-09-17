@@ -181,4 +181,12 @@ defmodule ShipchoiceDb.Shipment do
       or_where: ilike(shipment.recipient_phone, ^wildcard)
     )
   end
+
+  def from_senders(query, senders) do
+    sender_phones = Enum.map(senders, &(&1.phone))
+    from(
+      shipment in query,
+      where: shipment.sender_phone in ^sender_phones
+    )
+  end
 end

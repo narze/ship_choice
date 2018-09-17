@@ -36,12 +36,21 @@ defmodule ShipchoiceDb.Factory do
     }
   end
 
+  def admin_user_factory do
+    %User{
+      name: "Manassarn Manoonchai",
+      username: "admin",
+      password: "password",
+      is_admin: true,
+    }
+  end
+
   def user_factory do
     %User{
       name: "Manassarn Manoonchai",
-      username: "narze",
+      username: "sender",
       password: "password",
-      is_admin: true,
+      is_admin: false,
     }
   end
 end

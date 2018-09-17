@@ -316,4 +316,18 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert Shipment.sanitize_phone("038337742;0959244143;") == "0959244143"
     end
   end
+
+  describe "from_senders/2" do
+    test "scopes shipments by senders phone number" do
+      shipment = insert(:shipment, sender_phone: "0812345678")
+      sender = insert(:sender, phone: "0812345678")
+
+      result =
+        Shipment
+        |> Shipment.from_senders([sender])
+        |> Repo.all()
+
+      assert result == [shipment]
+    end
+  end
 end

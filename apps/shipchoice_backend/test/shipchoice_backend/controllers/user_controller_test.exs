@@ -28,7 +28,7 @@ defmodule ShipchoiceBackend.UserControllerTest do
 
   describe "with a signed in user" do
     setup %{conn: conn, login_as: name} do
-      user = insert(:user, name: name, username: name)
+      user = insert(:admin_user, name: name, username: name)
       conn = assign(conn, :current_user, user)
 
       {:ok, conn: conn, user: user}

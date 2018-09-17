@@ -43,4 +43,28 @@ defmodule ShipchoiceBackend.Auth do
       |> halt()
     end
   end
+
+  def authorize_admin(conn, _opts) do
+    if conn.assigns[:current_user] &&
+       conn.assigns[:current_user].is_admin do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Not allowed.")
+      |> redirect(to: redirect_back_path(conn))
+      |> halt()
+    end
+  end
+
+  defp redirect_back_path(conn, alternative \\ "/") do
+    path =
+      conn
+      |> get_req_header("referer")
+      |> referrer()
+
+    path || alternative
+  end
+
+  defp referrer([]), do: nil
+  defp referrer([h|_]), do: h
 end

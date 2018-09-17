@@ -29,22 +29,32 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     )
   end
 
-  describe "with a signed in user" do
-    setup %{conn: conn, login_as: username} do
-      user = insert(:user, username: username)
+  describe "with a signed in admin user" do
+    setup options do
+      %{conn: conn, login_as: username, admin: admin} =
+        Enum.into(options, %{admin: false})
+      factory = if admin, do: :admin_user, else: :user
+      user = insert(factory, username: username)
       conn = assign(conn, :current_user, user)
 
       {:ok, conn: conn, user: user}
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "GET /shipments", %{conn: conn} do
       conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       assert html_response(conn, 200) =~ "Upload Kerry Report"
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "user"
+    test "GET /shipments with non admin", %{conn: conn} do
+      conn = get(conn, "/shipments")
+      assert html_response(conn, 200) =~ "All Shipments"
+      refute html_response(conn, 200) =~ "Upload Kerry Report"
+    end
+
+    @tag login_as: "admin", admin: true
     test "GET /shipments with existing shipments", %{conn: conn} do
       shipments = [
         %{shipment_number: "SHP0001"},
@@ -60,7 +70,25 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       assert html_response(conn, 200) =~ "SHP0002"
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "user"
+    test "GET /shipments with existing shipments with non admin user", %{conn: conn, user: user} do
+      sender = insert(:sender, phone: "0876543210", users: [user])
+
+      shipments = [
+        %{shipment_number: "SHP0001", sender_phone: "0876543210"},
+        %{shipment_number: "SHP0002"}
+      ]
+
+      shipments
+      |> Enum.each(fn shipment -> Shipment.insert(shipment) end)
+
+      conn = get(conn, "/shipments")
+
+      assert html_response(conn, 200) =~ "SHP0001"
+      refute html_response(conn, 200) =~ "SHP0002"
+    end
+
+    @tag login_as: "admin", admin: true
     test "GET /shipments with search term", %{conn: conn} do
       shipments = [
         %{shipment_number: "SHP0001"},
@@ -76,20 +104,36 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       refute html_response(conn, 200) =~ "SHP0002"
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "user"
+    test "GET /shipments/upload with non admin user", %{conn: conn} do
+      conn = get(conn, "/shipments/upload")
+      assert redirected_to(conn) == "/"
+      assert html_response(conn, 302)
+      assert get_flash(conn, :error) == "Not allowed."
+    end
+
+    @tag login_as: "admin", admin: true
     test "GET /shipments/upload", %{conn: conn} do
       conn = get(conn, "/shipments/upload")
       assert html_response(conn, 200) =~ "Upload Kerry Report"
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "user"
+    test "POST /shipments/upload with non admin user", %{conn: conn} do
+      conn = post(conn, "/shipments/upload")
+      assert redirected_to(conn) == "/"
+      assert html_response(conn, 302)
+      assert get_flash(conn, :error) == "Not allowed."
+    end
+
+    @tag login_as: "admin", admin: true
     test "POST /shipments/upload", %{conn: conn} do
       conn = post(conn, "/shipments/upload")
       assert redirected_to(conn) == "/shipments/upload"
       assert get_flash(conn, :error) == "Kerry Report File Needed"
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "POST /shipments/upload with xlsx file", %{conn: conn} do
       upload = %Plug.Upload{
         path: "test/fixtures/kerry.xlsx",
@@ -126,7 +170,16 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       assert length(Shipment.all()) == 13
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "user"
+    test "POST /shipments/:id/send_message with non admin user", %{conn: conn} do
+      shipment = insert(:shipment)
+      conn = post(conn, "/shipments/#{shipment.id}/send_message")
+      assert redirected_to(conn) == "/"
+      assert html_response(conn, 302)
+      assert get_flash(conn, :error) == "Not allowed."
+    end
+
+    @tag login_as: "admin", admin: true
     test "POST /shipments/:id/send_message", %{conn: conn} do
       shipment = insert(:shipment)
       shortened_url = "http://short.url/abc"
@@ -144,7 +197,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       end
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "trims sender name to make message not longer than 70 chars", %{conn: conn} do
       shipment = insert(:shipment, sender_name: String.duplicate("ที่", 20))
       shortened_url = "short.url/abcd"
@@ -164,7 +217,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       end
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "omits tracking url if url shorten fails", %{conn: conn} do
       shipment = insert(:shipment)
       expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name}"
@@ -181,7 +234,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       end
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "POST send_message when already have one message", %{conn: conn} do
       shipment = insert(:shipment, messages: [build(:message)])
 
@@ -194,7 +247,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       end
     end
 
-    @tag login_as: "narze"
+    @tag login_as: "admin", admin: true
     test "POST send_message when send_message_to_shipment returns error", %{conn: conn} do
       shipment = insert(:shipment, messages: [build(:message)])
 

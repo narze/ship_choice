@@ -30,6 +30,35 @@ defmodule ShipchoiceBackend.AuthTest do
     end
   end
 
+  describe "authorize_admin" do
+    test "redirects back when current_user not exists", %{conn: conn} do
+      conn =
+        conn
+        |> assign(:current_user, nil)
+        |> Auth.authorize_admin([])
+
+      assert conn.halted
+    end
+
+    test "redirects back when current_user is not admin", %{conn: conn} do
+      conn =
+        conn
+        |> assign(:current_user, %User{is_admin: false})
+        |> Auth.authorize_admin([])
+
+      assert conn.halted
+    end
+
+    test "continues when current_user is admin", %{conn: conn} do
+      conn =
+        conn
+        |> assign(:current_user, %User{is_admin: true})
+        |> Auth.authorize_admin([])
+
+      refute conn.halted
+    end
+  end
+
   describe "login" do
     setup do
       :ok = Sandbox.checkout(Repo)

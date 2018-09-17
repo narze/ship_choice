@@ -20,9 +20,11 @@
   <div class="col-lg-8">
     <%= pagination_links @page %>
   </div>
-  <div class="col-lg-4">
-    <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
-  </div>
+  <%= if @current_user.is_admin do %>
+    <div class="col-lg-4">
+      <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
+    </div>
+  <% end %>
 </div>
 
 <div class="row">
@@ -49,7 +51,9 @@
   <div class="col-lg-8">
     <%= pagination_links @page %>
   </div>
-  <div class="col-lg-4">
-    <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
-  </div>
+  <%= if @current_user.is_admin do %>
+    <div class="col-lg-4">
+      <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
+    </div>
+  <% end %>
 </div>

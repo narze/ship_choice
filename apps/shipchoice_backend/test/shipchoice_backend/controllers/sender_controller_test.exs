@@ -30,7 +30,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
   describe "with a signed in user" do
     setup %{conn: conn, login_as: username} do
-      user = insert(:user, username: username)
+      user = insert(:admin_user, username: username)
       conn = assign(conn, :current_user, user)
 
       {:ok, conn: conn, user: user}

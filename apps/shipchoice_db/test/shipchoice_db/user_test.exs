@@ -10,8 +10,8 @@ defmodule ShipchoiceDb.UserTest do
 
   describe "factory" do
     test "factory is valid" do
-      {:ok, inserted_user} = User.insert(params_for(:user))
-      {:error, _} = User.insert(params_for(:user))
+      {:ok, inserted_user} = User.insert(params_for(:admin_user))
+      {:error, _} = User.insert(params_for(:admin_user))
 
       user = User.get(inserted_user.id)
 
@@ -31,7 +31,7 @@ defmodule ShipchoiceDb.UserTest do
 
   describe "search/2" do
     test "returns results matched by user name" do
-      user = insert(:user)
+      user = insert(:admin_user)
 
       result =
         User
@@ -42,7 +42,7 @@ defmodule ShipchoiceDb.UserTest do
     end
 
     test "returns results matched by username" do
-      user = insert(:user)
+      user = insert(:admin_user)
 
       result =
         User
@@ -55,7 +55,7 @@ defmodule ShipchoiceDb.UserTest do
 
   describe "user" do
     test "has many senders" do
-      inserted_user = insert(:user, senders: [build(:sender)])
+      inserted_user = insert(:admin_user, senders: [build(:sender)])
 
       user =
         User.get(inserted_user.id)

@@ -2,15 +2,26 @@ defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.Shipment
+  alias ShipchoiceDb.{Repo, Shipment}
 
   plug(:authenticate_user)
+  plug :authorize_admin when action in [:upload, :do_upload, :send_message]
 
   def index(conn, params) do
-    page =
+    page = if conn.assigns[:current_user].is_admin do
       Shipment
       |> Shipment.search(get_in(params, ["search"]))
       |> ShipchoiceDb.Repo.paginate(params)
+    else
+      user =
+        conn.assigns[:current_user]
+        |> Repo.preload(:senders)
+
+      Shipment
+      |> Shipment.from_senders(user.senders)
+      |> Shipment.search(get_in(params, ["search"]))
+      |> ShipchoiceDb.Repo.paginate(params)
+    end
 
     render(
       conn,
