@@ -51,12 +51,12 @@ defmodule ShipchoiceBackend.Auth do
     else
       conn
       |> put_flash(:error, "Not allowed.")
-      |> redirect(to: redirect_back_path(conn))
+      |> redirect(external: redirect_back_url(conn))
       |> halt()
     end
   end
 
-  defp redirect_back_path(conn, alternative \\ "/") do
+  defp redirect_back_url(conn, alternative \\ "/") do
     path =
       conn
       |> get_req_header("referer")
