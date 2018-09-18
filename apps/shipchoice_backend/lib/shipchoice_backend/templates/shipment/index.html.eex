@@ -40,7 +40,7 @@
 
       <tbody>
         <%= for shipment <- @shipments do %>
-          <%= render "shipment.html", shipment: shipment %>
+          <%= render "shipment.html", shipment: shipment, current_user: @current_user %>
         <% end %>
       </tbody>
     </table>

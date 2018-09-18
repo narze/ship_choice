@@ -3,5 +3,9 @@
   <td><%= @shipment.sender_name %> (<%= @shipment.sender_phone %>)</td>
   <td><%= @shipment.recipient_name %></td>
   <td><%= @shipment.recipient_phone %></td>
-  <td><%= link "Send Message", method: :post, to: "/shipments/#{@shipment.id}/send_message" %></td>
+  <td>
+     <%= if @current_user.is_admin do %>
+      <%= link "Send Message", method: :post, to: "/shipments/#{@shipment.id}/send_message" %>
+    <% end %>
+  </td>
 </tr>

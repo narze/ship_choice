@@ -8,16 +8,21 @@
         <%= link "Shipments",
                   to: shipment_path(@conn, :index),
                   class: "dropdown-item" %>
-        <%= link "Senders",
-                  to: sender_path(@conn, :index),
-                  class: "dropdown-item" %>
-        <%= link "Messages",
-                  to: message_path(@conn, :index),
-                  class: "dropdown-item" %>
-        <%= link "Users",
-                  to: user_path(@conn, :index),
-                  class: "dropdown-item" %>
+
+         <%= if @current_user.is_admin do %>
+          <%= link "Senders",
+                    to: sender_path(@conn, :index),
+                    class: "dropdown-item" %>
+          <%= link "Messages",
+                    to: message_path(@conn, :index),
+                    class: "dropdown-item" %>
+          <%= link "Users",
+                    to: user_path(@conn, :index),
+                    class: "dropdown-item" %>
+        <% end %>
+
         <div class="dropdown-divider"></div>
+
         <%= link "Logout",
                   to: session_path(@conn, :delete, @current_user),
                   method: :delete,
