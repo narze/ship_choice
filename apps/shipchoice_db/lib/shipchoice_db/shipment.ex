@@ -169,6 +169,7 @@ defmodule ShipchoiceDb.Shipment do
     "http://shypchoice.com/t/#{shipment.shipment_number}"
   end
 
+  def search(query, ""), do: query
   def search(query, search_term) do
     wildcard = "%#{search_term}%"
 

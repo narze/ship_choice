@@ -108,6 +108,7 @@ defmodule ShipchoiceDb.User do
     |> Repo.one()
   end
 
+  def search(query, ""), do: query
   def search(query, search_term) do
     wildcard = "%#{search_term}%"
 
