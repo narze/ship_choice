@@ -21,7 +21,7 @@
     <%= pagination_links @page %>
   </div>
   <div class="col-lg-4">
-    <%= link "Add New User", to: "/users/new", class: "btn btn-primary float-right" %>
+    <%= link "Add New Sender User", to: "/memberships/new", class: "btn btn-primary float-right" %>
   </div>
 </div>
 
