@@ -17,9 +17,10 @@ defmodule ShipchoiceBackend.ShipmentController do
         conn.assigns[:current_user]
         |> Repo.preload(:senders)
 
+      # FIXME: Cannot find from senders before searching
       Shipment
-      |> Shipment.from_senders(user.senders)
       |> Shipment.search(get_in(params, ["search"]))
+      |> Shipment.from_senders(user.senders)
       |> ShipchoiceDb.Repo.paginate(params)
     end
 
