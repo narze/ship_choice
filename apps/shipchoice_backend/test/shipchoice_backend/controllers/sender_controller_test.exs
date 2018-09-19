@@ -108,8 +108,8 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
       {:ok, sender} = Sender.insert(sender)
 
-      _shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
-      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
+      _shipment1 = insert(:shipment, shipment_number: "PORM000188508", sender_phone: sender.phone)
+      _shipment2 = insert(:shipment, shipment_number: "PORM000188509", sender_phone: sender.phone)
 
       with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender -> {:ok, "Sent"} end do
         conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")

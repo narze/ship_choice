@@ -5,22 +5,22 @@ defmodule ShipchoiceDb.Factory do
 
   def sender_factory do
     %Sender{
-      name: "Manassarn Manoonchai",
-      phone: "0863949474",
+      name: Faker.Name.name(),
+      phone: Faker.Phone.EnUs.phone(),
     }
   end
 
   def shipment_factory do
     %Shipment{
-      shipment_number: "PORM000188508",
+      shipment_number: "PORM" <> (Faker.random_between(0, 30000000) |> to_string),
       branch_code: "PORM",
-      sender_name: "Manassarn Manoonchai",
-      sender_phone: "0863949474",
-      recipient_name: "John Doe",
-      recipient_phone: "0812345678",
-      recipient_address1: "345, Sixth Avenue",
-      recipient_address2: "District 51",
-      recipient_zip: "12345",
+      sender_name: Faker.Name.name(),
+      sender_phone: Faker.Phone.EnUs.phone(),
+      recipient_name: Faker.Name.name(),
+      recipient_phone: Faker.Phone.EnUs.phone(),
+      recipient_address1: Faker.Address.street_address(),
+      recipient_address2: Faker.Address.state(),
+      recipient_zip: Faker.Address.zip_code(),
       metadata: %{
         "service_code" => "ND",
         "weight" => 1.06,
@@ -32,13 +32,13 @@ defmodule ShipchoiceDb.Factory do
     %Message{
       status: "pending",
       message: "Hello",
-      phone: "0812345678",
+      phone: Faker.Phone.EnUs.phone(),
     }
   end
 
   def admin_user_factory do
     %User{
-      name: "Manassarn Manoonchai",
+      name: Faker.Name.name(),
       username: "admin",
       password: "password",
       is_admin: true,
@@ -47,7 +47,7 @@ defmodule ShipchoiceDb.Factory do
 
   def user_factory do
     %User{
-      name: "Manassarn Manoonchai",
+      name: Faker.Name.name(),
       username: "sender",
       password: "password",
       is_admin: false,

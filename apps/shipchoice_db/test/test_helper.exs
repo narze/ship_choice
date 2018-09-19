@@ -2,5 +2,6 @@
 
 ExUnit.configure(timeout: :infinity)
 ExUnit.start()
+Faker.start()
 
 Ecto.Adapters.SQL.Sandbox.mode(ShipchoiceDb.Repo, :manual)

@@ -78,7 +78,7 @@ defmodule ShipchoiceBackend.MessagesTest do
         send_message: fn message_to_send, _phone_number -> {:ok, message_to_send} end do
         assert {:ok, message} = Messages.send_message_to_shipment(message_to_send, shipment)
         assert message.shipment_id == shipment.id
-        assert called(SMSSender.send_message(message_to_send, "+66812345678"))
+        assert called(SMSSender.send_message(message_to_send, shipment.recipient_phone |> Messages.transform_phone_number))
       end
     end
   end
@@ -104,16 +104,16 @@ defmodule ShipchoiceBackend.MessagesTest do
                  Messages.send_message_to_shipment(message_to_send, shipment, resend: true)
 
         assert message.shipment_id == shipment.id
-        assert called(SMSSender.send_message(message_to_send, "+66812345678"))
+        assert called(SMSSender.send_message(message_to_send, shipment.recipient_phone |> Messages.transform_phone_number))
       end
     end
   end
 
   describe "sending all unsent shipments for single sender" do
     test "send_message_to_all_shipments_in_sender/1" do
-      shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
-      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
-      sender = insert(:sender, %{phone: shipment1.sender_phone})
+      shipment1 = insert(:shipment, sender_phone: "0812345678")
+      _shipment2 = insert(:shipment, sender_phone: "0812345678")
+      sender = insert(:sender, phone: shipment1.sender_phone)
 
       with_mock SMSSender, send_message: fn message, _phone_number -> {:ok, message} end do
         assert {:ok, "Sent to 2 shipments"} =

@@ -21,6 +21,9 @@ defmodule ShipchoiceBackend.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+
+    get("/dashboard", DashboardController, :index)
+
     get("/shipments", ShipmentController, :index)
     get("/shipments/upload", ShipmentController, :upload)
     post("/shipments/upload", ShipmentController, :do_upload)

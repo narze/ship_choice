@@ -43,6 +43,7 @@ defmodule ShipchoiceDb.Mixfile do
       {:comeonin, "~> 4.1"},
       {:bcrypt_elixir, "~> 1.0"},
       {:scrivener_ecto, "~> 1.0"},
+      {:faker, "~> 0.10", only: :test},
     ]
   end
 
