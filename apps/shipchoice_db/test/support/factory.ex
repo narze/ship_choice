@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.Factory do
   use ExMachina.Ecto, repo: ShipchoiceDb.Repo
 
-  alias ShipchoiceDb.{Sender, Shipment, Message, User}
+  alias ShipchoiceDb.{Message, Sender, Shipment, Transaction, User}
 
   def sender_factory do
     %Sender{
@@ -42,6 +42,14 @@ defmodule ShipchoiceDb.Factory do
       username: "admin",
       password: "password",
       is_admin: true,
+    }
+  end
+
+  def transaction_factory do
+    %Transaction{
+      amount: Faker.random_between(-10000, 10000),
+      balance: Faker.random_between(-10000, 10000),
+      user: user_factory(),
     }
   end
 
