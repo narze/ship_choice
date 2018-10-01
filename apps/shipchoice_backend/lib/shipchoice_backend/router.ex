@@ -40,7 +40,9 @@ defmodule ShipchoiceBackend.Router do
 
     resources("/memberships", MembershipController, only: [:new, :create])
     resources("/sessions", SessionController, only: [:new, :create, :delete])
-    resources("/users", UserController, only: [:index, :new, :create])
+    resources("/users", UserController, only: [:index, :new, :create]) do
+      resources("/credits", CreditController, only: [:new, :create])
+    end
   end
 
   # Other scopes may use custom stacks.
