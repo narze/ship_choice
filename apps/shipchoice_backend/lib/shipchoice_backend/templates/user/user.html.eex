@@ -1,5 +1,6 @@
 <tr>
   <td><%= @user.name %></td>
   <td><%= @user.username %></td>
+  <td><%= get_credits(@user) %></td>
   <td><%= is_admin(@user) %></td>
 </tr>
