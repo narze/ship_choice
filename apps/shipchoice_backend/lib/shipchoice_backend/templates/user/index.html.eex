@@ -33,6 +33,7 @@
         <th>Username</th>
         <th>Credits</th>
         <th>Is Admin</th>
+        <th>Actions</th>
       </thead>
 
       <tbody>

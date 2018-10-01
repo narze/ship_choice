@@ -3,4 +3,7 @@
   <td><%= @user.username %></td>
   <td><%= get_credits(@user) %></td>
   <td><%= is_admin(@user) %></td>
+  <td><%= link "Add Credits",
+               to: user_credit_path(@conn, :new, @user),
+               class: "btn btn-primary btn-sm" %></td>
 </tr>
