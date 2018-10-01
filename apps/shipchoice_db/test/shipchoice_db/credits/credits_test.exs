@@ -23,4 +23,16 @@ defmodule ShipchoiceDb.CreditsTest do
       assert transaction.user_id == user.id
     end
   end
+
+  describe "get_user_credit/1" do
+    test "it returns sum of user's remaining credit" do
+      user = insert(:user)
+
+      assert Credits.get_user_credit(user) == 0
+
+      Credits.add_credit_to_user(100, user)
+
+      assert Credits.get_user_credit(user) == 100
+    end
+  end
 end
