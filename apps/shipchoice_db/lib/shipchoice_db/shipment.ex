@@ -5,7 +5,7 @@ defmodule ShipchoiceDb.Shipment do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 2]
-  alias ShipchoiceDb.{Repo, Shipment, Message}
+  alias ShipchoiceDb.{Message, Repo, Sender, Shipment}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -97,7 +97,7 @@ defmodule ShipchoiceDb.Shipment do
       shipment_list
       |> Enum.map(fn shipment ->
         case insert(shipment) do
-          {:ok, result} -> 1
+          {:ok, _result} -> 1
           _ -> 0
         end
       end)
@@ -189,5 +189,10 @@ defmodule ShipchoiceDb.Shipment do
       shipment in query,
       where: shipment.sender_phone in ^sender_phones
     )
+  end
+
+  def get_sender(%Shipment{} = shipment) do
+    from(s in Sender, where: s.phone == ^shipment.sender_phone)
+    |> Repo.one()
   end
 end
