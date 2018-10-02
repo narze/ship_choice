@@ -4,7 +4,7 @@ defmodule ShipchoiceDb.Sender do
   """
   use Ecto.Schema
   import Ecto.{Changeset, Query}
-  alias ShipchoiceDb.{Repo, Sender, Shipment, User}
+  alias ShipchoiceDb.{Repo, Sender, Shipment, Transaction, User}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -14,6 +14,7 @@ defmodule ShipchoiceDb.Sender do
 
     timestamps()
 
+    has_many :transactions, Transaction
     many_to_many :users, User, join_through: "sender_user"
   end
 

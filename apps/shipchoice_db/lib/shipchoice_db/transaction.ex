@@ -4,7 +4,7 @@ defmodule ShipchoiceDb.Transaction do
   """
   use Ecto.Schema
   import Ecto.{Changeset, Query}
-  alias ShipchoiceDb.{Repo, Transaction, User}
+  alias ShipchoiceDb.{Repo, Transaction, Sender}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,7 +12,7 @@ defmodule ShipchoiceDb.Transaction do
   schema "transaction" do
     field :amount, :integer
     field :balance, :integer
-    belongs_to :user, User
+    belongs_to :sender, Sender
 
     timestamps()
   end
@@ -31,9 +31,9 @@ defmodule ShipchoiceDb.Transaction do
     |> cast(attrs, [
       :amount,
       :balance,
-      :user_id,
+      :sender_id,
     ])
-    |> validate_required([:amount, :balance, :user_id])
+    |> validate_required([:amount, :balance, :sender_id])
   end
 
   @doc """

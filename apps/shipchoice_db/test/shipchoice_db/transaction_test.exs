@@ -15,7 +15,7 @@ defmodule ShipchoiceDb.TransactionTest do
       assert transaction.id != nil
       assert is_integer(transaction.amount)
       assert is_integer(transaction.amount)
-      assert transaction.user_id != nil
+      assert transaction.sender_id != nil
     end
   end
 end
