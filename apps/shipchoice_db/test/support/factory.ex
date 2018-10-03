@@ -49,7 +49,7 @@ defmodule ShipchoiceDb.Factory do
     %Transaction{
       amount: Faker.random_between(-10000, 10000),
       balance: Faker.random_between(-10000, 10000),
-      user: user_factory(),
+      sender: sender_factory(),
     }
   end
 

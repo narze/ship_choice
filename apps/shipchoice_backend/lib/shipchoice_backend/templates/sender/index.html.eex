@@ -32,6 +32,7 @@
         <th>Sender Name</th>
         <th>Phone</th>
         <th>Shipments Count</th>
+        <th>Credits</th>
         <th>Actions</th>
       </thead>
 

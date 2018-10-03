@@ -29,9 +29,9 @@ defmodule ShipchoiceBackend.Router do
     post("/shipments/upload", ShipmentController, :do_upload)
     post("/shipments/:id/send_message", ShipmentController, :send_message)
 
-    get("/senders", SenderController, :index)
-    get("/senders/new", SenderController, :new)
-    post("/senders", SenderController, :create)
+    resources("/senders", SenderController, only: [:index, :new, :create]) do
+      resources("/credits", CreditController, only: [:new, :create])
+    end
     post("/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments)
 
     get("/messages", MessageController, :index)
@@ -40,9 +40,7 @@ defmodule ShipchoiceBackend.Router do
 
     resources("/memberships", MembershipController, only: [:new, :create])
     resources("/sessions", SessionController, only: [:new, :create, :delete])
-    resources("/users", UserController, only: [:index, :new, :create]) do
-      resources("/credits", CreditController, only: [:new, :create])
-    end
+    resources("/users", UserController, only: [:index, :new, :create])
   end
 
   # Other scopes may use custom stacks.
