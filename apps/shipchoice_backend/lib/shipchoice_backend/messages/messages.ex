@@ -146,7 +146,7 @@ defmodule ShipchoiceBackend.Messages do
       end)
       |> Enum.count(fn {result, _} -> result == :ok end)
 
-    {:ok, "Sent to #{messages_sent_count} shipments"}
+    {:ok, "Sent to #{messages_sent_count} shipments", messages_sent_count}
   end
 
   def transform_phone_number(phone_number) do
