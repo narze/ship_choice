@@ -3,7 +3,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Shipment, Message, Repo}
+  alias ShipchoiceDb.{Credits, Message, Repo, Shipment}
 
   import Mock
   import ShipchoiceDb.Factory
@@ -195,6 +195,24 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
           assert called(Messages.send_message_to_shipment(expected_message, :_, :_))
         end
       end
+    end
+
+    @tag login_as: "admin", admin: true
+    test "POST /shipments/:id/send_message when shipments belongs to sender", %{conn: conn} do
+      sender = insert(:sender)
+      shipment = insert(:shipment, sender_phone: sender.phone)
+      shortened_url = "http://short.url/abc"
+
+      with_mock Messages,
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        with_mock URLShortener, shorten_url: fn _url -> {:ok, shortened_url} end do
+          conn = post(conn, "/shipments/#{shipment.id}/send_message")
+        end
+      end
+
+      # Deducts sender credit by -1
+      sender = shipment |> Shipment.get_sender()
+      assert Credits.get_sender_credit(sender) == -1
     end
 
     @tag login_as: "admin", admin: true
