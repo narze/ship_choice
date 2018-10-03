@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Sender, Repo}
+  alias ShipchoiceDb.{Credits, Sender, Repo}
   alias ShipchoiceBackend.Messages
 
   import Mock
@@ -111,13 +111,16 @@ defmodule ShipchoiceBackend.SenderControllerTest do
       _shipment1 = insert(:shipment, shipment_number: "PORM000188508", sender_phone: sender.phone)
       _shipment2 = insert(:shipment, shipment_number: "PORM000188509", sender_phone: sender.phone)
 
-      with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender -> {:ok, "Sent"} end do
+      with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender -> {:ok, "Sent", 2} end do
         conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")
 
         assert redirected_to(conn) == "/senders"
         assert get_flash(conn, :info) =~ "Sent message to 2 shipments."
         assert called(Messages.send_message_to_all_shipments_in_sender(:_))
       end
+
+      # Deducts sender credit by -2
+      assert Credits.get_sender_credit(sender) == -2
     end
   end
 end

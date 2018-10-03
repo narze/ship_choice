@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Repo, Shipment}
+  alias ShipchoiceDb.{Credits, Repo, Shipment}
 
   plug(:authenticate_user)
   plug :authorize_admin when action in [:upload, :do_upload, :send_message]
@@ -99,6 +99,11 @@ defmodule ShipchoiceBackend.ShipmentController do
 
     case result do
       {:ok, _message} ->
+        sender = Shipment.get_sender(shipment)
+        if sender do
+          Credits.deduct_credit_from_sender(1, sender)
+        end
+
         conn
         |> put_flash(:info, "Message Sent.")
         |> redirect(to: "/shipments")

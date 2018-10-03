@@ -116,7 +116,7 @@ defmodule ShipchoiceBackend.MessagesTest do
       sender = insert(:sender, phone: shipment1.sender_phone)
 
       with_mock SMSSender, send_message: fn message, _phone_number -> {:ok, message} end do
-        assert {:ok, "Sent to 2 shipments"} =
+        assert {:ok, "Sent to 2 shipments", 2} =
                  Messages.send_message_to_all_shipments_in_sender(sender)
       end
     end

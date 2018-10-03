@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.SenderController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.Sender
+  alias ShipchoiceDb.{Credits, Sender}
 
   plug(:authenticate_user)
 
@@ -45,8 +45,8 @@ defmodule ShipchoiceBackend.SenderController do
 
   def send_message_to_shipments(conn, %{"id" => id}) do
     sender = Sender.get(id)
-    count = Sender.count_shipments(sender)
-    {:ok, result} = Messages.send_message_to_all_shipments_in_sender(sender)
+    {:ok, result, count} = Messages.send_message_to_all_shipments_in_sender(sender)
+    Credits.deduct_credit_from_sender(count, sender)
 
     conn
     |> put_flash(:info, "Sent message to #{count} shipments.")

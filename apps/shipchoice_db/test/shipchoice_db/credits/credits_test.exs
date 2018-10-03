@@ -24,6 +24,22 @@ defmodule ShipchoiceDb.CreditsTest do
     end
   end
 
+  describe "deduct_credit_from_sender/2" do
+    test "it creates debit transaction for sender" do
+      amount = 10_000
+      sender = insert(:sender)
+
+      assert {:ok, inserted_transaction} = Credits.deduct_credit_from_sender(amount, sender)
+
+      sender = sender |> Repo.preload(:transactions)
+      assert sender.transactions |> length() == 1
+      transaction = sender.transactions |> List.first()
+      assert transaction == inserted_transaction
+      assert transaction.amount == -amount
+      assert transaction.sender_id == sender.id
+    end
+  end
+
   describe "get_sender_credit/1" do
     test "it returns sum of sender's remaining credit" do
       sender = insert(:sender)

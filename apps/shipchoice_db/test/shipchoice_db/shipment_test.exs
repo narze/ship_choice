@@ -330,4 +330,19 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert result == [shipment]
     end
   end
+
+  describe "get_sender/1" do
+    test "returns its sender by phone" do
+      shipment = insert(:shipment, sender_phone: "0812345678")
+      sender = insert(:sender, phone: "0812345678")
+
+      assert sender == shipment |> Shipment.get_sender()
+    end
+
+    test "returns nil if shipment associates to no sender" do
+      shipment = insert(:shipment, sender_phone: "0812345678")
+
+      assert Shipment.get_sender(shipment) == nil
+    end
+  end
 end

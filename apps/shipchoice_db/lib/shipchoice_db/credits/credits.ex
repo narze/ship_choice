@@ -8,6 +8,13 @@ defmodule ShipchoiceDb.Credits do
       |> Repo.insert()
   end
 
+  def deduct_credit_from_sender(amount, %Sender{} = sender) do
+    transaction =
+      sender
+      |> Ecto.build_assoc(:transactions, %{amount: -amount, balance: 0})
+      |> Repo.insert()
+  end
+
   def get_sender_credit(%Sender{} = sender) do
     credit =
       sender
