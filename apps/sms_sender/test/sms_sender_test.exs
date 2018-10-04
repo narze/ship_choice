@@ -7,10 +7,6 @@ defmodule SMSSenderTest do
     HTTPoison.start
   end
 
-  test "greets the world" do
-    assert SMSSender.hello() == :world
-  end
-
   describe "send_message/2" do
     # context "send with wrong format of phone number (no +66)" do
       test "returns error : invalid number" do

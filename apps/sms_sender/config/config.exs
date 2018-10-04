@@ -33,3 +33,8 @@ config :sms_sender,
   apitel_sender_id: "${APITEL_SENDER_ID}",
   apitel_api_key: "${APITEL_API_KEY}",
   apitel_api_secret: "${APITEL_API_SECRET}"
+
+config :sms_sender,
+  sender: SMSSender.Apitel
+
+import_config "#{Mix.env}.exs"
