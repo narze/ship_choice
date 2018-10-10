@@ -136,8 +136,14 @@ defmodule ShipchoiceBackend.Messages do
   @doc """
   Send multiple Message to all shipments in a sender
   """
-  def send_message_to_all_shipments_in_sender(%Sender{} = sender) do
+  def send_message_to_all_shipments_in_sender(%Sender{} = sender, limit \\ nil) do
     shipments = Sender.get_shipments(sender)
+
+    shipments =
+      case limit do
+        nil -> shipments
+        _ -> shipments |> Enum.take(limit)
+      end
 
     messages_sent_count =
       shipments

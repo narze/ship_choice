@@ -104,9 +104,26 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
     @tag login_as: "narze"
     test "POST /senders/:id/send_message_to_shipments", %{conn: conn} do
-      sender = %{name: "Foo", phone: "0863949474"}
+      sender = insert(:sender, name: "Foo", phone: "0863949474")
+      Credits.add_credit_to_sender(100, sender)
 
-      {:ok, sender} = Sender.insert(sender)
+      _shipment1 = insert(:shipment, shipment_number: "PORM000188508", sender_phone: sender.phone)
+      _shipment2 = insert(:shipment, shipment_number: "PORM000188509", sender_phone: sender.phone)
+
+      with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender, 100 -> {:ok, "Sent", 2} end do
+        conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")
+
+        assert redirected_to(conn) == "/senders"
+        assert get_flash(conn, :info) =~ "Sent message to 2 shipments."
+        assert called(Messages.send_message_to_all_shipments_in_sender(:_, 100))
+      end
+
+      assert Credits.get_sender_credit(sender) == 100 -2
+    end
+
+    @tag login_as: "narze"
+    test "POST /senders/:id/send_message_to_shipments, when having insufficient credits", %{conn: conn} do
+      sender = insert(:sender, name: "Foo", phone: "0863949474")
 
       _shipment1 = insert(:shipment, shipment_number: "PORM000188508", sender_phone: sender.phone)
       _shipment2 = insert(:shipment, shipment_number: "PORM000188509", sender_phone: sender.phone)
@@ -115,12 +132,30 @@ defmodule ShipchoiceBackend.SenderControllerTest do
         conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")
 
         assert redirected_to(conn) == "/senders"
-        assert get_flash(conn, :info) =~ "Sent message to 2 shipments."
-        assert called(Messages.send_message_to_all_shipments_in_sender(:_))
+        assert get_flash(conn, :error) =~ "Messages not sent. Insufficient credit."
+        refute called(Messages.send_message_to_all_shipments_in_sender(:_))
       end
 
-      # Deducts sender credit by -2
-      assert Credits.get_sender_credit(sender) == -2
+      assert Credits.get_sender_credit(sender) == 0
+    end
+
+    @tag login_as: "narze"
+    test "POST /senders/:id/send_message_to_shipments, when having partial credits", %{conn: conn} do
+      sender = insert(:sender, name: "Foo", phone: "0863949474")
+      Credits.add_credit_to_sender(1, sender)
+
+      _shipment1 = insert(:shipment, shipment_number: "PORM000188508", sender_phone: sender.phone)
+      _shipment2 = insert(:shipment, shipment_number: "PORM000188509", sender_phone: sender.phone)
+
+      with_mock Messages, send_message_to_all_shipments_in_sender: fn _sender, _limit -> {:ok, "Sent", 1} end do
+        conn = post(conn, "/senders/#{sender.id}/send_message_to_shipments")
+
+        assert redirected_to(conn) == "/senders"
+        assert get_flash(conn, :info) =~ "Sent message to 1 shipments."
+        assert called(Messages.send_message_to_all_shipments_in_sender(:_, 1))
+      end
+
+      assert Credits.get_sender_credit(sender) == 0
     end
   end
 end
