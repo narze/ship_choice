@@ -120,6 +120,17 @@ defmodule ShipchoiceBackend.MessagesTest do
                  Messages.send_message_to_all_shipments_in_sender(sender)
       end
     end
+
+    test "when specifying limit less than shipments" do
+      shipment1 = insert(:shipment, sender_phone: "0812345678")
+      _shipment2 = insert(:shipment, sender_phone: "0812345678")
+      sender = insert(:sender, phone: shipment1.sender_phone)
+
+      with_mock SMSSender, send_message: fn message, _phone_number -> {:ok, message} end do
+        assert {:ok, "Sent to 1 shipments", 1} =
+                 Messages.send_message_to_all_shipments_in_sender(sender, 1)
+      end
+    end
   end
 
   describe "transform_phone_number/1" do

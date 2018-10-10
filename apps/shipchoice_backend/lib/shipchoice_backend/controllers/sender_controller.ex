@@ -45,11 +45,19 @@ defmodule ShipchoiceBackend.SenderController do
 
   def send_message_to_shipments(conn, %{"id" => id}) do
     sender = Sender.get(id)
-    {:ok, result, count} = Messages.send_message_to_all_shipments_in_sender(sender)
-    Credits.deduct_credit_from_sender(count, sender)
+    credits = Credits.get_sender_credit(sender)
 
-    conn
-    |> put_flash(:info, "Sent message to #{count} shipments.")
-    |> redirect(to: "/senders")
+    if credits < 1 do
+      conn
+      |> put_flash(:error, "Messages not sent. Insufficient credit.")
+      |> redirect(to: "/senders")
+    else
+      {:ok, result, count} = Messages.send_message_to_all_shipments_in_sender(sender, credits)
+      Credits.deduct_credit_from_sender(count, sender)
+
+      conn
+      |> put_flash(:info, "Sent message to #{count} shipments.")
+      |> redirect(to: "/senders")
+    end
   end
 end
