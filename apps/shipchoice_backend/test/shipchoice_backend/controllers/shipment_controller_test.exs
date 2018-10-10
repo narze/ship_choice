@@ -198,21 +198,48 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "admin", admin: true
-    test "POST /shipments/:id/send_message when shipments belongs to sender", %{conn: conn} do
+    test "POST /shipments/:id/send_message when shipments belongs to sender, without credits", %{conn: conn} do
       sender = insert(:sender)
       shipment = insert(:shipment, sender_phone: sender.phone)
       shortened_url = "http://short.url/abc"
+      expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{shortened_url}"
 
       with_mock Messages,
         send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
         with_mock URLShortener, shorten_url: fn _url -> {:ok, shortened_url} end do
           conn = post(conn, "/shipments/#{shipment.id}/send_message")
+          assert redirected_to(conn) == "/shipments"
+          assert get_flash(conn, :error) =~ "Message Not Sent. Insufficient Credit."
+          refute called(URLShortener.shorten_url(shipment |> Shipment.tracking_url()))
+          refute called(Messages.send_message_to_shipment(expected_message, :_, :_))
+        end
+      end
+
+      assert Credits.get_sender_credit(sender) == 0
+    end
+
+    @tag login_as: "admin", admin: true
+    test "POST /shipments/:id/send_message when shipments belongs to sender, with credits", %{conn: conn} do
+      sender = insert(:sender)
+      shipment = insert(:shipment, sender_phone: sender.phone)
+      Credits.add_credit_to_sender(100, sender)
+      shortened_url = "http://short.url/abc"
+      expected_message = "Kerry กำลังนำส่งพัสดุจาก #{shipment.sender_name} #{shortened_url}"
+
+      with_mock Messages,
+        send_message_to_shipment: fn _message, %Shipment{}, _resent -> {:ok, %Message{}} end do
+        with_mock URLShortener, shorten_url: fn _url -> {:ok, shortened_url} end do
+          conn = post(conn, "/shipments/#{shipment.id}/send_message")
+          assert redirected_to(conn) == "/shipments"
+          assert get_flash(conn, :info) =~ "Message Sent."
+          assert called(URLShortener.shorten_url(shipment |> Shipment.tracking_url()))
+          assert called(Messages.send_message_to_shipment(expected_message, :_, :_))
         end
       end
 
       # Deducts sender credit by -1
       sender = shipment |> Shipment.get_sender()
-      assert Credits.get_sender_credit(sender) == -1
+      assert Credits.get_sender_credit(sender) == 100 - 1
     end
 
     @tag login_as: "admin", admin: true

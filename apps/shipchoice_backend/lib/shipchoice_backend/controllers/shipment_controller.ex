@@ -67,51 +67,57 @@ defmodule ShipchoiceBackend.ShipmentController do
 
   def send_message(conn, %{"id" => id}) do
     shipment = Shipment.get(id)
+    sender = Shipment.get_sender(shipment)
 
-    message =
-      case shipment
-           |> Shipment.tracking_url()
-           |> URLShortener.shorten_url() do
-        {:ok, tracking_url} ->
-          sender_name_max_length = 70 - 26 - String.length(tracking_url)
+    if sender && Credits.get_sender_credit(sender) < 1 do
+      conn
+      |> put_flash(:error, "Message Not Sent. Insufficient Credit.")
+      |> redirect(to: "/shipments")
+    else
+      message =
+        case shipment
+            |> Shipment.tracking_url()
+            |> URLShortener.shorten_url() do
+          {:ok, tracking_url} ->
+            sender_name_max_length = 70 - 26 - String.length(tracking_url)
 
-          sliced_sender_name =
-            shipment.sender_name
-            |> String.to_charlist()
-            |> Enum.slice(0..(sender_name_max_length - 1))
-            |> to_string()
+            sliced_sender_name =
+              shipment.sender_name
+              |> String.to_charlist()
+              |> Enum.slice(0..(sender_name_max_length - 1))
+              |> to_string()
 
-          "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name} #{tracking_url}"
+            "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name} #{tracking_url}"
 
-        _ ->
-          sender_name_max_length = 70 - 25
+          _ ->
+            sender_name_max_length = 70 - 25
 
-          sliced_sender_name =
-            shipment.sender_name
-            |> String.to_charlist()
-            |> Enum.slice(0..(sender_name_max_length - 1))
-            |> to_string()
+            sliced_sender_name =
+              shipment.sender_name
+              |> String.to_charlist()
+              |> Enum.slice(0..(sender_name_max_length - 1))
+              |> to_string()
 
-          "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name}"
-      end
-
-    result = Messages.send_message_to_shipment(message, shipment, resend: true)
-
-    case result do
-      {:ok, _message} ->
-        sender = Shipment.get_sender(shipment)
-        if sender do
-          Credits.deduct_credit_from_sender(1, sender)
+            "Kerry กำลังนำส่งพัสดุจาก #{sliced_sender_name}"
         end
 
-        conn
-        |> put_flash(:info, "Message Sent.")
-        |> redirect(to: "/shipments")
+      result = Messages.send_message_to_shipment(message, shipment, resend: true)
 
-      {:error, error} ->
-        conn
-        |> put_flash(:error, error)
-        |> redirect(to: "/shipments")
+      case result do
+        {:ok, _message} ->
+          if sender do
+            Credits.deduct_credit_from_sender(1, sender)
+          end
+
+          conn
+          |> put_flash(:info, "Message Sent.")
+          |> redirect(to: "/shipments")
+
+        {:error, error} ->
+          conn
+          |> put_flash(:error, error)
+          |> redirect(to: "/shipments")
+      end
     end
   end
 end
