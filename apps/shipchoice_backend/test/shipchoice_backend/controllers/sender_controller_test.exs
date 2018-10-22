@@ -165,12 +165,13 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
   describe "GET /senders/:id" do
     @tag login_as: "narze"
-    test "renders sender name with shipments count", %{conn: conn, user: user} do
+    test "renders sender dashboard", %{conn: conn, user: user} do
       sender = insert(:sender, users: [user])
       conn = get(conn, "/senders/#{sender.id}")
 
       assert html_response(conn, 200) =~ sender.name
       assert html_response(conn, 200) =~ "Total Shipments : #{sender |> Sender.count_shipments()}"
+      assert html_response(conn, 200) =~ "Remaining Credits : #{sender |> Credits.get_sender_credit()}"
     end
   end
 end

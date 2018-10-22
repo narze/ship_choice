@@ -46,9 +46,15 @@ defmodule ShipchoiceBackend.SenderController do
   def show(conn, %{"id" => id}) do
     sender = Sender.get(id)
     total_shipments = Sender.count_shipments(sender)
+    credits = Credits.get_sender_credit(sender)
 
     conn
-    |> render("show.html", sender: sender, total_shipments: total_shipments)
+    |> render(
+        "show.html",
+        sender: sender,
+        total_shipments: total_shipments,
+        remaining_credits: credits,
+      )
   end
 
   def send_message_to_shipments(conn, %{"id" => id}) do
