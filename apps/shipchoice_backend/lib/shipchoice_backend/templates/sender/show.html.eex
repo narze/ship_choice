@@ -27,15 +27,14 @@
     <table class="table">
       <thead>
         <th>Shipment #</th>
-        <th>Sender</th>
         <th>Recipient Name</th>
         <th>Recipient Phone</th>
-        <th>Actions</th>
+        <th>Message Sent</th>
       </thead>
 
       <tbody>
         <%= for shipment <- @shipments do %>
-          <%= render ShipchoiceBackend.ShipmentView, "shipment.html", shipment: shipment, current_user: @current_user %>
+          <%= render "shipment.html", shipment: shipment, current_user: @current_user %>
         <% end %>
       </tbody>
     </table>
