@@ -167,11 +167,14 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     @tag login_as: "narze"
     test "renders sender dashboard", %{conn: conn, user: user} do
       sender = insert(:sender, users: [user])
+      shipments = insert_list(2, :shipment, sender_phone: sender.phone)
       conn = get(conn, "/senders/#{sender.id}")
 
       assert html_response(conn, 200) =~ sender.name
       assert html_response(conn, 200) =~ "Total Shipments : #{sender |> Sender.count_shipments()}"
       assert html_response(conn, 200) =~ "Remaining Credits : #{sender |> Credits.get_sender_credit()}"
+      assert html_response(conn, 200) =~ shipments |> Enum.at(0) |> Map.get(:shipment_number)
+      assert html_response(conn, 200) =~ shipments |> Enum.at(1) |> Map.get(:shipment_number)
     end
   end
 end
