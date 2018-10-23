@@ -1,4 +1,4 @@
-<ul class="navbar-nav my-2 my-lg-0">
+<ul class="nav navbar-nav my-2 my-lg-0">
   <%= if @current_user do %>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
