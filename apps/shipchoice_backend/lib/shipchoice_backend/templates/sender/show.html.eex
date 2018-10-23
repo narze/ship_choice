@@ -1,14 +1,32 @@
 <div class="row">
   <div class="col-lg-12">
-    <h1>Sender : <%= @sender.name %></h1>
+    <h3>Sender : <%= @sender.name %></h3>
   </div>
 </div>
 <div class="row">
   <div class="col-lg-4">
-    Total Shipments : <%= @total_shipments %>
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Total Shipments</h4>
+        <p class="card-text"><%= @total_shipments %></p>
+      </div>
+    </div>
   </div>
   <div class="col-lg-4">
-    Remaining Credits : <%= @remaining_credits %>
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Remaining Credits</h4>
+        <p class="card-text"><%= @remaining_credits %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Pending Shipments</h4>
+        <p class="card-text">-</p>
+      </div>
+    </div>
   </div>
 </div>
 <hr>
