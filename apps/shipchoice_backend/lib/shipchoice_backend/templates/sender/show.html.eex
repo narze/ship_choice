@@ -15,16 +15,16 @@
   <div class="col-lg-4">
     <div class="card text-center">
       <div class="card-body">
-        <h4 class="card-title">Remaining Credits</h4>
-        <p class="card-text"><%= @remaining_credits %></p>
+        <h4 class="card-title">Messages Sent</h4>
+        <p class="card-text"><%= @messages_sent %>/<%= @total_shipments %></p>
       </div>
     </div>
   </div>
   <div class="col-lg-4">
     <div class="card text-center">
       <div class="card-body">
-        <h4 class="card-title">Pending Shipments</h4>
-        <p class="card-text">-</p>
+        <h4 class="card-title">Remaining Credits</h4>
+        <p class="card-text"><%= @remaining_credits %></p>
       </div>
     </div>
   </div>

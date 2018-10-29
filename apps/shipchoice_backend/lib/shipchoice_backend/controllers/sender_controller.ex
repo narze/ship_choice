@@ -60,6 +60,7 @@ defmodule ShipchoiceBackend.SenderController do
         shipments: page.entries,
         page: page,
         remaining_credits: credits,
+        messages_sent: Sender.count_messages(sender),
       )
   end
 

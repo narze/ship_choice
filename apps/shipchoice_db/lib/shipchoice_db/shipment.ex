@@ -22,6 +22,7 @@ defmodule ShipchoiceDb.Shipment do
     field(:recipient_zip, :string)
     field(:metadata, :map)
     has_many(:messages, Message)
+    belongs_to(:sender, Sender, foreign_key: :sender_phone, references: :phone, define_field: false)
 
     timestamps()
   end

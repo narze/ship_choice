@@ -94,4 +94,17 @@ defmodule ShipchoiceDb.SenderTest do
       assert length(sender.users) == 1
     end
   end
+
+  describe "count_messages/1" do
+    test "returns amount of messages" do
+      sender = insert(
+        :sender,
+        shipments: [
+          build(:shipment, messages: build_list(3, :message))
+        ]
+      )
+
+      assert Sender.count_messages(sender) == 3
+    end
+  end
 end
