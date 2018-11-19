@@ -27,6 +27,8 @@ defmodule ShipchoiceBackend.Router do
     get("/shipments", ShipmentController, :index)
     get("/shipments/upload", ShipmentController, :upload)
     post("/shipments/upload", ShipmentController, :do_upload)
+    get("/shipments/upload_pending", ShipmentController, :upload_pending)
+    post("/shipments/upload_pending", ShipmentController, :do_upload_pending)
     post("/shipments/:id/send_message", ShipmentController, :send_message)
 
     resources("/senders", SenderController, only: [:index, :new, :create]) do

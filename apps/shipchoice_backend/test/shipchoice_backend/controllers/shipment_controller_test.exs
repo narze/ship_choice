@@ -17,7 +17,9 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       [
         get(conn, shipment_path(conn, :index)),
         get(conn, shipment_path(conn, :upload)),
+        get(conn, shipment_path(conn, :upload_pending)),
         post(conn, shipment_path(conn, :do_upload)),
+        post(conn, shipment_path(conn, :do_upload_pending)),
         post(conn, shipment_path(conn, :send_message, 1))
       ],
       fn conn ->
@@ -45,6 +47,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       assert html_response(conn, 200) =~ "Upload Kerry Report"
+      assert html_response(conn, 200) =~ "Upload Kerry Pending Report"
     end
 
     @tag login_as: "user"
@@ -52,6 +55,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       refute html_response(conn, 200) =~ "Upload Kerry Report"
+      refute html_response(conn, 200) =~ "Upload Kerry Pending Report"
     end
 
     @tag login_as: "admin", admin: true
@@ -305,6 +309,34 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
         assert get_flash(conn, :error) =~ msg
         assert called(Messages.send_message_to_shipment(:_, :_, :_))
       end
+    end
+  end
+
+  describe "GET upload_pending" do
+    setup options do
+      %{conn: conn, login_as: username, admin: admin} =
+        Enum.into(options, %{admin: false})
+      factory = if admin, do: :admin_user, else: :user
+      user = insert(factory, username: username)
+      conn = assign(conn, :current_user, user)
+
+      {:ok, conn: conn, user: user}
+    end
+
+    @tag login_as: "user"
+    test "redirect to root page", %{conn: conn} do
+      conn = get(conn, "/shipments/upload_pending")
+
+      assert redirected_to(conn) == "/"
+      assert html_response(conn, 302)
+      assert get_flash(conn, :error) == "Not allowed."
+    end
+
+    @tag login_as: "admin", admin: true
+    test "renders upload pending page", %{conn: conn} do
+      conn = get(conn, "/shipments/upload_pending")
+
+      assert html_response(conn, 200) =~ "Upload Kerry Pending Report"
     end
   end
 end
