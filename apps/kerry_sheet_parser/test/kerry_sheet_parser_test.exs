@@ -7,6 +7,8 @@ defmodule KerrySheetParserTest do
       sheet_path = "test/fixtures/HPPY_Pending-3-11-61.xlsx"
       {:ok, result} = KerrySheetParser.parse_pending_sheet(sheet_path)
 
+      assert 92 == result |> length()
+
       first_row = result |> Enum.at(0)
 
       assert result |> is_list()

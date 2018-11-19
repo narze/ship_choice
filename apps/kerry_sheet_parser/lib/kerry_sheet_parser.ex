@@ -36,6 +36,7 @@ defmodule KerrySheetParser do
     rows =
       data
       |> Enum.drop(14) # Drop rows until first row of data
+      |> Enum.drop(-1) # Drop summary row at the bottom
       |> Enum.map(fn row ->
         row =
           row
