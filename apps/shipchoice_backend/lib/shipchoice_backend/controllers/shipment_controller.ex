@@ -76,7 +76,22 @@ defmodule ShipchoiceBackend.ShipmentController do
   end
 
   def do_upload_pending(conn, params) do
+    unless kerry_pending_report = params["kerry_pending_report"] do
+      conn
+      |> put_flash(:error, "Kerry Pending Report File Needed")
+      |> redirect(to: "/shipments/upload_pending")
+    else
+      {:ok, rows} = KerrySheetParser.parse_pending_sheet(kerry_pending_report.path)
 
+      count = rows |> length()
+
+      conn
+      |> put_flash(
+        :info,
+        "Uploaded Kerry Pending Report. #{count} Rows Processed."
+      )
+      |> redirect(to: "/shipments")
+    end
   end
 
   def send_message(conn, %{"id" => id}) do

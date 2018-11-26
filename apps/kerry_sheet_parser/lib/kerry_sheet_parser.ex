@@ -34,7 +34,7 @@ defmodule KerrySheetParser do
     temp_file = "/tmp/kerry_pending_#{:os.system_time(:seconds)}_#{:rand.uniform(100_000)}.xlsx"
     File.cp(sheet_path, temp_file)
 
-    data = Excelion.parse!(sheet_path, sheet_number, start_row)
+    data = Excelion.parse!(temp_file, sheet_number, start_row)
     File.rm(temp_file)
 
     rows =
