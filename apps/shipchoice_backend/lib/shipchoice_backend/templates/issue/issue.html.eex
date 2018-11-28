@@ -1,0 +1,6 @@
+<tr>
+  <td><%= @issue.shipment_number %></td>
+  <td><%= @issue.dly_status_code %></td>
+  <td><%= @issue.dly_status_remark %></td>
+  <td></td>
+</tr>
