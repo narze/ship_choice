@@ -3,7 +3,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Credits, Message, Repo, Shipment}
+  alias ShipchoiceDb.{Credits, Issue, Message, Repo, Shipment}
 
   import Mock
   import ShipchoiceDb.Factory
@@ -359,7 +359,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
     end
 
     @tag login_as: "admin", admin: true
-    test "with xlsx file", %{conn: conn} do
+    test "with xlsx file inserts issues", %{conn: conn} do
       upload = %Plug.Upload{
         path: "../../apps/kerry_sheet_parser/test/fixtures/HPPY_Pending-3-11-61.xlsx",
         filename: "HPPY_Pending-3-11-61.xlsx"
@@ -370,6 +370,9 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       assert redirected_to(conn) == "/shipments"
       assert get_flash(conn, :info) =~ "Uploaded Kerry Pending Report."
       assert get_flash(conn, :info) =~ "92 Rows Processed."
+      assert get_flash(conn, :info) =~ "92 Issues Added."
+
+      assert length(Issue.all()) == 92
     end
   end
 end

@@ -40,4 +40,85 @@ defmodule ShipchoiceDb.IssueTest do
       assert shipment1 == Issue.get_shipment(issue)
     end
   end
+
+  describe "insert_rows/1" do
+    test "inserts list of issues" do
+      issue_list = [
+        %{
+          consignment_no: "PORM000188508",
+          date_time: "date_time1",
+          payer: "payer1",
+          sender: "sender1",
+          route: "route1",
+          dc: "dc1",
+          svc_type: "svc_type1",
+          pkg_count: "pkg_count1",
+          last_status_code: "last_status_code1",
+          dly_status_code: "dly_status_code1",
+          dly_status_remark: "dly_status_remark1",
+          station_location: "station_location1",
+          cod_amount: "cod_amount1",
+        },
+        %{
+          consignment_no: "PORM000188509",
+          date_time: "date_time2",
+          payer: "payer2",
+          sender: "sender2",
+          route: "route2",
+          dc: "dc2",
+          svc_type: "svc_type2",
+          pkg_count: "pkg_count2",
+          last_status_code: "last_status_code2",
+          dly_status_code: "dly_status_code2",
+          dly_status_remark: "dly_status_remark2",
+          station_location: "station_location2",
+          cod_amount: "cod_amount2",
+        },
+      ]
+
+      {:ok, count: 2, new: 2} = Issue.insert_rows(issue_list)
+
+      assert length(Issue.all()) == 2
+    end
+  end
+
+  describe "parse/1" do
+    test "parses row to insertable data" do
+      issue_row = %{
+        consignment_no: "PORM000188508",
+        date_time: "date_time1",
+        payer: "payer1",
+        sender: "sender1",
+        route: "route1",
+        dc: "dc1",
+        svc_type: "svc_type1",
+        pkg_count: "pkg_count1",
+        last_status_code: "last_status_code1",
+        dly_status_code: "dly_status_code1",
+        dly_status_remark: "dly_status_remark1",
+        station_location: "station_location1",
+        cod_amount: "cod_amount1",
+      }
+
+      expected_map = %{
+        shipment_number: "PORM000188508",
+        payer: "payer1",
+        sender: "sender1",
+        route: "route1",
+        dc: "dc1",
+        last_status_code: "last_status_code1",
+        dly_status_code: "dly_status_code1",
+        dly_status_remark: "dly_status_remark1",
+        station_location: "station_location1",
+        metadata: %{
+          cod_amount: "cod_amount1",
+          date_time: "date_time1",
+          svc_type: "svc_type1",
+          pkg_count: "pkg_count1",
+        }
+      }
+
+      assert Issue.parse(issue_row) == expected_map
+    end
+  end
 end

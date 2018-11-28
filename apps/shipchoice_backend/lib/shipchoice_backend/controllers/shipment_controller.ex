@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Credits, Repo, Shipment}
+  alias ShipchoiceDb.{Credits, Issue, Repo, Shipment}
 
   plug(:authenticate_user)
   plug :authorize_admin when action in [
@@ -83,12 +83,12 @@ defmodule ShipchoiceBackend.ShipmentController do
     else
       {:ok, rows} = KerrySheetParser.parse_pending_sheet(kerry_pending_report.path)
 
-      count = rows |> length()
+      {:ok, count: count, new: new} = Issue.insert_rows(rows)
 
       conn
       |> put_flash(
         :info,
-        "Uploaded Kerry Pending Report. #{count} Rows Processed."
+        "Uploaded Kerry Pending Report. #{count} Rows Processed. #{new} Issues Added."
       )
       |> redirect(to: "/shipments")
     end
