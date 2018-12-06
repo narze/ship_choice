@@ -22,7 +22,6 @@
   </div>
   <%= if @current_user.is_admin do %>
     <div class="col-lg-4">
-      <%= link "Upload Kerry Pending Report", to: "/shipments/upload_pending", class: "btn btn-primary float-right" %>
       <%= link "Upload Kerry Report", to: "/shipments/upload", class: "btn btn-primary float-right" %>
     </div>
   <% end %>

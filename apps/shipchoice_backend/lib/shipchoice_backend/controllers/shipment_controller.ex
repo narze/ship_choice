@@ -7,9 +7,7 @@ defmodule ShipchoiceBackend.ShipmentController do
   plug(:authenticate_user)
   plug :authorize_admin when action in [
     :upload,
-    :upload_pending,
     :do_upload,
-    :do_upload_pending,
     :send_message,
   ]
 
@@ -66,29 +64,6 @@ defmodule ShipchoiceBackend.ShipmentController do
       |> put_flash(
         :info,
         "Uploaded Kerry Report. #{count} Rows Processed. #{new} Shipments Added."
-      )
-      |> redirect(to: "/shipments")
-    end
-  end
-
-  def upload_pending(conn, _params) do
-    render(conn, "upload_pending.html")
-  end
-
-  def do_upload_pending(conn, params) do
-    unless kerry_pending_report = params["kerry_pending_report"] do
-      conn
-      |> put_flash(:error, "Kerry Pending Report File Needed")
-      |> redirect(to: "/shipments/upload_pending")
-    else
-      {:ok, rows} = KerrySheetParser.parse_pending_sheet(kerry_pending_report.path)
-
-      {:ok, count: count, new: new} = Issue.insert_rows(rows)
-
-      conn
-      |> put_flash(
-        :info,
-        "Uploaded Kerry Pending Report. #{count} Rows Processed. #{new} Issues Added."
       )
       |> redirect(to: "/shipments")
     end
