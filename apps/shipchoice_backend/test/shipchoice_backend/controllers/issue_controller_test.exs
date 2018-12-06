@@ -1,4 +1,4 @@
-defmodule ShipchoiceBackend.SenderControllerTest do
+defmodule ShipchoiceBackend.IssueControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
@@ -40,7 +40,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     end
 
     @tag login_as: "user"
-    test "user is not allowed to view all issues" do
+    test "user is not allowed to view all issues", %{conn: conn} do
       conn = get(conn, "/issues")
 
       assert redirected_to(conn) == "/"
@@ -49,7 +49,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     end
 
     @tag login_as: "admin", admin: true
-    test "admin can view all issues" do
+    test "admin can view all issues", %{conn: conn} do
       conn = get(conn, "/issues")
 
       assert html_response(conn, 200) =~ "All Issues"
@@ -111,7 +111,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
 
       conn = post(conn, "/issues/upload_pending", %{kerry_pending_report: upload})
 
-      assert redirected_to(conn) == "/shipments"
+      assert redirected_to(conn) == "/issues"
       assert get_flash(conn, :info) =~ "Uploaded Kerry Pending Report."
       assert get_flash(conn, :info) =~ "92 Rows Processed."
       assert get_flash(conn, :info) =~ "92 Issues Added."

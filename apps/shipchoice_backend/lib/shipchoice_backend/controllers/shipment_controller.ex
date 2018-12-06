@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.ShipmentController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Credits, Issue, Repo, Shipment}
+  alias ShipchoiceDb.{Credits, Repo, Shipment}
 
   plug(:authenticate_user)
   plug :authorize_admin when action in [
