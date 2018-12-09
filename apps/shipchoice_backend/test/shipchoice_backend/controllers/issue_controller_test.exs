@@ -50,9 +50,24 @@ defmodule ShipchoiceBackend.IssueControllerTest do
 
     @tag login_as: "admin", admin: true
     test "admin can view all issues", %{conn: conn} do
+      issues = insert_list(2, :issue)
+
       conn = get(conn, "/issues")
 
       assert html_response(conn, 200) =~ "All Issues"
+      assert html_response(conn, 200) =~ Enum.at(issues, 0).shipment_number
+      assert html_response(conn, 200) =~ Enum.at(issues, 1).shipment_number
+    end
+
+    @tag login_as: "admin", admin: true
+    test "admin can view resolved issues", %{conn: conn} do
+      time = DateTime.utc_now()
+      issues = insert_list(2, :issue, resolved_at: time)
+
+      conn = get(conn, "/issues")
+
+      assert html_response(conn, 200) =~ "All Issues"
+      assert html_response(conn, 200) =~ time |> Timex.format!("{relative}", :relative)
     end
   end
 

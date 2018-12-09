@@ -22,6 +22,7 @@
         <th>Shipment #</th>
         <th>Status Code</th>
         <th>Status Remark</th>
+        <th>Resolved At</th>
         <th>Actions</th>
       </thead>
 
