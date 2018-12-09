@@ -21,6 +21,7 @@ defmodule ShipchoiceDb.Issue do
     field(:dly_status_remark, :string)
     field(:station_location, :string)
     field(:metadata, :map)
+    field(:resolved_at, :naive_datetime)
 
     timestamps()
   end
