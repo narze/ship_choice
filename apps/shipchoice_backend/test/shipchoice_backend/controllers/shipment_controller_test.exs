@@ -45,6 +45,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       assert html_response(conn, 200) =~ "Upload Kerry Report"
+      assert html_response(conn, 200) =~ "Upload Kerry Pending Report"
     end
 
     @tag login_as: "user"
@@ -52,6 +53,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
       conn = get(conn, "/shipments")
       assert html_response(conn, 200) =~ "All Shipments"
       refute html_response(conn, 200) =~ "Upload Kerry Report"
+      refute html_response(conn, 200) =~ "Upload Kerry Pending Report"
     end
 
     @tag login_as: "admin", admin: true

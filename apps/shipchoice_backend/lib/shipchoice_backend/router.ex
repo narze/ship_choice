@@ -38,6 +38,12 @@ defmodule ShipchoiceBackend.Router do
 
     get("/t/:number", TrackingController, :tracking)
 
+    get("/issues/upload_pending", IssueController, :upload_pending)
+    post("/issues/upload_pending", IssueController, :do_upload_pending)
+    post("/issues/:id/resolve", IssueController, :resolve)
+    post("/issues/:id/undo_resolve", IssueController, :undo_resolve)
+    resources("/issues", IssueController, only: [:index])
+
     resources("/memberships", MembershipController, only: [:new, :create])
     resources("/sessions", SessionController, only: [:new, :create, :delete])
     resources("/users", UserController, only: [:index, :new, :create])

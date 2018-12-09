@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h4>All Issues</h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <%= pagination_links @page %>
+  </div>
+  <%= if @current_user.is_admin do %>
+    <div class="col-lg-4">
+      <%= link "Upload Kerry Pending Report", to: "/issues/upload_pending", class: "btn btn-primary float-right" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <table class="table">
+      <thead>
+        <th>Shipment #</th>
+        <th>Status Code</th>
+        <th>Status Remark</th>
+        <th>Resolved At</th>
+        <th>Actions</th>
+      </thead>
+
+      <tbody>
+        <%= render_many @issues,
+                        ShipchoiceBackend.IssueView,
+                        "issue.html",
+                        conn: @conn %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <%= pagination_links @page %>
+  </div>
+  <%= if @current_user.is_admin do %>
+    <div class="col-lg-4">
+      <%= link "Upload Kerry Pending Report", to: "/issues/upload_pending", class: "btn btn-primary float-right" %>
+    </div>
+  <% end %>
+</div>

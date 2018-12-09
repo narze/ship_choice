@@ -5,7 +5,11 @@ defmodule ShipchoiceBackend.ShipmentController do
   alias ShipchoiceDb.{Credits, Repo, Shipment}
 
   plug(:authenticate_user)
-  plug :authorize_admin when action in [:upload, :do_upload, :send_message]
+  plug :authorize_admin when action in [
+    :upload,
+    :do_upload,
+    :send_message,
+  ]
 
   def index(conn, params) do
     page = if conn.assigns[:current_user].is_admin do

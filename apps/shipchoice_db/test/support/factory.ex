@@ -1,7 +1,21 @@
 defmodule ShipchoiceDb.Factory do
   use ExMachina.Ecto, repo: ShipchoiceDb.Repo
 
-  alias ShipchoiceDb.{Message, Sender, Shipment, Transaction, User}
+  alias ShipchoiceDb.{Issue, Message, Sender, Shipment, Transaction, User}
+
+  def issue_factory do
+    %Issue{
+      shipment_number: "PORM" <> (Faker.random_between(0, 30000000) |> to_string),
+      payer: Faker.Name.name(),
+      sender: Faker.Name.name(),
+      route: "ABCXYZ",
+      dc: "BKKXYZ",
+      last_status_code: "CLS",
+      dly_status_code: "DLY06",
+      dly_status_remark: "Cancelled",
+      station_location: "ABC",
+    }
+  end
 
   def sender_factory do
     %Sender{
