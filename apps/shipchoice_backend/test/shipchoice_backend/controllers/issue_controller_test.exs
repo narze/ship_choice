@@ -18,6 +18,8 @@ defmodule ShipchoiceBackend.IssueControllerTest do
         get(conn, issue_path(conn, :index)),
         get(conn, issue_path(conn, :upload_pending)),
         post(conn, issue_path(conn, :do_upload_pending)),
+        post(conn, issue_path(conn, :resolve, 1)),
+        post(conn, issue_path(conn, :undo_resolve, 1)),
       ],
       fn conn ->
         assert html_response(conn, 302)
@@ -55,6 +57,7 @@ defmodule ShipchoiceBackend.IssueControllerTest do
       conn = get(conn, "/issues")
 
       assert html_response(conn, 200) =~ "All Issues"
+      assert html_response(conn, 200) =~ "Mark Resolved"
       assert html_response(conn, 200) =~ Enum.at(issues, 0).shipment_number
       assert html_response(conn, 200) =~ Enum.at(issues, 1).shipment_number
     end
@@ -67,6 +70,7 @@ defmodule ShipchoiceBackend.IssueControllerTest do
       conn = get(conn, "/issues")
 
       assert html_response(conn, 200) =~ "All Issues"
+      assert html_response(conn, 200) =~ "Undo Resolve"
       assert html_response(conn, 200) =~ time |> Timex.format!("{relative}", :relative)
     end
   end
@@ -132,6 +136,30 @@ defmodule ShipchoiceBackend.IssueControllerTest do
       assert get_flash(conn, :info) =~ "92 Issues Added."
 
       assert length(Issue.all()) == 92
+    end
+  end
+
+  describe "POST resolve" do
+    setup options do
+      %{conn: conn, login_as: username, admin: admin} =
+        Enum.into(options, %{admin: false})
+      factory = if admin, do: :admin_user, else: :user
+      user = insert(factory, username: username)
+      conn = assign(conn, :current_user, user)
+
+      {:ok, conn: conn, user: user}
+    end
+
+    @tag login_as: "admin", admin: true
+    test "sets issue as resolved", %{conn: conn} do
+      issue = insert(:issue)
+
+      conn = post(conn, "/issues/#{issue.id}/resolve")
+
+      assert redirected_to(conn) == "/issues"
+      assert get_flash(conn, :info) == "Mark resolved"
+
+      refute Issue.get(issue.id).resolved_at |> is_nil()
     end
   end
 end

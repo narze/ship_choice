@@ -130,9 +130,22 @@ defmodule ShipchoiceDb.IssueTest do
     end
 
     test "returns true when resolved_at is present" do
-      issue = insert(:issue, resolved_at: DateTime.utc_now())
+      issue = insert(:issue, resolved_at: NaiveDateTime.utc_now())
 
       assert Issue.resolved?(issue)
+    end
+  end
+
+  describe "update/2" do
+    test "updates an issue" do
+      issue = insert(:issue)
+      now = NaiveDateTime.utc_now()
+
+      {:ok, updated_issue} =
+        Issue.update(issue, %{payer: "foo", resolved_at: now})
+
+      assert updated_issue.payer == "foo"
+      assert updated_issue.resolved_at == now
     end
   end
 end

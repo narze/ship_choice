@@ -8,6 +8,8 @@ defmodule ShipchoiceBackend.IssueController do
     :index,
     :upload_pending,
     :do_upload_pending,
+    :resolve,
+    :undo_resolve,
   ]
 
   def index(conn, params) do
@@ -37,12 +39,38 @@ defmodule ShipchoiceBackend.IssueController do
 
       {:ok, count: count, new: new} = Issue.insert_rows(rows)
 
-      conn
+      (conn
       |> put_flash(
         :info,
         "Uploaded Kerry Pending Report. #{count} Rows Processed. #{new} Issues Added."
       )
-      |> redirect(to: "/issues")
+      |> redirect(to: "/issues"))
     end
+  end
+
+  def resolve(conn, %{"id" => id}) do
+    {:ok, issue} =
+      Issue.get(id)
+      |> Issue.update(%{resolved_at: DateTime.utc_now()})
+
+    conn
+    |> put_flash(
+      :info,
+      "Mark resolved"
+    )
+    |> redirect(to: "/issues")
+  end
+
+  def undo_resolve(conn, %{"id" => id}) do
+    {:ok, issue} =
+      Issue.get(id)
+      |> Issue.update(%{resolved_at: nil})
+
+    conn
+    |> put_flash(
+      :info,
+      "Undo mark resolved"
+    )
+    |> redirect(to: "/issues")
   end
 end

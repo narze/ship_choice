@@ -3,5 +3,17 @@
   <td><%= @issue.dly_status_code %></td>
   <td><%= @issue.dly_status_remark %></td>
   <td><%= resolved_at(@issue) %></td>
-  <td></td>
+  <td>
+    <%= if @issue.resolved_at do %>
+      <%= link("Undo Resolve",
+              to: issue_path(@conn, :undo_resolve, @issue),
+              method: :post,
+              class: "btn btn-danger btn-sm") %>
+    <% else %>
+      <%= link("Mark Resolved",
+              to: issue_path(@conn, :resolve, @issue),
+              method: :post,
+              class: "btn btn-primary btn-sm") %>
+    <% end %>
+  </td>
 </tr>

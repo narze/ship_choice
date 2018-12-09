@@ -48,6 +48,7 @@ defmodule ShipchoiceDb.Issue do
       :dly_status_remark,
       :station_location,
       :metadata,
+      :resolved_at,
     ])
     |> validate_required([:shipment_number])
     |> unique_constraint(:shipment_number)
@@ -154,5 +155,23 @@ defmodule ShipchoiceDb.Issue do
 
   def resolved?(issue) do
     !is_nil(issue.resolved_at)
+  end
+
+  @doc """
+  Updates an issue.
+
+  ## Examples
+
+      iex> update(issue, %{field: new_value})
+      {:ok, %Issue{}}
+
+      iex> update(issue, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update(%Issue{} = issue, attrs) do
+    issue
+    |> Issue.changeset(attrs)
+    |> Repo.update()
   end
 end
