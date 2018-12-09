@@ -121,4 +121,18 @@ defmodule ShipchoiceDb.IssueTest do
       assert Issue.parse(issue_row) == expected_map
     end
   end
+
+  describe "resolved?/1" do
+    test "returns false when resolved_at is not present" do
+      issue = insert(:issue)
+
+      refute Issue.resolved?(issue)
+    end
+
+    test "returns true when resolved_at is present" do
+      issue = insert(:issue, resolved_at: DateTime.utc_now())
+
+      assert Issue.resolved?(issue)
+    end
+  end
 end

@@ -5,7 +5,7 @@ defmodule ShipchoiceDb.Issue do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, only: [from: 2]
-  alias ShipchoiceDb.{Message, Repo, Shipment, Issue}
+  alias ShipchoiceDb.{Repo, Shipment, Issue}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -150,5 +150,9 @@ defmodule ShipchoiceDb.Issue do
       station_location: station_location,
       metadata: metadata,
     }
+  end
+
+  def resolved?(issue) do
+    !is_nil(issue.resolved_at)
   end
 end
