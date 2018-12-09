@@ -2,6 +2,7 @@ defmodule ShipchoiceBackend.IssueController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceDb.{Repo, Issue}
+  import Ecto.Query, only: [order_by: 2]
 
   plug(:authenticate_user)
   plug :authorize_admin when action in [
@@ -15,6 +16,7 @@ defmodule ShipchoiceBackend.IssueController do
   def index(conn, params) do
     page =
       Issue
+      |> order_by(desc: :inserted_at)
       |> Repo.paginate(params)
 
     render(
