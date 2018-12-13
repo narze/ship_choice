@@ -10,6 +10,9 @@
                   class: "dropdown-item" %>
 
          <%= if @current_user.is_admin do %>
+          <%= link "Issues",
+                    to: issue_path(@conn, :index),
+                    class: "dropdown-item" %>
           <%= link "Senders",
                     to: sender_path(@conn, :index),
                     class: "dropdown-item" %>
