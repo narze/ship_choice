@@ -45,7 +45,7 @@ end
 # will be used by default
 
 release :shipchoice do
-  set version: "0.1.0"
+  set version: "0.2.0"
   set applications: [
     :runtime_tools,
     :elixir_make,
