@@ -8,5 +8,10 @@ $(function () {
 
     $note.hide()
     $inputGroup.collapse('show')
+
+    $(`[data-issue=${issueId}] [data-action=cancel]`).one('click', (e) => {
+      $inputGroup.collapse('hide')
+      $note.show()
+    })
   })
 })
