@@ -1,0 +1,65 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h3>Sender : <%= @sender.name %></h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Total Shipments</h4>
+        <p class="card-text"><%= @total_shipments %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Messages Sent</h4>
+        <p class="card-text"><%= @messages_sent %>/<%= @total_shipments %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h4 class="card-title">Remaining Credits</h4>
+        <p class="card-text"><%= @remaining_credits %></p>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-lg-12">
+    <h3>Shipments</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= pagination_links @page %>
+  </div>
+</div>
+<div>
+  <div class="col-lg-12">
+    <table class="table table-sm table-hover">
+      <thead>
+        <th>Shipment #</th>
+        <th>Recipient Name</th>
+        <th>Recipient Phone</th>
+        <th>Message Sent</th>
+      </thead>
+
+      <tbody>
+        <%= for shipment <- @shipments do %>
+          <%= render "shipment.html", shipment: shipment, current_user: @current_user %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= pagination_links @page %>
+  </div>
+</div>

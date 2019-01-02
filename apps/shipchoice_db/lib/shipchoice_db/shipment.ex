@@ -22,6 +22,7 @@ defmodule ShipchoiceDb.Shipment do
     field(:recipient_zip, :string)
     field(:metadata, :map)
     has_many(:messages, Message)
+    belongs_to(:sender, Sender, foreign_key: :sender_phone, references: :phone, define_field: false)
 
     timestamps()
   end
@@ -194,5 +195,15 @@ defmodule ShipchoiceDb.Shipment do
   def get_sender(%Shipment{} = shipment) do
     from(s in Sender, where: s.phone == ^shipment.sender_phone)
     |> Repo.one()
+  end
+
+  def has_sent_message(%Shipment{} = shipment) do
+    messages_count =
+      shipment
+      |> ShipchoiceDb.Repo.preload(:messages)
+      |> Map.get(:messages)
+      |> Enum.count()
+
+    messages_count > 0
   end
 end

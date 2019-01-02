@@ -1,0 +1,6 @@
+<tr>
+  <td><%= @shipment.shipment_number %></td>
+  <td><%= @shipment.recipient_name %></td>
+  <td><%= @shipment.recipient_phone %></td>
+  <td><%= ShipchoiceBackend.LayoutView.yes_no(is_message_sent(@shipment)) %></td>
+</tr>

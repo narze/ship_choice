@@ -15,6 +15,7 @@ defmodule ShipchoiceDb.Sender do
     timestamps()
 
     has_many :transactions, Transaction
+    has_many :shipments, Shipment, foreign_key: :sender_phone, references: :phone
     many_to_many :users, User, join_through: "sender_user"
   end
 
@@ -84,6 +85,16 @@ defmodule ShipchoiceDb.Sender do
   def count_shipments(sender) do
     query = from(s in Shipment, where: s.sender_phone == ^sender.phone)
     Repo.aggregate(query, :count, :id)
+  end
+
+  def count_messages(sender) do
+    query = from(
+      s in Shipment,
+      left_join: m in assoc(s, :messages),
+      where: s.sender_phone == ^sender.phone,
+      select: count(m.id)
+    )
+    query |> Repo.all() |> Enum.sum()
   end
 
   def get_shipments(sender) do

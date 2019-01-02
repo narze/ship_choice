@@ -45,7 +45,7 @@ end
 # will be used by default
 
 release :shipchoice do
-  set version: "0.1.0"
+  set version: "0.2.1"
   set applications: [
     :runtime_tools,
     :elixir_make,
@@ -54,6 +54,7 @@ release :shipchoice do
     shipchoice_backend: :permanent,
     shipchoice_db: :permanent,
     sms_sender: :permanent,
+    kerry_sheet_parser: :permanent,
     url_shortener: :permanent
   ]
   set commands: [

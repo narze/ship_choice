@@ -1,6 +1,20 @@
-<div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}!", name: "ShypChoice" %></h2>
-  <p class="lead">
-    We make senders life better.
-  </p>
-</div>
+<%= if @current_user do %>
+  <div>
+    <h2>Senders</h2>
+    <ul>
+      <%= for sender <- @senders do %>
+        <li>
+          <%= link sender.name,
+                   to: sender_path(@conn, :show, sender) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% else %>
+  <div class="jumbotron">
+    <h2><%= gettext "Welcome to %{name}!", name: "ShypChoice" %></h2>
+    <p class="lead">
+      We make senders life better.
+    </p>
+  </div>
+<% end %>

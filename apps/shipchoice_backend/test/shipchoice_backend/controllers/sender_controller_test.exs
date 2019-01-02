@@ -17,6 +17,7 @@ defmodule ShipchoiceBackend.SenderControllerTest do
       [
         get(conn, sender_path(conn, :index)),
         get(conn, sender_path(conn, :new)),
+        get(conn, sender_path(conn, :show, 1)),
         post(conn, sender_path(conn, :create), %{"sender" => %{}})
       ],
       fn conn ->
@@ -28,14 +29,17 @@ defmodule ShipchoiceBackend.SenderControllerTest do
     )
   end
 
-  describe "with a signed in user" do
-    setup %{conn: conn, login_as: username} do
-      user = insert(:admin_user, username: username)
+  setup %{conn: conn} = tags do
+    if tags[:login_as] do
+      user = insert(:admin_user, username: tags[:login_as])
       conn = assign(conn, :current_user, user)
-
       {:ok, conn: conn, user: user}
+    else
+      {:ok, conn: conn}
     end
+  end
 
+  describe "with a signed in user" do
     @tag login_as: "narze"
     test "GET /senders", %{conn: conn} do
       conn = get(conn, "/senders")
@@ -156,6 +160,23 @@ defmodule ShipchoiceBackend.SenderControllerTest do
       end
 
       assert Credits.get_sender_credit(sender) == 0
+    end
+  end
+
+  describe "GET /senders/:id" do
+    @tag login_as: "narze"
+    test "renders sender dashboard", %{conn: conn, user: user} do
+      sender = insert(:sender, users: [user])
+      shipments = insert_list(2, :shipment, sender_phone: sender.phone)
+      conn = get(conn, "/senders/#{sender.id}")
+
+      assert html_response(conn, 200) =~ sender.name
+      assert html_response(conn, 200) =~ "Total Shipments"
+      assert html_response(conn, 200) =~ sender |> Sender.count_shipments() |> Integer.to_string()
+      assert html_response(conn, 200) =~ "Remaining Credits"
+      assert html_response(conn, 200) =~ sender |> Credits.get_sender_credit() |> Integer.to_string()
+      assert html_response(conn, 200) =~ shipments |> Enum.at(0) |> Map.get(:shipment_number)
+      assert html_response(conn, 200) =~ shipments |> Enum.at(1) |> Map.get(:shipment_number)
     end
   end
 end

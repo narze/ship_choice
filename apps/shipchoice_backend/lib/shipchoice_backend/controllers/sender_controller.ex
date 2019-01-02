@@ -2,7 +2,7 @@ defmodule ShipchoiceBackend.SenderController do
   use ShipchoiceBackend, :controller
 
   alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Credits, Sender}
+  alias ShipchoiceDb.{Credits, Sender, Shipment}
 
   plug(:authenticate_user)
 
@@ -41,6 +41,27 @@ defmodule ShipchoiceBackend.SenderController do
         |> put_flash(:error, "Error occurred")
         |> redirect(to: "/senders/new")
     end
+  end
+
+  def show(conn, %{"id" => id} = params) do
+    sender = Sender.get(id)
+    total_shipments = Sender.count_shipments(sender)
+    credits = Credits.get_sender_credit(sender)
+    page =
+      Shipment
+      |> Shipment.from_senders([sender])
+      |> ShipchoiceDb.Repo.paginate(params)
+
+    conn
+    |> render(
+        "show.html",
+        sender: sender,
+        total_shipments: total_shipments,
+        shipments: page.entries,
+        page: page,
+        remaining_credits: credits,
+        messages_sent: Sender.count_messages(sender),
+      )
   end
 
   def send_message_to_shipments(conn, %{"id" => id}) do

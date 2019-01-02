@@ -29,7 +29,7 @@ defmodule ShipchoiceBackend.Router do
     post("/shipments/upload", ShipmentController, :do_upload)
     post("/shipments/:id/send_message", ShipmentController, :send_message)
 
-    resources("/senders", SenderController, only: [:index, :new, :create]) do
+    resources("/senders", SenderController, only: [:index, :new, :create, :show]) do
       resources("/credits", CreditController, only: [:new, :create])
     end
     post("/senders/:id/send_message_to_shipments", SenderController, :send_message_to_shipments)

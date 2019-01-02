@@ -9,3 +9,19 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias ShipchoiceDb.User
+
+User.insert(%{
+  name: "Admin",
+  username: "admin",
+  password: "password",
+  is_admin: true,
+})
+
+User.insert(%{
+  name: "User",
+  username: "user",
+  password: "password",
+  is_admin: false,
+})

@@ -345,4 +345,18 @@ defmodule ShipchoiceDb.ShipmentTest do
       assert Shipment.get_sender(shipment) == nil
     end
   end
+
+  describe "has_sent_message/1" do
+    test "returns false if shipment has no associated messages" do
+      shipment = insert(:shipment)
+
+      assert Shipment.has_sent_message(shipment) == false
+    end
+
+    test "returns true if shipment has associated messages" do
+      shipment = insert(:shipment, messages: [build(:message)])
+
+      assert Shipment.has_sent_message(shipment)
+    end
+  end
 end
