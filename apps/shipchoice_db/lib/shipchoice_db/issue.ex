@@ -22,6 +22,7 @@ defmodule ShipchoiceDb.Issue do
     field(:station_location, :string)
     field(:metadata, :map)
     field(:resolved_at, :naive_datetime)
+    field(:note, :string)
 
     timestamps()
   end
@@ -49,6 +50,7 @@ defmodule ShipchoiceDb.Issue do
       :station_location,
       :metadata,
       :resolved_at,
+      :note,
     ])
     |> validate_required([:shipment_number])
     |> unique_constraint(:shipment_number)

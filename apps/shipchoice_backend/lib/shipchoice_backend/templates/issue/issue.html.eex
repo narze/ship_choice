@@ -2,6 +2,7 @@
   <td><%= @issue.shipment_number %></td>
   <td><%= @issue.dly_status_code %></td>
   <td><%= @issue.dly_status_remark %></td>
+  <td><small><%= @issue.note %></small></td>
   <td><%= resolved_at(@issue) %></td>
   <td>
     <%= if @issue.resolved_at do %>
