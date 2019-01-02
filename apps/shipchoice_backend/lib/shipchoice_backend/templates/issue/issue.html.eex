@@ -2,7 +2,29 @@
   <td><%= @issue.shipment_number %></td>
   <td><%= @issue.dly_status_code %></td>
   <td><%= @issue.dly_status_remark %></td>
-  <td><small><%= @issue.note %></small></td>
+  <td data-issue="<%= @issue.id %>">
+    <div class="issue-note collapse show">
+      <small><%= @issue.note || "-" %></small>
+    </div>
+    <div class="edit-issue-note-input input-group input-group-sm collapse">
+      <!-- TODO: Update issue not form -->
+      <input type="text" class="form-control"
+             placeholder=""
+             aria-label="Issue note"
+             aria-describedby="button-addon4">
+      <div class="input-group-append" id="button-addon4">
+        <button class="btn btn-outline-primary" type="button">Save</button>
+        <button class="btn btn-outline-danger" type="button">Cancel</button>
+      </div>
+    </div>
+
+    <%= link("Edit",
+             to: "#",
+             class: "edit-issue-note badge badge-secondary",
+             data: [
+               issue: @issue.id,
+             ]) %>
+  </td>
   <td><%= resolved_at(@issue) %></td>
   <td>
     <%= if @issue.resolved_at do %>
