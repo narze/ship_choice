@@ -17,4 +17,10 @@ defmodule ShipchoiceBackend.IssueView do
       "-"
     end
   end
+
+  def render("update_note.json", %{success: success}) do
+    %{
+      success: success
+    }
+  end
 end
