@@ -1,29 +1,34 @@
-<tr>
+<tr class="issue" data-issue="<%= @issue.id %>">
   <td><%= @issue.shipment_number %></td>
   <td><%= @issue.dly_status_code %></td>
   <td><%= @issue.dly_status_remark %></td>
-  <td data-issue="<%= @issue.id %>">
+  <td>
     <div class="issue-note collapse show">
       <small><%= @issue.note || "-" %></small>
     </div>
-    <div class="edit-issue-note-input input-group input-group-sm collapse">
-      <!-- TODO: Update issue not form -->
-      <input type="text" class="form-control"
-             placeholder=""
-             aria-label="Issue note"
-             aria-describedby="button-addon4">
-      <div class="input-group-append" id="button-addon4">
-        <button class="btn btn-outline-primary" type="button">Save</button>
-        <button class="btn btn-outline-danger" type="button" data-action="cancel">Cancel</button>
+
+    <%= form_for @conn,
+                 issue_path(@conn, :update_note, @issue),
+                 [class: "update-note"],
+                 fn f -> %>
+      <div class="edit-issue-note-input input-group input-group-sm collapse">
+        <%= text_input f,
+                       :note,
+                       placeholder: "",
+                       class: "form-control",
+                       "aria-label": "Issue note",
+                       "aria-describedby": "button-addon-#{@issue.id}" %>
+
+        <div class="input-group-append" id="button-addon-<%= @issue.id %>">
+          <button class="btn btn-outline-primary" type="submit">Save</button>
+          <button class="btn btn-outline-danger" type="button" data-action="cancel">Cancel</button>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <%= link("Edit",
              to: "#",
-             class: "edit-issue-note badge badge-secondary",
-             data: [
-               issue: @issue.id,
-             ]) %>
+             class: "edit-issue-note badge badge-secondary") %>
   </td>
   <td><%= resolved_at(@issue) %></td>
   <td>
