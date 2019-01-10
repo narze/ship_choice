@@ -1,7 +1,9 @@
 <tr class="issue" data-issue="<%= @issue.id %>">
   <td><%= @issue.shipment_number %></td>
+  <td><small><%= @issue.sender %></small></td>
+  <td><small><%= @issue.recipient %></small></td>
   <td><%= @issue.dly_status_code %></td>
-  <td><%= @issue.dly_status_remark %></td>
+  <td><small><%= @issue.dly_status_remark %></small></td>
   <td>
     <div class="issue-note collapse show">
       <small><%= @issue.note || "-" %></small>
