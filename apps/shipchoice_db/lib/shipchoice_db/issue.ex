@@ -14,6 +14,7 @@ defmodule ShipchoiceDb.Issue do
     field(:shipment_number, :string)
     field(:payer, :string)
     field(:sender, :string)
+    field(:recipient, :string)
     field(:route, :string)
     field(:dc, :string)
     field(:last_status_code, :string)
@@ -42,6 +43,7 @@ defmodule ShipchoiceDb.Issue do
       :shipment_number,
       :payer,
       :sender,
+      :recipient,
       :route,
       :dc,
       :last_status_code,
@@ -120,6 +122,7 @@ defmodule ShipchoiceDb.Issue do
           consignment_no: shipment_number,
           payer: payer,
           sender: sender,
+          recipient: recipient,
           route: route,
           dc: dc,
           last_status_code: last_status_code,
@@ -133,6 +136,7 @@ defmodule ShipchoiceDb.Issue do
         :consignment_no,
         :payer,
         :sender,
+        :recipient,
         :route,
         :dc,
         :last_status_code,
@@ -145,6 +149,7 @@ defmodule ShipchoiceDb.Issue do
       shipment_number: shipment_number,
       payer: payer,
       sender: sender,
+      recipient: recipient,
       route: route,
       dc: dc,
       last_status_code: last_status_code,
