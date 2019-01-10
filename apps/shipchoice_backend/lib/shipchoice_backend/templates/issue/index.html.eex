@@ -23,7 +23,7 @@
         <th>Status Code</th>
         <th>Status Remark</th>
         <th>Note</th>
-        <th>Resolved At</th>
+        <th>Resolve Status</th>
         <th>Actions</th>
       </thead>
 

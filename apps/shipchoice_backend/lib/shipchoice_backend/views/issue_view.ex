@@ -12,9 +12,9 @@ defmodule ShipchoiceBackend.IssueView do
         issue.resolved_at
         |> Timex.format!("({relative})", :relative)
 
-      abs <> " " <> rel
+      "Resolved " <> abs <> " " <> rel
     else
-      "-"
+      "Pending"
     end
   end
 
