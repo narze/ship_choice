@@ -23,6 +23,9 @@ defmodule KerrySheetParserTest do
       assert first_row[:route]
       assert first_row[:station_location]
       assert first_row[:svc_type]
+      assert first_row[:sender] == "คุณเรวดี เอี่ยมสุนทรวิทย์ (คุณธฤตมน นวลตาลส่งแทน)  0816335441"
+      assert first_row[:recipient] == "คุณ ดนัย เวศนารัตน์ 389 กลางเวียง อำเภอเวียงสา น่าน  0949189035"
+      assert first_row[:sender_and_recipient] == nil
 
       refute first_row[nil]
     end

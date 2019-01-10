@@ -11,7 +11,7 @@ defmodule KerrySheetParser do
     nil,
     nil,
     :payer,
-    :sender,
+    :sender_and_recipient,
     :route,
     :dc,
     :svc_type,
@@ -48,13 +48,21 @@ defmodule KerrySheetParser do
             cell
             |> String.replace_prefix("\"", "")
             |> String.replace_suffix("\"", "")
-            |> String.replace("\n", "")
+            |> String.trim()
+            |> String.replace("\n\n", " || ")
+            |> String.replace("\n", " ")
           end)
 
-        @keys
-        |> Enum.zip(row)
-        |> Enum.into(%{})
-        |> Map.delete(nil)
+        map =
+          @keys
+          |> Enum.zip(row)
+          |> Enum.into(%{})
+          |> Map.delete(nil)
+
+        map
+        |> Map.put(:sender, String.split(map[:sender_and_recipient], " || ") |> List.first |> String.trim)
+        |> Map.put(:recipient, String.split(map[:sender_and_recipient], " || ") |> List.last |> String.trim)
+        |> Map.delete(:sender_and_recipient)
       end)
 
     {:ok, rows}
