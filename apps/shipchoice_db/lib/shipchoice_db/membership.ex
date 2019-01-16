@@ -46,7 +46,7 @@ defmodule ShipchoiceDb.Membership do
     Ecto.Multi.new
     |> Ecto.Multi.insert(:sender, sender_changeset(params))
     |> Ecto.Multi.insert(:user, user_changeset(params))
-    |> Ecto.Multi.run(:sender_user, fn changes ->
+    |> Ecto.Multi.run(:sender_user, fn _, changes ->
       sender = changes.sender
       user = changes.user
 

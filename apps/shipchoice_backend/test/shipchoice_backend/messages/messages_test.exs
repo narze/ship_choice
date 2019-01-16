@@ -12,12 +12,12 @@ defmodule ShipchoiceBackend.MessagesTest do
     @valid_attrs %{
       message: "some message",
       phone: "some phone",
-      sent_at: ~N[2010-04-17 14:00:00.000000]
+      sent_at: ~N[2010-04-17 14:00:00]
     }
     @update_attrs %{
       message: "some updated message",
       phone: "some updated phone",
-      sent_at: ~N[2011-05-18 15:01:01.000000]
+      sent_at: ~N[2011-05-18 15:01:01]
     }
     @invalid_attrs %{message: nil, phone: nil, sent_at: nil}
 
@@ -35,7 +35,7 @@ defmodule ShipchoiceBackend.MessagesTest do
       assert {:ok, %Message{} = message} = Messages.create_message(@valid_attrs)
       assert message.message == "some message"
       assert message.phone == "some phone"
-      assert message.sent_at == ~N[2010-04-17 14:00:00.000000]
+      assert message.sent_at == ~N[2010-04-17 14:00:00]
     end
 
     test "create_message/1 with invalid data returns error changeset" do
@@ -48,7 +48,7 @@ defmodule ShipchoiceBackend.MessagesTest do
       assert %Message{} = message
       assert message.message == "some updated message"
       assert message.phone == "some updated phone"
-      assert message.sent_at == ~N[2011-05-18 15:01:01.000000]
+      assert message.sent_at == ~N[2011-05-18 15:01:01]
     end
 
     test "update_message/2 with invalid data returns error changeset" do

@@ -149,7 +149,7 @@ defmodule ShipchoiceDb.IssueTest do
         Issue.update(issue, %{payer: "foo", resolved_at: now})
 
       assert updated_issue.payer == "foo"
-      assert updated_issue.resolved_at == now
+      assert updated_issue.resolved_at == now |> NaiveDateTime.truncate(:second)
     end
   end
 end
