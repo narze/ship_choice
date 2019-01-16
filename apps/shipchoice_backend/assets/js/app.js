@@ -25,3 +25,5 @@ import "phoenix_html"
 import "bootstrap"
 
 import "./frontend"
+
+import "./react-test"
