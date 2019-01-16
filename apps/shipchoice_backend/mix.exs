@@ -37,15 +37,17 @@ defmodule ShipchoiceBackend.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.2"},
+      {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:phoenix_ecto, "~> 3.0"},
+      {:ecto_sql, "~> 3.0"},
+      {:phoenix_ecto, "~> 4.0"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 2.0"},
+      {:plug, "~> 1.7"},
       {:xlsxir, "~> 1.6.2"},
-      {:scrivener_html, "~> 1.7"},
+      {:scrivener_html, git: "https://github.com/hlongvu/scrivener_html.git"},
       {:timex, "~> 3.1"}
     ]
   end

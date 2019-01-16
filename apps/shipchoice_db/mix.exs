@@ -37,12 +37,12 @@ defmodule ShipchoiceDb.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.1"},
+      {:ecto_sql, "~> 3.0"},
       {:poison, "~> 3.1"},
       {:ex_machina, "~> 2.2", only: :test},
       {:comeonin, "~> 4.1"},
       {:bcrypt_elixir, "~> 1.0"},
-      {:scrivener_ecto, "~> 1.0"},
+      {:scrivener_ecto, "~> 2.0"},
       {:faker, "~> 0.10", only: :test},
     ]
   end
