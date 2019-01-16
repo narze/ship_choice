@@ -21,7 +21,7 @@ defmodule ShipchoiceBackend do
     quote do
       use Phoenix.Controller, namespace: ShipchoiceBackend
       import Plug.Conn
-      import ShipchoiceBackend.Router.Helpers
+      alias ShipchoiceBackend.Router.Helpers, as: Routes
       import ShipchoiceBackend.Gettext
       import ShipchoiceBackend.Auth, only: [
         authenticate_user: 2,
@@ -42,7 +42,7 @@ defmodule ShipchoiceBackend do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import ShipchoiceBackend.Router.Helpers
+      alias ShipchoiceBackend.Router.Helpers, as: Routes
       import ShipchoiceBackend.ErrorHelpers
       import ShipchoiceBackend.Gettext
     end

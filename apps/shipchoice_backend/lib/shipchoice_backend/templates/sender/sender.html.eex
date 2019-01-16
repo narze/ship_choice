@@ -5,11 +5,11 @@
   <td><%= get_credits(@sender) %></td>
   <td>
     <%= link("Send message to recipients",
-             to: sender_path(@conn, :send_message_to_shipments, @sender),
+             to: Routes.sender_path(@conn, :send_message_to_shipments, @sender),
              method: :post,
              class: "btn btn-primary btn-sm") %>
     <%= link("Add Credits",
-             to: sender_credit_path(@conn, :new, @sender),
+             to: Routes.sender_credit_path(@conn, :new, @sender),
              class: "btn btn-primary btn-sm") %>
   </td>
 </tr>

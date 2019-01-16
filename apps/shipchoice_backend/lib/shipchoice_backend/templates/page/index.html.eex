@@ -5,7 +5,7 @@
       <%= for sender <- @senders do %>
         <li>
           <%= link sender.name,
-                   to: sender_path(@conn, :show, sender) %>
+                   to: Routes.sender_path(@conn, :show, sender) %>
         </li>
       <% end %>
     </ul>

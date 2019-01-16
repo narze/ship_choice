@@ -6,28 +6,28 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         <%= link "Shipments",
-                  to: shipment_path(@conn, :index),
+                  to: Routes.shipment_path(@conn, :index),
                   class: "dropdown-item" %>
 
          <%= if @current_user.is_admin do %>
           <%= link "Issues",
-                    to: issue_path(@conn, :index),
+                    to: Routes.issue_path(@conn, :index),
                     class: "dropdown-item" %>
           <%= link "Senders",
-                    to: sender_path(@conn, :index),
+                    to: Routes.sender_path(@conn, :index),
                     class: "dropdown-item" %>
           <%= link "Messages",
-                    to: message_path(@conn, :index),
+                    to: Routes.message_path(@conn, :index),
                     class: "dropdown-item" %>
           <%= link "Users",
-                    to: user_path(@conn, :index),
+                    to: Routes.user_path(@conn, :index),
                     class: "dropdown-item" %>
         <% end %>
 
         <div class="dropdown-divider"></div>
 
         <%= link "Logout",
-                  to: session_path(@conn, :delete, @current_user),
+                  to: Routes.session_path(@conn, :delete, @current_user),
                   method: :delete,
                   class: "dropdown-item" %>
       </div>
@@ -35,7 +35,7 @@
   <% else %>
     <li class="nav-item active">
       <%= link "Login",
-                to: session_path(@conn, :new),
+                to: Routes.session_path(@conn, :new),
                 class: "nav-link" %>
     </li>
   <% end %>

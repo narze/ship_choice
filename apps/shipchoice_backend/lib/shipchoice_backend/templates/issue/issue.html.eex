@@ -10,7 +10,7 @@
     </div>
 
     <%= form_for @conn,
-                 issue_path(@conn, :update_note, @issue),
+                 Routes.issue_path(@conn, :update_note, @issue),
                  [class: "update-note"],
                  fn f -> %>
       <div class="edit-issue-note-input input-group input-group-sm collapse">
@@ -36,12 +36,12 @@
   <td>
     <%= if @issue.resolved_at do %>
       <%= link("Undo Resolve",
-              to: issue_path(@conn, :undo_resolve, @issue),
+              to: Routes.issue_path(@conn, :undo_resolve, @issue),
               method: :post,
               class: "btn btn-danger btn-sm") %>
     <% else %>
       <%= link("Mark Resolved",
-              to: issue_path(@conn, :resolve, @issue),
+              to: Routes.issue_path(@conn, :resolve, @issue),
               method: :post,
               class: "btn btn-primary btn-sm") %>
     <% end %>
