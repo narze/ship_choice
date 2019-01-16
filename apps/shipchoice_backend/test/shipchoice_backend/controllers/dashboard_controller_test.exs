@@ -2,10 +2,8 @@ defmodule ShipchoiceBackend.DashboardControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceBackend.Messages
-  alias ShipchoiceDb.{Shipment, Message, Repo}
+  alias ShipchoiceDb.Repo
 
-  import Mock
   import ShipchoiceDb.Factory
 
   setup do
@@ -34,26 +32,26 @@ defmodule ShipchoiceBackend.DashboardControllerTest do
       :login_user,
     ]
 
-    test "renders dashboard", %{conn: conn, user: user, sender: sender, shipments: shipments} do
+    test "renders dashboard", %{conn: conn, user: _user, sender: _sender, shipments: _shipments} do
       conn = get(conn, dashboard_path(conn, :index))
       assert html_response(conn, 200) =~ "Dashboard"
       assert html_response(conn, 200) =~ "3 Shipments"
     end
   end
 
-  defp insert_user(%{conn: conn}) do
+  defp insert_user(%{conn: _conn}) do
     user = insert(:user)
 
     [user: user]
   end
 
-  defp insert_sender(%{conn: conn, user: user}) do
+  defp insert_sender(%{conn: _conn, user: user}) do
     sender = insert(:sender, users: [user])
 
     [sender: sender]
   end
 
-  defp insert_shipments(%{conn: conn, user: user, sender: sender}) do
+  defp insert_shipments(%{conn: _conn, user: _user, sender: sender}) do
     shipments = insert_list(3, :shipment, sender_phone: sender.phone)
 
     [shipments: shipments]

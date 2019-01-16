@@ -1,12 +1,11 @@
 defmodule ShipchoiceBackend.DashboardController do
   use ShipchoiceBackend, :controller
 
-  alias ShipchoiceBackend.Messages
   alias ShipchoiceDb.{Repo, Shipment}
 
   plug(:authenticate_user)
 
-  def index(conn, params) do
+  def index(conn, _params) do
     user =
       conn.assigns[:current_user]
       |> Repo.preload(:senders)

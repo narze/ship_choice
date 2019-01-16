@@ -35,7 +35,7 @@ defmodule ShipchoiceDb.IssueTest do
     test "gets issues' shipment by shipment number" do
       issue = insert(:issue, %{shipment_number: "PORM000188508"})
       shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
-      shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
+      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
 
       assert shipment1 == Issue.get_shipment(issue)
     end

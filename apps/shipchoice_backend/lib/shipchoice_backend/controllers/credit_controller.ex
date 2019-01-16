@@ -1,7 +1,6 @@
 defmodule ShipchoiceBackend.CreditController do
   use ShipchoiceBackend, :controller
 
-  alias ShipchoiceBackend.Messages
   alias ShipchoiceDb.{Credits, Sender}
 
   plug(:authenticate_user)

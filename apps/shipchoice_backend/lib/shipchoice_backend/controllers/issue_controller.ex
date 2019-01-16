@@ -52,7 +52,7 @@ defmodule ShipchoiceBackend.IssueController do
   end
 
   def resolve(conn, %{"id" => id}) do
-    {:ok, issue} =
+    {:ok, _issue} =
       Issue.get(id)
       |> Issue.update(%{resolved_at: DateTime.utc_now()})
 
@@ -65,7 +65,7 @@ defmodule ShipchoiceBackend.IssueController do
   end
 
   def undo_resolve(conn, %{"id" => id}) do
-    {:ok, issue} =
+    {:ok, _issue} =
       Issue.get(id)
       |> Issue.update(%{resolved_at: nil})
 
@@ -78,7 +78,7 @@ defmodule ShipchoiceBackend.IssueController do
   end
 
   def update_note(conn, %{"id" => id, "note" => note}) do
-    {:ok, issue} =
+    {:ok, _issue} =
       Issue.get(id)
       |> Issue.update(%{note: note})
 

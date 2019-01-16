@@ -2,10 +2,8 @@ defmodule ShipchoiceBackend.IssueControllerTest do
   use ShipchoiceBackend.ConnCase
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias ShipchoiceDb.{Credits, Issue, Repo}
-  alias ShipchoiceBackend.Messages
+  alias ShipchoiceDb.{Issue, Repo}
 
-  import Mock
   import ShipchoiceDb.Factory
 
   setup do
@@ -66,7 +64,7 @@ defmodule ShipchoiceBackend.IssueControllerTest do
     @tag login_as: "admin", admin: true
     test "admin can view resolved issues", %{conn: conn} do
       time = DateTime.utc_now()
-      issues = insert_list(2, :issue, resolved_at: time)
+      _issues = insert_list(2, :issue, resolved_at: time)
 
       conn = get(conn, "/issues")
 

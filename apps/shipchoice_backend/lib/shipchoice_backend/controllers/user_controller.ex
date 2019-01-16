@@ -1,7 +1,6 @@
 defmodule ShipchoiceBackend.UserController do
   use ShipchoiceBackend, :controller
 
-  alias ShipchoiceBackend.Messages
   alias ShipchoiceDb.User
 
   plug(:authenticate_user)
