@@ -1,7 +1,7 @@
 defmodule ShipchoiceBackend.Endpoint do
   use Phoenix.Endpoint, otp_app: :shipchoice_backend
 
-  socket("/socket", ShipchoiceBackend.UserSocket)
+  socket("/socket", ShipchoiceBackend.UserSocket, websocket: true)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
