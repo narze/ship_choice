@@ -1,5 +1,7 @@
 defmodule ShipchoiceDb.Repo do
-  use Ecto.Repo, otp_app: :shipchoice_db
+  use Ecto.Repo,
+    otp_app: :shipchoice_db,
+    adapter: Application.get_env(:shipchoice_db, ShipchoiceDb.Repo)[:adapter]
   use Scrivener, page_size: 50
 
   @doc """
