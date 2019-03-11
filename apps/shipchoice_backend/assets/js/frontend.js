@@ -38,9 +38,21 @@ $(function () {
     })
   })
 
+  document.addEventListener('ajax:beforeSend', (e) => {
+    if (e.target.dataset.action == "issue-resolve-toggle") {
+      $(e.target).addClass('disabled')
+    }
+  })
+
   document.addEventListener('ajax:success', (e) => {
     if (e.target.dataset.action == "issue-resolve-toggle") {
       $(e.target).parents('tr.issue').replaceWith(e.data.xhr.responseText)
+    }
+  })
+
+  document.addEventListener('ajax:complete', (e) => {
+    if (e.target.dataset.action == "issue-resolve-toggle") {
+      $(e.target).removeClass('disabled')
     }
   })
 })
