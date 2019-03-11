@@ -9,6 +9,7 @@
 
     <title>ShypChoice</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
+    <script src="<%= Routes.static_path(@conn, "/js/app.js") %>" defer></script>
   </head>
 
   <body>
@@ -24,7 +25,5 @@
 
       <%= render "footer.html" %>
     </div> <!-- /container -->
-
-    <script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

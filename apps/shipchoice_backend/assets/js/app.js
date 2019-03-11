@@ -24,6 +24,9 @@ import "phoenix_html"
 
 import "bootstrap"
 
+import Turbolinks from "turbolinks"
+Turbolinks.start()
+
 import "./frontend"
 
 import "./react-test"
