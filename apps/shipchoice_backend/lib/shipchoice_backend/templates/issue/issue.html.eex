@@ -37,12 +37,16 @@
     <%= if @issue.resolved_at do %>
       <%= link("Undo Resolve",
               to: Routes.issue_path(@conn, :undo_resolve, @issue),
-              method: :post,
+              "data-action": "issue-resolve-toggle",
+              "ujs-method": "post",
+              "ujs-remote": true,
               class: "btn btn-danger btn-sm") %>
     <% else %>
       <%= link("Mark Resolved",
               to: Routes.issue_path(@conn, :resolve, @issue),
-              method: :post,
+              "data-action": "issue-resolve-toggle",
+              "ujs-method": "post",
+              "ujs-remote": true,
               class: "btn btn-primary btn-sm") %>
     <% end %>
   </td>
