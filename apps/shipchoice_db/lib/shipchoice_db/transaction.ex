@@ -3,7 +3,7 @@ defmodule ShipchoiceDb.Transaction do
   Ecto Schema representing transactions.
   """
   use Ecto.Schema
-  import Ecto.{Changeset, Query}
+  import Ecto.Changeset
   alias ShipchoiceDb.{Repo, Transaction, Sender}
 
   @primary_key {:id, :binary_id, autogenerate: true}

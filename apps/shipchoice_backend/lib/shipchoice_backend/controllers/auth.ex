@@ -11,7 +11,7 @@ defmodule ShipchoiceBackend.Auth do
     user_id = get_session(conn, :user_id)
 
     cond do
-      user = conn.assigns[:current_user] ->
+      conn.assigns[:current_user] ->
         conn
 
       user = user_id && User.get(user_id) ->

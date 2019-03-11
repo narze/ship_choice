@@ -12,9 +12,15 @@ defmodule ShipchoiceBackend.IssueView do
         issue.resolved_at
         |> Timex.format!("({relative})", :relative)
 
-      abs <> " " <> rel
+      "Resolved " <> abs <> " " <> rel
     else
-      "-"
+      "Pending"
     end
+  end
+
+  def render("update_note.json", %{success: success}) do
+    %{
+      success: success
+    }
   end
 end

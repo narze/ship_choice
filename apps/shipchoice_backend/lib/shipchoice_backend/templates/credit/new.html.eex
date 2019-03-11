@@ -6,7 +6,7 @@
 <div class="row">
   <div class="col-lg-12">
     <%= form_for @conn,
-                 sender_credit_path(@conn, :create, @sender),
+                 Routes.sender_credit_path(@conn, :create, @sender),
                  fn f -> %>
       <div class="form-group">
         <label for="amount">Amount</label>

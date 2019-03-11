@@ -5,7 +5,7 @@
 </div>
 <div class="row">
   <div class="col-lg-12">
-    <%= form_for @conn, issue_path(@conn, :upload_pending), [multipart: true], fn f -> %>
+    <%= form_for @conn, Routes.issue_path(@conn, :upload_pending), [multipart: true], fn f -> %>
       <div class="form-group">
         <label for="file">Kerry Pending Report File</label>
         <%= file_input f, :kerry_pending_report, class: "form-control" %>

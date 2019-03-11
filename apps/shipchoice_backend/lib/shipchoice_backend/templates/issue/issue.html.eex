@@ -1,17 +1,47 @@
-<tr>
+<tr class="issue" data-issue="<%= @issue.id %>">
   <td><%= @issue.shipment_number %></td>
+  <td><small><%= @issue.sender %></small></td>
+  <td><small><%= @issue.recipient %></small></td>
   <td><%= @issue.dly_status_code %></td>
-  <td><%= @issue.dly_status_remark %></td>
+  <td><small><%= @issue.dly_status_remark %></small></td>
+  <td>
+    <div class="issue-note collapse show">
+      <small><%= @issue.note || "-" %></small>
+    </div>
+
+    <%= form_for @conn,
+                 Routes.issue_path(@conn, :update_note, @issue),
+                 [class: "update-note"],
+                 fn f -> %>
+      <div class="edit-issue-note-input input-group input-group-sm collapse">
+        <%= text_input f,
+                       :note,
+                       placeholder: "",
+                       class: "form-control",
+                       "aria-label": "Issue note",
+                       "aria-describedby": "button-addon-#{@issue.id}" %>
+
+        <div class="input-group-append" id="button-addon-<%= @issue.id %>">
+          <button class="btn btn-outline-primary" type="submit">Save</button>
+          <button class="btn btn-outline-danger" type="button" data-action="cancel">Cancel</button>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link("Edit",
+             to: "#",
+             class: "edit-issue-note badge badge-secondary") %>
+  </td>
   <td><%= resolved_at(@issue) %></td>
   <td>
     <%= if @issue.resolved_at do %>
       <%= link("Undo Resolve",
-              to: issue_path(@conn, :undo_resolve, @issue),
+              to: Routes.issue_path(@conn, :undo_resolve, @issue),
               method: :post,
               class: "btn btn-danger btn-sm") %>
     <% else %>
       <%= link("Mark Resolved",
-              to: issue_path(@conn, :resolve, @issue),
+              to: Routes.issue_path(@conn, :resolve, @issue),
               method: :post,
               class: "btn btn-primary btn-sm") %>
     <% end %>

@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.CreditsTest do
   use ExUnit.Case
   import ShipchoiceDb.Factory
-  alias ShipchoiceDb.{Credits, Repo, Sender}
+  alias ShipchoiceDb.{Credits, Repo}
   alias Ecto.Adapters.SQL.Sandbox
 
   setup do

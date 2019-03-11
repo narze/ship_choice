@@ -3,7 +3,7 @@ defmodule ShipchoiceDb.Membership do
   Ecto Embedded Schema representing memberships
   """
   use Ecto.Schema
-  import Ecto.{Changeset, Query}
+  import Ecto.Changeset
   alias ShipchoiceDb.{Membership, Repo, Sender, User}
 
   embedded_schema do
@@ -42,11 +42,11 @@ defmodule ShipchoiceDb.Membership do
     insert(changeset)
   end
 
-  defp to_multi(params \\ %{}) do
+  defp to_multi(params) do
     Ecto.Multi.new
     |> Ecto.Multi.insert(:sender, sender_changeset(params))
     |> Ecto.Multi.insert(:user, user_changeset(params))
-    |> Ecto.Multi.run(:sender_user, fn changes ->
+    |> Ecto.Multi.run(:sender_user, fn _, changes ->
       sender = changes.sender
       user = changes.user
 

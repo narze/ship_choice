@@ -60,7 +60,7 @@ defmodule ShipchoiceBackend.SenderController do
         shipments: page.entries,
         page: page,
         remaining_credits: credits,
-        messages_sent: Sender.count_messages(sender),
+        messages_sent: Sender.count_messages(sender)
       )
   end
 
@@ -73,7 +73,7 @@ defmodule ShipchoiceBackend.SenderController do
       |> put_flash(:error, "Messages not sent. Insufficient credit.")
       |> redirect(to: "/senders")
     else
-      {:ok, result, count} = Messages.send_message_to_all_shipments_in_sender(sender, credits)
+      {:ok, _result, count} = Messages.send_message_to_all_shipments_in_sender(sender, credits)
       Credits.deduct_credit_from_sender(count, sender)
 
       conn

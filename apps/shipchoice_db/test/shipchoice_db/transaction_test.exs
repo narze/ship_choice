@@ -1,7 +1,7 @@
 defmodule ShipchoiceDb.TransactionTest do
   use ExUnit.Case
   import ShipchoiceDb.Factory
-  alias ShipchoiceDb.{Transaction, Repo}
+  alias ShipchoiceDb.Repo
   alias Ecto.Adapters.SQL.Sandbox
 
   setup do

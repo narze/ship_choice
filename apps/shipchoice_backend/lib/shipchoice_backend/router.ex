@@ -42,6 +42,7 @@ defmodule ShipchoiceBackend.Router do
     post("/issues/upload_pending", IssueController, :do_upload_pending)
     post("/issues/:id/resolve", IssueController, :resolve)
     post("/issues/:id/undo_resolve", IssueController, :undo_resolve)
+    post("/issues/:id/update_note", IssueController, :update_note)
     resources("/issues", IssueController, only: [:index])
 
     resources("/memberships", MembershipController, only: [:new, :create])

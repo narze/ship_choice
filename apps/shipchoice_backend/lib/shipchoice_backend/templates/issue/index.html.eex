@@ -20,9 +20,12 @@
     <table class="table">
       <thead>
         <th>Shipment #</th>
+        <th>Sender</th>
+        <th>Recipient</th>
         <th>Status Code</th>
         <th>Status Remark</th>
-        <th>Resolved At</th>
+        <th>Note</th>
+        <th>Resolve Status</th>
         <th>Actions</th>
       </thead>
 

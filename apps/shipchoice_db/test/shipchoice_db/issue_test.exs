@@ -35,7 +35,7 @@ defmodule ShipchoiceDb.IssueTest do
     test "gets issues' shipment by shipment number" do
       issue = insert(:issue, %{shipment_number: "PORM000188508"})
       shipment1 = insert(:shipment, %{shipment_number: "PORM000188508"})
-      shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
+      _shipment2 = insert(:shipment, %{shipment_number: "PORM000188509"})
 
       assert shipment1 == Issue.get_shipment(issue)
     end
@@ -49,6 +49,7 @@ defmodule ShipchoiceDb.IssueTest do
           date_time: "date_time1",
           payer: "payer1",
           sender: "sender1",
+          recipient: "recipient1",
           route: "route1",
           dc: "dc1",
           svc_type: "svc_type1",
@@ -64,6 +65,7 @@ defmodule ShipchoiceDb.IssueTest do
           date_time: "date_time2",
           payer: "payer2",
           sender: "sender2",
+          recipient: "recipient2",
           route: "route2",
           dc: "dc2",
           svc_type: "svc_type2",
@@ -89,6 +91,7 @@ defmodule ShipchoiceDb.IssueTest do
         date_time: "date_time1",
         payer: "payer1",
         sender: "sender1",
+        recipient: "recipient1",
         route: "route1",
         dc: "dc1",
         svc_type: "svc_type1",
@@ -104,6 +107,7 @@ defmodule ShipchoiceDb.IssueTest do
         shipment_number: "PORM000188508",
         payer: "payer1",
         sender: "sender1",
+        recipient: "recipient1",
         route: "route1",
         dc: "dc1",
         last_status_code: "last_status_code1",
@@ -145,7 +149,7 @@ defmodule ShipchoiceDb.IssueTest do
         Issue.update(issue, %{payer: "foo", resolved_at: now})
 
       assert updated_issue.payer == "foo"
-      assert updated_issue.resolved_at == now
+      assert updated_issue.resolved_at == now |> NaiveDateTime.truncate(:second)
     end
   end
 end

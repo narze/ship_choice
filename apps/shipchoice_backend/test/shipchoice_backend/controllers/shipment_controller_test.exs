@@ -74,7 +74,7 @@ defmodule ShipchoiceBackend.ShipmentControllerTest do
 
     @tag login_as: "user"
     test "GET /shipments with existing shipments with non admin user", %{conn: conn, user: user} do
-      sender = insert(:sender, phone: "0876543210", users: [user])
+      _sender = insert(:sender, phone: "0876543210", users: [user])
 
       shipments = [
         %{shipment_number: "SHP0001", sender_phone: "0876543210"},

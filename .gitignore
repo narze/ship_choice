@@ -20,3 +20,7 @@ erl_crash.dump
 *.ez
 
 .env
+.DS_Store
+
+/data/
+docker.env

@@ -107,12 +107,6 @@ defmodule ShipchoiceDb.Shipment do
     {:ok, count: count, new: new}
   end
 
-  defp add_timestamps(row) do
-    row
-    |> Map.put(:inserted_at, DateTime.utc_now())
-    |> Map.put(:updated_at, DateTime.utc_now())
-  end
-
   @doc """
   Parses shipment data from Kerry Excel file
   """

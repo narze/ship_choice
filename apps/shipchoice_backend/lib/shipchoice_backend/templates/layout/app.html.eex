@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>ShypChoice</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
@@ -25,6 +25,6 @@
       <%= render "footer.html" %>
     </div> <!-- /container -->
 
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

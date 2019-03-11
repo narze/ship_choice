@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+    image: shipchoice:${SHIPCHOICE_TAG:-latest}
+    command: bash -c 'dockerize -wait tcp://postgres:5432 -timeout 1m && /app/bin/start_server foreground'
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    ports:
+      - ${PORT:-8080}:8080
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+    #   interval: 20s
+    #   timeout: 10s
+    #   retries: 5
+    env_file:
+      - docker.env
+    depends_on:
+      - postgres
+    networks:
+      - main
+
+  postgres:
+    image: postgres:11
+    ports:
+      - 5432
+    env_file:
+      - docker.env
+    volumes:
+      - ./data:/var/lib/postgresql/data:cached
+    networks:
+      - main
+
+networks:
+  main:
+
+volumes:
+  postgres:
