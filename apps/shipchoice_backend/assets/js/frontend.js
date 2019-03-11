@@ -1,7 +1,7 @@
 $(function () {
   $('[data-toggle="popover"]').popover()
 
-  $('.edit-issue-note').click((e) => {
+  $('table').on('click', '.edit-issue-note', (e) => {
     e.preventDefault()
 
     let $issue = $(e.target).parents('tr.issue')
@@ -36,5 +36,11 @@ $(function () {
         }
       })
     })
+  })
+
+  document.addEventListener('ajax:success', (e) => {
+    if (e.target.dataset.action == "issue-resolve-toggle") {
+      $(e.target).parents('tr.issue').replaceWith(e.data.xhr.responseText)
+    }
   })
 })

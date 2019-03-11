@@ -52,29 +52,23 @@ defmodule ShipchoiceBackend.IssueController do
   end
 
   def resolve(conn, %{"id" => id}) do
-    {:ok, _issue} =
+    {:ok, issue} =
       Issue.get(id)
       |> Issue.update(%{resolved_at: DateTime.utc_now()})
 
     conn
-    |> put_flash(
-      :info,
-      "Mark resolved"
-    )
-    |> redirect(to: "/issues")
+    |> put_layout(false)
+    |> render("issue.html", issue: issue)
   end
 
   def undo_resolve(conn, %{"id" => id}) do
-    {:ok, _issue} =
+    {:ok, issue} =
       Issue.get(id)
       |> Issue.update(%{resolved_at: nil})
 
     conn
-    |> put_flash(
-      :info,
-      "Undo mark resolved"
-    )
-    |> redirect(to: "/issues")
+    |> put_layout(false)
+    |> render("issue.html", issue: issue)
   end
 
   def update_note(conn, %{"id" => id, "note" => note}) do
