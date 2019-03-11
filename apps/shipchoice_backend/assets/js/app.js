@@ -23,6 +23,7 @@ import "phoenix_html"
 // import socket from "./socket"
 
 import "bootstrap"
+import "jquery-ujs"
 
 import Turbolinks from "turbolinks"
 Turbolinks.start()
