@@ -155,8 +155,7 @@ defmodule ShipchoiceBackend.IssueControllerTest do
 
       conn = post(conn, "/issues/#{issue.id}/resolve")
 
-      assert redirected_to(conn) == "/issues"
-      assert get_flash(conn, :info) == "Mark resolved"
+      assert conn.resp_body =~ "Undo Resolve"
 
       refute Issue.get(issue.id).resolved_at |> is_nil()
     end
