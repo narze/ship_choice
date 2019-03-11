@@ -2,6 +2,8 @@ $(function () {
   $('[data-toggle="popover"]').popover()
 
   $('.edit-issue-note').click((e) => {
+    e.preventDefault()
+
     let $issue = $(e.target).parents('tr.issue')
     let issueId = $issue.data('issue')
     let $note = $(`[data-issue=${issueId}] .issue-note`)
