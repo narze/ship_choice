@@ -8,12 +8,13 @@ defmodule ShipchoiceDb.Factory do
       shipment_number: "PORM" <> (Faker.random_between(0, 30000000) |> to_string),
       payer: Faker.Name.name(),
       sender: Faker.Name.name(),
+      recipient: Faker.Name.name(),
       route: "ABCXYZ",
       dc: "BKKXYZ",
       last_status_code: "CLS",
       dly_status_code: "DLY06",
       dly_status_remark: "Cancelled",
-      station_location: "ABC",
+      station_location: "ABCDEF",
     }
   end
 

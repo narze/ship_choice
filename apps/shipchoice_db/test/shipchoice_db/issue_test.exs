@@ -152,4 +152,39 @@ defmodule ShipchoiceDb.IssueTest do
       assert updated_issue.resolved_at == now |> NaiveDateTime.truncate(:second)
     end
   end
+
+  describe "search/2" do
+    test "returns results matched by sender" do
+      keys = [
+        :shipment_number,
+        :payer,
+        :sender,
+        :recipient,
+        :route,
+        :dc,
+        :last_status_code,
+        :dly_status_code,
+        :dly_status_remark,
+        :station_location,
+      ]
+
+      keys
+      |> Enum.each(fn key ->
+        issue = insert(:issue)
+
+        result =
+          Issue
+          |> Issue.search(
+            issue
+            |> Map.get(key)
+            |> String.slice(1..-2)
+          )
+          |> Repo.all()
+
+        assert result == [issue]
+
+        issue |> Repo.delete()
+      end)
+    end
+  end
 end

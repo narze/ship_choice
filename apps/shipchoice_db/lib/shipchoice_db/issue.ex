@@ -181,4 +181,21 @@ defmodule ShipchoiceDb.Issue do
     |> Issue.changeset(attrs)
     |> Repo.update()
   end
+
+  def search(query, ""), do: query
+  def search(query, search_term) do
+    wildcard = "%#{search_term}%"
+
+    from issue in query,
+      where: ilike(issue.sender, ^wildcard),
+      or_where: ilike(issue.shipment_number, ^wildcard),
+      or_where: ilike(issue.payer, ^wildcard),
+      or_where: ilike(issue.recipient, ^wildcard),
+      or_where: ilike(issue.route, ^wildcard),
+      or_where: ilike(issue.dc, ^wildcard),
+      or_where: ilike(issue.last_status_code, ^wildcard),
+      or_where: ilike(issue.dly_status_code, ^wildcard),
+      or_where: ilike(issue.dly_status_remark, ^wildcard),
+      or_where: ilike(issue.station_location, ^wildcard)
+  end
 end
