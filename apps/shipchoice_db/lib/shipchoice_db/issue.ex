@@ -198,4 +198,16 @@ defmodule ShipchoiceDb.Issue do
       or_where: ilike(issue.dly_status_remark, ^wildcard),
       or_where: ilike(issue.station_location, ^wildcard)
   end
+
+  def by_resolved(query, resolved) when is_nil(resolved) or byte_size(resolved) == 0 do
+    query
+  end
+  def by_resolved(query, resolved) when is_boolean(resolved) and not resolved do
+    from issue in query,
+      where: is_nil(issue.resolved_at)
+  end
+  def by_resolved(query, resolved) when is_boolean(resolved) and resolved do
+    from issue in query,
+      where: not is_nil(issue.resolved_at)
+  end
 end

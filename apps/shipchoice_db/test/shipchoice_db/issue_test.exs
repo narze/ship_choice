@@ -187,4 +187,34 @@ defmodule ShipchoiceDb.IssueTest do
       end)
     end
   end
+
+  describe "by_resolved/2" do
+    test "when input nil, returns query" do
+      query = Issue
+
+      assert Issue.by_resolved(query, nil) == query
+    end
+
+    test "when input true, returns query where resolved_at is set" do
+      issue_1 = insert(:issue, resolved_at: NaiveDateTime.utc_now())
+      issue_2 = insert(:issue, resolved_at: nil)
+
+      query = Issue
+
+      result = Issue.by_resolved(query, true) |> Repo.all()
+
+      assert result == [issue_1]
+    end
+
+    test "when input false, returns query where resolved_at is nil" do
+      issue_1 = insert(:issue, resolved_at: NaiveDateTime.utc_now())
+      issue_2 = insert(:issue, resolved_at: nil)
+
+      query = Issue
+
+      result = Issue.by_resolved(query, false) |> Repo.all()
+
+      assert result == [issue_2]
+    end
+  end
 end
