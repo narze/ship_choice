@@ -17,6 +17,7 @@ defmodule ShipchoiceBackend.IssueController do
   def index(conn, params) do
     page =
       Issue
+      |> Issue.search(get_in(params, ["search"]))
       |> order_by(desc: :inserted_at)
       |> Repo.paginate(params)
 

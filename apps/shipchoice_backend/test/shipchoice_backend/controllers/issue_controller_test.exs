@@ -72,6 +72,24 @@ defmodule ShipchoiceBackend.IssueControllerTest do
       assert html_response(conn, 200) =~ "Undo Resolve"
       # assert html_response(conn, 200) =~ time |> Timex.format!("{relative}", :relative)
     end
+
+    @tag login_as: "admin", admin: true
+    test "GET /issues with search term", %{conn: conn} do
+      issues = [
+        %{shipment_number: "ABC1234", sender: "John Doe"},
+        %{shipment_number: "XYZ0001", sender: "Joe Don"},
+      ]
+
+      issues
+      |> Enum.each(fn issue -> insert(:issue, issue) end)
+
+      conn = get(conn, "/issues?search=john")
+
+      assert html_response(conn, 200) =~ "ABC1234"
+      assert html_response(conn, 200) =~ "John Doe"
+      refute html_response(conn, 200) =~ "XYZ0001"
+      refute html_response(conn, 200) =~ "Joe Don"
+    end
   end
 
   describe "GET upload_pending" do
