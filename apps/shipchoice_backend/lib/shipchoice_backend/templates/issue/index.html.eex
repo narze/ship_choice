@@ -12,7 +12,8 @@
                  fn f -> %>
       <%= search_input f, :search, class: "form-control mr-sm-2", placeholder: "Search" %>
       <%= select f, :resolved, ["Pending": 0, "Resolved": 1], prompt: "Status", class: "form-control mr-sm-2" %>
-      <%= submit "Search", class: "btn btn-outline-success my-1 my-sm-3" %>
+      <%= submit "Search", class: "btn btn-outline-success my-1 my-sm-3 mr-sm-1" %>
+      <%= link "Reset", to: "/issues", class: "btn btn-default my-1 my-sm-3" %>
     <% end %>
   </div>
 </div>
@@ -26,6 +27,12 @@
       <%= link "Upload Kerry Pending Report", to: "/issues/upload_pending", class: "btn btn-primary float-right" %>
     </div>
   <% end %>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <%= @page.total_entries %> issue(s)
+  </div>
 </div>
 
 <div class="row">
