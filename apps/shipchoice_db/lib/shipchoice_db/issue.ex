@@ -202,12 +202,15 @@ defmodule ShipchoiceDb.Issue do
   def by_resolved(query, resolved) when is_nil(resolved) or byte_size(resolved) == 0 do
     query
   end
-  def by_resolved(query, resolved) when is_boolean(resolved) and not resolved do
+  def by_resolved(query, resolved) when resolved == "0" do
     from issue in query,
       where: is_nil(issue.resolved_at)
   end
-  def by_resolved(query, resolved) when is_boolean(resolved) and resolved do
+  def by_resolved(query, resolved) when resolved == "1" do
     from issue in query,
       where: not is_nil(issue.resolved_at)
+  end
+  def by_resolved(query, resolved) do
+    query
   end
 end

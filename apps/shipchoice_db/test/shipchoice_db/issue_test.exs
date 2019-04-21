@@ -201,7 +201,7 @@ defmodule ShipchoiceDb.IssueTest do
 
       query = Issue
 
-      result = Issue.by_resolved(query, true) |> Repo.all()
+      result = Issue.by_resolved(query, "1") |> Repo.all()
 
       assert result == [issue_1]
     end
@@ -212,7 +212,7 @@ defmodule ShipchoiceDb.IssueTest do
 
       query = Issue
 
-      result = Issue.by_resolved(query, false) |> Repo.all()
+      result = Issue.by_resolved(query, "0") |> Repo.all()
 
       assert result == [issue_2]
     end
