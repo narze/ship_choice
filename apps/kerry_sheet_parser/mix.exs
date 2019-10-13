@@ -27,7 +27,7 @@ defmodule KerrySheetParser.MixProject do
   defp deps do
     [
       {:excelion, "~> 0.0.5"},
-      {:xlsx_parser, "~> 0.0.10", override: true},
+      {:xlsx_parser, github: "TheFirstAvenger/elixir-xlsx_parser", override: true},
       {:simple_agent, override: true},
       {:sweet_xml, override: true},
     ]

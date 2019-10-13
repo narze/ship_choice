@@ -46,7 +46,7 @@ defmodule ShipchoiceBackend.Mixfile do
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.0"},
       {:plug, "~> 1.7"},
-      {:xlsxir, "~> 1.6.2"},
+      {:xlsxir, github: "jsonkenl/xlsxir"},
       {:scrivener_html, git: "https://github.com/hlongvu/scrivener_html.git"},
       {:timex, "~> 3.1"},
       {:jason, "~> 1.0"},
